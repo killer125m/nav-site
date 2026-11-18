@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="台灣買房全貌試算：一次算完買房交易稅費、寬限期前後月付跳幅、負擔能力與賣房的房地合一稅，附三種貸款情境並排比較。" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png" />
+<link rel="shortcut icon" href="/favicon.ico" />
+    <title>台灣買房全貌試算</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;700;900&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f4f4f0;
+        --surface: #ffffff;
+        --surface-2: #eceee8;
+        --ink: #1d2420;
+        --ink-2: #57625a;
+        --line: #d9ddd3;
+        --accent: #0f6a4f;
+        --accent-strong: #0a4f3a;
+        --accent-soft: #e0efe7;
+        --warn: #9c6a0c;
+        --warn-soft: #f7ecd2;
+        --danger: #b3382e;
+        --danger-soft: #f9e4e1;
+        --ok: #0f6a4f;
+        --ok-soft: #e0efe7;
+        --shadow: 0 1px 2px rgba(29, 36, 32, .06), 0 8px 24px rgba(29, 36, 32, .06);
+        --radius-card: 14px;
+        --radius-in: 9px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #12150f;
+          --surface: #1b1f19;
+          --surface-2: #242922;
+          --ink: #edf0e8;
+          --ink-2: #a9b3a4;
+          --line: #333b31;
+          --accent: #5cc79e;
+          --accent-strong: #8fe0bf;
+          --accent-soft: #173528;
+          --warn: #e2ac4e;
+          --warn-soft: #3a2f14;
+          --danger: #e8836f;
+          --danger-soft: #3d211c;
+          --ok: #5cc79e;
+          --ok-soft: #173528;
+          --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+        }
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.65;
+      }
+      button, select, input { font: inherit; color: inherit; }
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.75rem; }
+      .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; }
+      h1, h2, h3 { font-family: "Noto Serif TC", "Noto Sans TC", serif; line-height: 1.3; }
+      h1 { font-size: clamp(1.7rem, 4.5vw, 2.4rem); font-weight: 900; margin: 0 0 10px; letter-spacing: .01em; }
+      h2 { font-size: 1.35rem; font-weight: 700; margin: 0 0 6px; }
+      h3 { font-size: 1.05rem; font-weight: 700; margin: 0 0 4px; }
+      p { margin: 0 0 10px; }
+      .lede { color: var(--ink-2); max-width: 46em; font-size: 1.02rem; }
+      .asof { color: var(--ink-2); font-size: .85rem; margin-top: 2px; }
+      .layout { display: grid; grid-template-columns: 392px minmax(0, 1fr); gap: 22px; align-items: start; margin-top: 24px; }
+      @media (max-width: 920px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow);
+        padding: 20px;
+      }
+      .panel.sticky { position: sticky; top: 16px; }
+      @media (max-width: 920px) { .panel.sticky { position: static; } }
+      .panel > h2 { font-size: 1.15rem; }
+      .results { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+      fieldset { border: 0; margin: 0 0 18px; padding: 0 0 18px; border-bottom: 1px dashed var(--line); }
+      fieldset:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+      legend { font-family: "Noto Serif TC", serif; font-weight: 700; font-size: 1rem; padding: 0; margin-bottom: 10px; }
+      .field { margin-bottom: 12px; }
+      .field label, .field .flabel { display: flex; justify-content: space-between; align-items: baseline; font-size: .92rem; font-weight: 500; margin-bottom: 4px; gap: 8px; }
+      .field .val { color: var(--accent-strong); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      @media (max-width: 420px) { .row2 { grid-template-columns: 1fr; } }
+      input[type="number"], select {
+        width: 100%;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-in);
+        padding: 8px 10px;
+        font-variant-numeric: tabular-nums;
+      }
+      input[type="number"]:focus, select:focus, input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+      input[type="range"] { width: 100%; accent-color: var(--accent); min-height: 2rem; }
+      .hint { font-size: .8rem; color: var(--ink-2); margin-top: 2px; }
+      .seg { display: flex; flex-wrap: wrap; gap: 6px; }
+      .seg button {
+        flex: 1 1 auto;
+        border: 1px solid var(--line);
+        background: var(--surface-2);
+        border-radius: 999px;
+        padding: 6px 12px;
+        cursor: pointer;
+        font-size: .9rem;
+        font-weight: 500;
+      }
+      .seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+      @media (prefers-color-scheme: dark) { .seg button[aria-pressed="true"] { color: #0d1512; } }
+      .hidden { display: none !important; }
+      /* result cards */
+      .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      @media (max-width: 560px) { .cards { grid-template-columns: minmax(0, 1fr); } }
+      .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); box-shadow: var(--shadow); padding: 18px; }
+      .card .k { font-size: .85rem; color: var(--ink-2); font-weight: 500; }
+      .card .big { font-size: clamp(1.55rem, 4vw, 2rem); font-weight: 900; font-variant-numeric: tabular-nums; line-height: 1.25; margin: 2px 0; }
+      .card .sub { font-size: .88rem; color: var(--ink-2); }
+      .jump { display: inline-block; background: var(--danger-soft); color: var(--danger); font-weight: 700; border-radius: 999px; padding: 1px 10px; font-size: .85rem; margin-left: 6px; white-space: nowrap; }
+      .ok-badge { display: inline-block; background: var(--ok-soft); color: var(--ok); font-weight: 700; border-radius: 999px; padding: 1px 10px; font-size: .85rem; }
+      .warn-badge { display: inline-block; background: var(--warn-soft); color: var(--warn); font-weight: 700; border-radius: 999px; padding: 1px 10px; font-size: .85rem; }
+      .danger-badge { display: inline-block; background: var(--danger-soft); color: var(--danger); font-weight: 700; border-radius: 999px; padding: 1px 10px; font-size: .85rem; }
+      table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+      th, td { padding: 8px 10px; text-align: right; font-size: .95rem; }
+      th:first-child, td:first-child { text-align: left; }
+      thead th { border-bottom: 2px solid var(--line); color: var(--ink-2); font-weight: 700; font-size: .88rem; }
+      tbody tr { border-bottom: 1px solid var(--line); }
+      tbody tr:last-child { border-bottom: 0; }
+      tr.total td { font-weight: 900; border-top: 2px solid var(--line); }
+      .scen-table th, .scen-table td { text-align: right; }
+      .scen-table th:first-child, .scen-table td:first-child { text-align: left; }
+      .scen-table td.best { color: var(--accent-strong); font-weight: 900; }
+      .gauge { margin-top: 10px; }
+      .gauge-track { position: relative; display: flex; height: 14px; border-radius: 999px; overflow: visible; }
+      .gauge-track .z1 { background: #3d9973; border-radius: 999px 0 0 999px; }
+      .gauge-track .z2 { background: #dfae4e; }
+      .gauge-track .z3 { background: #cf5b4c; border-radius: 0 999px 999px 0; }
+      .gauge-marker { position: absolute; top: -5px; width: 3px; height: 24px; background: var(--ink); border-radius: 2px; transform: translateX(-50%); }
+      .gauge-labels { display: flex; font-size: .75rem; color: var(--ink-2); margin-top: 4px; }
+      .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--ink-2); margin-top: 8px; }
+      .legend .sw { display: inline-block; width: 22px; height: 4px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+      details.panel { padding: 0; overflow: hidden; }
+      details.panel > summary { cursor: pointer; padding: 18px 20px; font-family: "Noto Serif TC", serif; font-weight: 700; font-size: 1.1rem; list-style: none; }
+      details.panel > summary::-webkit-details-marker { display: none; }
+      details.panel .inner { padding: 0 20px 18px; overflow-x: auto; }
+      .doc { margin-top: 26px; }
+      .doc .panel { margin-bottom: 18px; }
+      .doc p, .doc li { color: var(--ink); }
+      .doc .muted { color: var(--ink-2); font-size: .92rem; }
+      .formula { background: var(--surface-2); border-radius: var(--radius-in); padding: 12px 14px; font-variant-numeric: tabular-nums; font-size: .95rem; }
+      @media (max-width: 560px) {
+        details.panel .inner th, details.panel .inner td { padding: 7px 5px; font-size: .82rem; }
+        details.panel .inner { overflow-x: visible; }
+      }
+      ul.tight { margin: 6px 0 10px; padding-left: 1.3em; }
+      ul.tight li { margin-bottom: 4px; }
+      .faq dt { font-weight: 700; margin-top: 14px; }
+      .faq dt:first-child { margin-top: 0; }
+      .faq dd { margin: 4px 0 0; color: var(--ink-2); }
+      footer { margin-top: 30px; color: var(--ink-2); font-size: .88rem; }
+      .mobilebar {
+        display: none;
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+        background: var(--surface); border-top: 1px solid var(--line);
+        padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+        box-shadow: 0 -6px 18px rgba(0,0,0,.08);
+      }
+      .mobilebar .mb-row { display: flex; justify-content: space-between; gap: 12px; font-size: .9rem; }
+      .mobilebar b { font-variant-numeric: tabular-nums; }
+      @media (max-width: 920px) {
+        .mobilebar { display: block; }
+        body { padding-bottom: 76px; }
+      }
+      .num { font-variant-numeric: tabular-nums; }
+      .right { text-align: right; }
+    </style>
+  </head>
+  <body>
+  <a href="/" style="position:fixed;top:16px;left:16px;z-index:9999;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#0F766E;color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.15);font-family:inherit;">← 回首頁</a>
+    <div class="wrap">
+      <header>
+        <h1>台灣買房全貌試算</h1>
+        <p class="lede">買房要準備的錢，不只是頭期款；要扛的，也不只是第一個月的房貸。這支試算把買進、持有、賣出一次算完：契稅、仲介費這些藏在房價之外的成本，寬限期結束後月付跳多少，賣房時的房地合一稅，還有你的收入到底扛不扛得住——最後把 20 年、30 年、30 年加寬限期三種情境並排，讓年期與寬限期的代價一眼看清。</p>
+        <p class="asof">利率與稅率查證日期：2026 年 11 月。青安 3.0 前 3 年優惠利率 1.775%（新青安已於 2026 年 7 月 31 日截止，8 月起由青安 3.0 接棒）；一般房貸目前多數人實際約落在 2.5%～2.9%。所有金額為估算，實際以銀行與主管機關公告為準。</p>
+      </header>
+
+      <div class="layout">
+        <!-- ============ INPUTS ============ -->
+        <form class="panel sticky" id="inputs" autocomplete="off">
+          <h2>填入你的條件</h2>
+          <fieldset>
+            <legend>房子與貸款</legend>
+            <div class="field">
+              <label for="inPrice">房屋總價 <span class="val"><span id="vPrice">1,500</span> 萬元</span></label>
+              <input type="range" id="inPriceRange" min="300" max="6000" step="10" value="1500" aria-label="房屋總價滑桿" />
+              <input type="number" id="inPrice" min="100" max="20000" step="10" value="1500" inputmode="numeric" />
+              <div class="hint">單位：萬元。成交總價（含車位就把車位價算進來）。</div>
+            </div>
+            <div class="field">
+              <label for="inLtv">貸款成數 <span class="val"><span id="vLtv">80</span>%</span></label>
+              <input type="range" id="inLtvRange" min="50" max="90" step="1" value="80" aria-label="貸款成數滑桿" />
+              <input type="number" id="inLtv" min="30" max="95" step="1" value="80" inputmode="numeric" />
+              <div class="hint">貸款金額 <b class="num" id="vLoan">1,200 萬元</b>，頭期款 <b class="num" id="vDown">300 萬元</b>。</div>
+            </div>
+            <div class="field">
+              <label for="inAssessed">房屋評定現值（萬元）</label>
+              <input type="number" id="inAssessed" min="1" max="20000" step="5" value="450" inputmode="numeric" />
+              <div class="hint">契稅、印花稅、登記規費的稅基不是市價，而是稅捐機關評定的現值，通常約為市價的 2～4 成。這裡預設用房價的 30% 估算，改了房價會跟著連動；拿到稅單後請改成實際數字。</div>
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="inTerm">貸款年期</label>
+                <select id="inTerm">
+                  <option value="20">20 年</option>
+                  <option value="25">25 年</option>
+                  <option value="30" selected>30 年</option>
+                  <option value="35">35 年</option>
+                  <option value="40">40 年</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="inGrace">寬限期</label>
+                <select id="inGrace">
+                  <option value="0">不使用</option>
+                  <option value="1">1 年</option>
+                  <option value="2" selected>2 年</option>
+                  <option value="3">3 年</option>
+                  <option value="4">4 年</option>
+                  <option value="5">5 年</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <span class="flabel">還款方式</span>
+              <div class="seg" role="group" aria-label="還款方式">
+                <button type="button" id="mAnnuity" aria-pressed="true">本息平均攤還</button>
+                <button type="button" id="mPrincipal" aria-pressed="false">本金平均攤還</button>
+              </div>
+              <div class="hint">本金平均攤還前期月付較高、逐月遞減，總利息較少。</div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>利率情境</legend>
+            <div class="field">
+              <div class="seg" role="group" aria-label="利率情境預設">
+                <button type="button" data-preset="qing" aria-pressed="false">青安 3.0</button>
+                <button type="button" data-preset="g25" aria-pressed="false">一般 2.5%</button>
+                <button type="button" data-preset="g29" aria-pressed="false">一般 2.9%</button>
+                <button type="button" data-preset="custom" aria-pressed="true">自訂</button>
+              </div>
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="inRate1" id="rate1Label">年利率（%）</label>
+                <input type="number" id="inRate1" min="0" max="10" step="0.005" value="2.6" inputmode="decimal" />
+              </div>
+              <div class="field hidden" id="phaseMonthsWrap">
+                <label for="inPhaseMonths">優惠期（月）</label>
+                <input type="number" id="inPhaseMonths" min="1" max="120" step="1" value="36" inputmode="numeric" />
+              </div>
+            </div>
+            <div class="field hidden" id="rate2Wrap">
+              <label for="inRate2">優惠期後利率（%）</label>
+              <input type="number" id="inRate2" min="0" max="10" step="0.005" value="2.5" inputmode="decimal" />
+              <div class="hint">青安 3.0 前 3 年 1.775%；期滿後利率依各銀行公告調整，這裡先用假設值估算，請依你的銀行方案修改。青安貸款的額度、年期與寬限期另有上限，依財政部公告為準。</div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>交易成本參數</legend>
+            <div class="row2">
+              <div class="field">
+                <label for="inAgentBuy">買方仲介費（%）</label>
+                <input type="number" id="inAgentBuy" min="0" max="6" step="0.5" value="2" inputmode="decimal" />
+                <div class="hint">買方行情多為成交價 1%～2%。</div>
+              </div>
+              <div class="field">
+                <label for="inScribe">代書費（元）</label>
+                <input type="number" id="inScribe" min="0" max="200000" step="1000" value="20000" inputmode="numeric" />
+                <div class="hint">含簽約、過戶、設定登記，行情約 1.2 萬～2.5 萬。</div>
+              </div>
+            </div>
+            <div class="field">
+              <label for="inMisc">其他雜費（元）</label>
+              <input type="number" id="inMisc" min="0" max="500000" step="1000" value="10000" inputmode="numeric" />
+              <div class="hint">銀行開辦費、帳管費、火險與地震險第一年保費等，抓個概數即可。</div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>收入與自備款</legend>
+            <div class="row2">
+              <div class="field">
+                <label for="inIncome">每月實拿收入（元）</label>
+                <input type="number" id="inIncome" min="0" max="2000000" step="1000" value="80000" inputmode="numeric" />
+                <div class="hint">雙薪家庭就填兩人合計的實拿。</div>
+              </div>
+              <div class="field">
+                <label for="inSavings">目前自備款（萬元）</label>
+                <input type="number" id="inSavings" min="0" max="20000" step="10" value="350" inputmode="numeric" />
+              </div>
+            </div>
+          </fieldset>
+        </form>
+
+        <!-- ============ RESULTS ============ -->
+        <div class="results">
+          <div class="cards">
+            <div class="card">
+              <div class="k">簽約到交屋，要準備的現金</div>
+              <div class="big" id="rCashNeed">—</div>
+              <div class="sub">頭期款 <span class="num" id="rDown">—</span> ＋ 稅費雜費 <span class="num" id="rClosing">—</span></div>
+              <div class="sub" id="rGap" style="margin-top:6px;">—</div>
+            </div>
+            <div class="card">
+              <div class="k" id="rPayTitle">每月還款</div>
+              <div class="big" id="rPayMain">—</div>
+              <div class="sub" id="rPaySub">—</div>
+            </div>
+            <div class="card">
+              <div class="k">總利息支出（全期）</div>
+              <div class="big" id="rTotalInterest">—</div>
+              <div class="sub">本金加利息總還款 <span class="num" id="rTotalPaid">—</span></div>
+            </div>
+            <div class="card">
+              <div class="k">負擔能力（寬限期後月付 ÷ 實拿收入）</div>
+              <div class="big"><span id="rBurden">—</span> <span id="rBurdenBadge"></span></div>
+              <div class="gauge" aria-hidden="true">
+                <div class="gauge-track">
+                  <div class="z1" style="width:30%"></div>
+                  <div class="z2" style="width:10%"></div>
+                  <div class="z3" style="width:60%"></div>
+                  <div class="gauge-marker" id="gaugeMarker" style="left:0%"></div>
+                </div>
+                <div class="gauge-labels"><span style="width:30%">30% 以內：穩健</span><span style="width:25%">30–40%：偏緊</span><span>40% 以上：過重</span></div>
+              </div>
+              <div class="sub" id="rBurdenSub">—</div>
+            </div>
+          </div>
+
+          <section class="panel" aria-labelledby="costTitle">
+            <h2 id="costTitle">買房總成本明細</h2>
+            <p class="sub" style="color:var(--ink-2);font-size:.9rem;">房價只是其中一筆。以下是簽約到交屋之間，藏在房價之外的每一筆錢。</p>
+            <table>
+              <tbody id="costBody"></tbody>
+            </table>
+          </section>
+
+          <section class="panel" aria-labelledby="scenTitle">
+            <h2 id="scenTitle">三種情境並排比較</h2>
+            <p style="color:var(--ink-2);font-size:.9rem;">同樣的貸款金額與利率，只換年期與寬限期。寬限期不是免費的：前幾年月付變輕，代價是後面月付跳高、全期利息變多。</p>
+            <table class="scen-table">
+              <thead>
+                <tr><th>比較項目</th><th>A・20 年<br />無寬限期</th><th>B・30 年<br />無寬限期</th><th>C・30 年<br />寬限期 3 年</th></tr>
+              </thead>
+              <tbody id="scenBody"></tbody>
+            </table>
+            <h3 style="margin-top:18px;">貸款餘額下降曲線</h3>
+            <div id="chart"></div>
+            <div class="legend">
+              <span><span class="sw" style="background:#0f6a4f"></span>A・20 年無寬限</span>
+              <span><span class="sw" style="background:#c08a1d"></span>B・30 年無寬限</span>
+              <span><span class="sw" style="background:#b3382e"></span>C・30 年＋寬限 3 年</span>
+            </div>
+            <p class="hint">寬限期內餘額完全不下降——這就是寬限期結束後月付跳高的原因：同一筆本金，要在更短的時間內還完。</p>
+          </section>
+
+          <section class="panel" aria-labelledby="sellTitle">
+            <h2 id="sellTitle">賣房試算：房地合一稅</h2>
+            <p style="color:var(--ink-2);font-size:.9rem;">買的時候沒人提醒，賣的時候才發現：持有時間直接決定稅率。把預計持有年數與賣出價填進來，連同剩下的貸款餘額一起算，看最後真正落袋多少。</p>
+            <div class="row2">
+              <div class="field">
+                <label for="inHoldYears">預計持有年數 <span class="val"><span id="vHoldYears">6</span> 年</span></label>
+                <input type="range" id="inHoldYears" min="1" max="15" step="1" value="6" />
+              </div>
+              <div class="field">
+                <label for="inGrowth">假設房價年漲幅（%）</label>
+                <input type="number" id="inGrowth" min="-5" max="15" step="0.5" value="2" inputmode="decimal" />
+                <div class="hint">改了會自動重算右邊的賣出價；賣出價也可以直接改。</div>
+              </div>
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="inSellPrice">預估賣出價（萬元）</label>
+                <input type="number" id="inSellPrice" min="0" max="30000" step="10" value="1687" inputmode="numeric" />
+              </div>
+              <div class="field">
+                <label for="inSelfUse">自住優惠</label>
+                <select id="inSelfUse">
+                  <option value="no" selected>不適用／一般持有</option>
+                  <option value="yes">符合自住（設籍滿 6 年、無出租營業）</option>
+                </select>
+                <div class="hint" id="selfUseHint">自住優惠需持有並設籍滿 6 年才用得到。</div>
+              </div>
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="inFeeMode">賣房必要費用</label>
+                <select id="inFeeMode">
+                  <option value="std" selected>未附證明：按成交價 3%（上限 30 萬）</option>
+                  <option value="custom">自行填寫實際費用</option>
+                </select>
+              </div>
+              <div class="field hidden" id="feeCustomWrap">
+                <label for="inFeeCustom">費用金額（元）</label>
+                <input type="number" id="inFeeCustom" min="0" max="10000000" step="10000" value="300000" inputmode="numeric" />
+              </div>
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="inLandInc">土地漲價總數額（萬元）</label>
+                <input type="number" id="inLandInc" min="0" max="20000" step="10" value="0" inputmode="numeric" />
+                <div class="hint">依土地增值稅計算的漲價總數額可從課稅所得中減除；不知道就先填 0，稅額會估得保守（偏高）。</div>
+              </div>
+              <div class="field">
+                <label for="inAgentSell">賣方仲介費（%）</label>
+                <input type="number" id="inAgentSell" min="0" max="6" step="0.5" value="4" inputmode="decimal" />
+                <div class="hint">賣方行情常見為成交價 4% 上下。</div>
+              </div>
+            </div>
+            <table style="margin-top:6px;">
+              <tbody id="sellBody"></tbody>
+            </table>
+          </section>
+
+          <details class="panel">
+            <summary>逐年攤還明細（目前條件）</summary>
+            <div class="inner">
+              <table>
+                <thead><tr><th>年度</th><th>繳款合計</th><th>其中本金</th><th>其中利息</th><th>年底餘額</th></tr></thead>
+                <tbody id="yearBody"></tbody>
+              </table>
+              <p class="hint">寬限期內的年度只繳利息、本金不動。兩段式利率會在優惠期結束的年度自動換到第二段利率重新計算月付。</p>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- ============ DOCS ============ -->
+      <div class="doc">
+        <section class="panel">
+          <h2>這個試算怎麼算的</h2>
+          <p><b>每月還款（本息平均攤還）</b>用年金公式計算：</p>
+          <p class="formula">月付金 ＝ 貸款本金 ×〔月利率 ×（1＋月利率）<sup>期數</sup>〕÷〔（1＋月利率）<sup>期數</sup> − 1〕</p>
+          <p><b>寬限期</b>是關鍵、也是最容易被業務話術帶過的地方：寬限期內每月只繳利息、本金完全不還；期滿後，銀行會用「剩下的年期」重新套一次上面的公式。原本 30 年要還完的本金被壓縮到 27 年、25 年內還完，月付因此跳高。本試算逐月模擬整個還款過程，寬限期結束、或兩段式利率切換的當月，都會以當時餘額與剩餘期數重新計算月付，所以跳幅是真實攤還邏輯算出來的，不是概估。</p>
+          <p><b>負擔能力</b>看的是「寬限期後的月付」而不是第一個月的數字——很多人用寬限期的輕月付去評估要不要買，期滿才發現收入扛不住。一般理財建議把房貸月付控制在實拿收入的 30% 以內，30%～40% 屬偏緊，超過 40% 就會明顯排擠生活與儲蓄。這是經驗法則，不是銀行核貸標準；銀行還會看你的其他負債與信用狀況。</p>
+        </section>
+
+        <section class="panel">
+          <h2>買房稅費一覽（稅基不是市價）</h2>
+          <ul class="tight">
+            <li><b>契稅</b>：買賣契稅稅率 6%，但稅基是「房屋評定現值」（契價），由地方稅捐機關依房屋標準價格評定，通常只有市價的 2～4 成，所以實際繳的契稅遠比「房價 × 6%」少。自己估不準是正常的，簽約時請代書以評定現值試算為準。</li>
+            <li><b>印花稅</b>：不動產買賣公契按金額千分之一（0.1%）貼印花，稅基同樣以評定現值與土地公告現值為主，本試算以房屋評定現值估算。</li>
+            <li><b>登記規費</b>：所有權移轉登記按申報價值千分之一；向銀行貸款的抵押權設定登記，另按設定金額千分之一繳規費，設定金額通常是貸款金額的 1.2 倍。</li>
+            <li><b>仲介服務費</b>：買賣雙方合計不得超過成交價 6%，實務上買方多為 1%～2%、賣方約 4%，可議價，簽約前先談清楚。</li>
+            <li><b>代書費</b>：簽約、過戶、貸款設定等程序費用，行情約 1.2 萬～2.5 萬元，依案件複雜度而定。</li>
+          </ul>
+          <p class="muted">另外提醒：交屋後每年還有房屋稅、地價稅與火險、地震險，這些是持有成本，不在本試算的「交屋前現金需求」內。</p>
+        </section>
+
+        <section class="panel">
+          <h2>房地合一稅 2.0 稅率（賣房時）</h2>
+          <p>2016 年 1 月 1 日以後取得的房地，出售時按持有期間適用下列稅率，課稅所得 ＝ 成交價 − 取得成本 − 必要費用 − 土地漲價總數額：</p>
+          <table>
+            <thead><tr><th>持有期間</th><th class="right">稅率</th></tr></thead>
+            <tbody>
+              <tr><td>2 年以內</td><td class="right">45%</td></tr>
+              <tr><td>超過 2 年、5 年以內</td><td class="right">35%</td></tr>
+              <tr><td>超過 5 年、10 年以內</td><td class="right">20%</td></tr>
+              <tr><td>超過 10 年</td><td class="right">15%</td></tr>
+              <tr><td>自住優惠：設籍持有滿 6 年、無出租或營業、本人與配偶及未成年子女 6 年內未曾適用</td><td class="right">所得 400 萬元以下免稅，超過部分 10%</td></tr>
+            </tbody>
+          </table>
+          <p class="muted" style="margin-top:8px;">必要費用未提示證明文件時，按成交價額 3% 計算，上限 30 萬元。非自願因素、合建分售等特殊情形另有 20% 稅率規定，不在本試算範圍。</p>
+        </section>
+
+        <section class="panel">
+          <h2>常見問題</h2>
+          <dl class="faq">
+            <dt>寬限期結束，月付到底會跳多少？</dt>
+            <dd>看寬限期多長、年期多短。以本頁預設（貸 1,200 萬、2.6%、30 年、寬限 2 年）為例：寬限期月付約 2.6 萬元（只有利息），期滿後跳到約 5 萬元，接近兩倍。寬限期愈長、剩餘年期愈短，跳幅愈大。用上面的試算換成你的數字，結果卡會直接標出跳幅百分比。</dd>
+            <dt>契稅為什麼不是用成交價算？</dt>
+            <dd>契稅的稅基是政府評定的「房屋評定現值」，不是買賣成交價。評定現值通常只有市價的 2～4 成，所以契稅實際金額比多數人想像的低；但也因為這樣，沒有稅單或代書試算，你很難自己估到精確數字，本頁用房價 30% 當預設估算。</dd>
+            <dt>青安 3.0 跟一般房貸怎麼選？</dt>
+            <dd>青安 3.0 前 3 年利率 1.775%，明顯低於一般房貸目前常見的 2.5%～2.9%；但優惠只有前 3 年，期滿後依銀行公告利率調整，且貸款額度、年期、寬限期都有上限。新青安已在 2026 年 7 月 31 日截止、由青安 3.0 接棒。試算時選「青安 3.0」，再把期滿後利率改成銀行給你的條件，就能看到 30 年總利息差多少。</dd>
+            <dt>持有 5 年賣和持有 6 年賣，稅差多少？</dt>
+            <dd>兩個門檻疊在一起：持有超過 5 年，稅率從 35% 降到 20%；若同時符合自住設籍滿 6 年，400 萬元以內的所得直接免稅、超過部分只課 10%。同一個獲利金額，跨過門檻前後稅額可以差到數十萬元——用上面的賣房試算把持有年數從 5 年拉到 6 年就看得到。</dd>
+            <dt>這個試算結果可以直接拿去報稅或跟銀行談嗎？</dt>
+            <dd>不行。它是規劃用的估算：評定現值、期滿後利率、賣出價都是假設值，房地合一稅也未含特殊扣除與例外情形。正式申報請依稅捐機關核定，貸款條件以銀行核貸結果為準。</dd>
+          </dl>
+        </section>
+      </div>
+
+      <footer>
+        <p><b>免責聲明：</b>本頁所有試算結果僅供購屋規劃參考，不構成財務、投資或稅務建議。利率、稅率、稅基與費用行情會隨政策與市場變動，實際金額以銀行核貸文件、代書試算與稅捐機關核定為準。</p>
+        <p><b>資料來源：</b>財政部稅務入口網（房地合一課徵所得稅、契稅相關規定）、財政部國庫署（青年安心成家購屋優惠貸款，青安 3.0）、內政部地政司（登記規費）。查證日期：2026 年 11 月。一般房貸利率 2.5%～2.9% 為目前市場常見區間，個別銀行與個人條件不同，請以實際詢價為準。</p>
+        <p style="text-align:center;margin-top:14px;">© 2026 HILL 版權所有</p>
+      </footer>
+    </div>
+
+    <div class="mobilebar" aria-hidden="true">
+      <div class="mb-row"><span>寬限期後月付 <b id="mbPay">—</b></span><span>交屋現金 <b id="mbCash">—</b></span></div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+        var $ = function (id) { return document.getElementById(id); };
+        var state = { method: "annuity", twoPhase: false, assessedTouched: false, sellTouched: false };
+
+        function num(id, def) {
+          var v = parseFloat($(id).value);
+          return isFinite(v) ? v : def;
+        }
+        function fmtNT(n) {
+          return "NT$ " + Math.round(n).toLocaleString("zh-Hant-TW");
+        }
+        function fmtWanNT(n) {
+          var w = n / 10000;
+          var s = (Math.round(w * 10) / 10).toLocaleString("zh-Hant-TW", { maximumFractionDigits: 1 });
+          return s + " 萬元";
+        }
+
+        /* ---- core simulation: monthly, recomputes annuity payment when
+           grace ends or the rate phase changes ---- */
+        function simulate(loan, termMonths, graceMonths, rateFn, method) {
+          var bal = loan, totalInt = 0, totalPaid = 0;
+          var gracePay = null, postPay = null, firstPay = null;
+          var pays = [0];
+          var pay = 0, lastRate = null, principalBase = 0;
+          var yearly = [], balances = [loan];
+          var yInt = 0, yPrin = 0, yPaid = 0;
+          for (var m = 1; m <= termMonths; m++) {
+            var annual = rateFn(m);
+            var r = annual / 100 / 12;
+            var interest = bal * r;
+            var principal, payment;
+            if (m <= graceMonths) {
+              principal = 0; payment = interest;
+            } else {
+              if (method === "annuity") {
+                if (lastRate === null || annual !== lastRate || m === graceMonths + 1) {
+                  var remain = termMonths - m + 1;
+                  pay = r > 0 ? bal * r / (1 - Math.pow(1 + r, -remain)) : bal / remain;
+                }
+                payment = pay; principal = payment - interest;
+                if (principal > bal) { principal = bal; payment = bal + interest; }
+              } else {
+                if (principalBase === 0) principalBase = loan / (termMonths - graceMonths);
+                principal = Math.min(principalBase, bal);
+                payment = principal + interest;
+              }
+            }
+            if (principal < 0) principal = 0;
+            bal -= principal; if (bal < 0.5) bal = 0;
+            pays[m] = payment;
+            totalInt += interest; totalPaid += payment;
+            yInt += interest; yPrin += principal; yPaid += payment;
+            if (firstPay === null) firstPay = payment;
+            if (m <= graceMonths) gracePay = payment;
+            if (m === graceMonths + 1) postPay = payment;
+            lastRate = annual;
+            if (m % 12 === 0 || m === termMonths) {
+              yearly.push({ year: Math.ceil(m / 12), paid: yPaid, prin: yPrin, intr: yInt, bal: bal });
+              balances.push(bal);
+              yInt = 0; yPrin = 0; yPaid = 0;
+            }
+            if (bal <= 0) break;
+          }
+          if (postPay === null) postPay = firstPay;
+          return {
+            gracePay: gracePay, postPay: postPay, firstPay: firstPay,
+            paymentAt: function (month) { return pays[Math.min(month, pays.length - 1)] || 0; },
+            totalInt: totalInt, totalPaid: totalPaid, yearly: yearly, balances: balances,
+            balanceAt: function (month) {
+              if (month <= 0) return loan;
+              var idx = Math.min(Math.floor(month / 12), balances.length - 1);
+              // monthly precision: re-run quickly is overkill; use yearly snapshot
+              // but for sell calc we recompute below via balanceAtMonth.
+              return balances[idx];
+            }
+          };
+        }
+        /* precise balance & interest paid at an arbitrary month */
+        function snapshotAt(loan, termMonths, graceMonths, rateFn, method, targetMonth) {
+          var bal = loan, totalInt = 0, pay = 0, lastRate = null, principalBase = 0;
+          var upto = Math.min(targetMonth, termMonths);
+          for (var m = 1; m <= upto; m++) {
+            var annual = rateFn(m), r = annual / 100 / 12;
+            var interest = bal * r, principal, payment;
+            if (m <= graceMonths) { principal = 0; payment = interest; }
+            else if (method === "annuity") {
+              if (lastRate === null || annual !== lastRate || m === graceMonths + 1) {
+                var remain = termMonths - m + 1;
+                pay = r > 0 ? bal * r / (1 - Math.pow(1 + r, -remain)) : bal / remain;
+              }
+              payment = pay; principal = payment - interest;
+              if (principal > bal) { principal = bal; payment = bal + interest; }
+            } else {
+              if (principalBase === 0) principalBase = loan / (termMonths - graceMonths);
+              principal = Math.min(principalBase, bal);
+              payment = principal + interest;
+            }
+            if (principal < 0) principal = 0;
+            bal -= principal; if (bal < 0.5) bal = 0;
+            totalInt += interest;
+            lastRate = annual;
+            if (bal <= 0) break;
+          }
+          return { balance: bal, interestPaid: totalInt };
+        }
+
+        /* ---- inputs ---- */
+        function syncPair(rangeId, boxId, labelId) {
+          var range = $(rangeId), box = $(boxId);
+          range.addEventListener("input", function () { box.value = range.value; update(); });
+          box.addEventListener("input", function () { range.value = box.value; update(); });
+        }
+        syncPair("inPriceRange", "inPrice", "vPrice");
+        syncPair("inLtvRange", "inLtv", "vLtv");
+        $("inHoldYears").addEventListener("input", function () { update(true); });
+
+        $("inAssessed").addEventListener("input", function () { state.assessedTouched = true; update(); });
+        $("inPrice").addEventListener("input", onPrice);
+        $("inPriceRange").addEventListener("input", onPrice);
+        function onPrice() {
+          if (!state.assessedTouched) {
+            $("inAssessed").value = Math.round(num("inPrice", 1500) * 0.3);
+          }
+          if (!state.sellTouched) updateSellFromGrowth();
+          update();
+        }
+        $("inGrowth").addEventListener("input", function () { if (!state.sellTouched) updateSellFromGrowth(); update(); });
+        $("inSellPrice").addEventListener("input", function () { state.sellTouched = true; update(); });
+        $("inHoldYears").addEventListener("input", function () { if (!state.sellTouched) updateSellFromGrowth(); });
+        function updateSellFromGrowth() {
+          var price = num("inPrice", 1500);
+          var g = num("inGrowth", 2) / 100;
+          var yrs = num("inHoldYears", 6);
+          $("inSellPrice").value = Math.round(price * Math.pow(1 + g, yrs));
+        }
+
+        /* method segmented */
+        $("mAnnuity").addEventListener("click", function () { setMethod("annuity"); });
+        $("mPrincipal").addEventListener("click", function () { setMethod("principal"); });
+        function setMethod(m) {
+          state.method = m;
+          $("mAnnuity").setAttribute("aria-pressed", m === "annuity" ? "true" : "false");
+          $("mPrincipal").setAttribute("aria-pressed", m === "principal" ? "true" : "false");
+          update();
+        }
+
+        /* rate presets */
+        var presets = document.querySelectorAll("[data-preset]");
+        presets.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            presets.forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+            btn.setAttribute("aria-pressed", "true");
+            var p = btn.getAttribute("data-preset");
+            if (p === "qing") {
+              state.twoPhase = true;
+              $("inRate1").value = 1.775; $("inPhaseMonths").value = 36; $("inRate2").value = 2.5;
+            } else if (p === "g25") { state.twoPhase = false; $("inRate1").value = 2.5; }
+            else if (p === "g29") { state.twoPhase = false; $("inRate1").value = 2.9; }
+            else { state.twoPhase = false; }
+            applyPhaseVisibility();
+            update();
+          });
+        });
+        ["inRate1", "inRate2", "inPhaseMonths"].forEach(function (id) {
+          $(id).addEventListener("input", function () {
+            presets.forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-preset") === (state.twoPhase ? "qing" : "custom") ? "true" : "false"); });
+            update();
+          });
+        });
+        function applyPhaseVisibility() {
+          $("phaseMonthsWrap").classList.toggle("hidden", !state.twoPhase);
+          $("rate2Wrap").classList.toggle("hidden", !state.twoPhase);
+          $("rate1Label").textContent = state.twoPhase ? "前段優惠利率（%）" : "年利率（%）";
+        }
+
+        ["inTerm", "inGrace", "inAgentBuy", "inScribe", "inMisc", "inIncome", "inSavings",
+         "inSelfUse", "inFeeMode", "inFeeCustom", "inLandInc", "inAgentSell", "inAssessed"].forEach(function (id) {
+          $(id).addEventListener("input", update);
+          $(id).addEventListener("change", update);
+        });
+        $("inFeeMode").addEventListener("change", function () {
+          $("feeCustomWrap").classList.toggle("hidden", $("inFeeMode").value !== "custom");
+        });
+
+        function rateFnFactory() {
+          var r1 = num("inRate1", 2.6), r2 = num("inRate2", 2.5), pm = Math.round(num("inPhaseMonths", 36));
+          if (!state.twoPhase) return function () { return r1; };
+          return function (m) { return m <= pm ? r1 : r2; };
+        }
+
+        function update() {
+          /* labels */
+          var priceWan = Math.max(0, num("inPrice", 1500));
+          var ltv = Math.min(100, Math.max(0, num("inLtv", 80)));
+          $("vPrice").textContent = priceWan.toLocaleString("zh-Hant-TW");
+          $("vLtv").textContent = ltv;
+          var price = priceWan * 10000;
+          var loan = Math.round(price * ltv / 100);
+          var down = price - loan;
+          $("vLoan").textContent = fmtWanNT(loan);
+          $("vDown").textContent = fmtWanNT(down);
+          $("vHoldYears").textContent = num("inHoldYears", 6);
+
+          var assessed = Math.max(0, num("inAssessed", 450)) * 10000;
+          var termY = num("inTerm", 30), graceY = num("inGrace", 0);
+          var termM = Math.round(termY * 12), graceM = Math.round(graceY * 12);
+          if (graceM >= termM) graceM = termM - 12 > 0 ? termM - 12 : 0;
+          var rateFn = rateFnFactory();
+          var sim = simulate(loan, termM, graceM, rateFn, state.method);
+
+          /* closing costs */
+          var deedTax = assessed * 0.06;
+          var stampTax = assessed * 0.001;
+          var regFee = assessed * 0.001;
+          var agentBuy = price * num("inAgentBuy", 2) / 100;
+          var scribe = num("inScribe", 20000);
+          var mtgFee = loan * 1.2 * 0.001;
+          var misc = num("inMisc", 10000);
+          var closing = deedTax + stampTax + regFee + agentBuy + scribe + mtgFee + misc;
+          var cashNeed = down + closing;
+
+          var rows = [
+            ["頭期款（房價 − 貸款）", down],
+            ["契稅（評定現值 × 6%）", deedTax],
+            ["印花稅（評定現值 × 0.1%）", stampTax],
+            ["所有權登記規費（評定現值 × 0.1%）", regFee],
+            ["仲介服務費（房價 × " + num("inAgentBuy", 2) + "%）", agentBuy],
+            ["代書費", scribe],
+            ["抵押設定規費（貸款額 × 1.2 × 0.1%）", mtgFee],
+            ["其他雜費（開辦費、火險等）", misc]
+          ];
+          var html = "";
+          rows.forEach(function (r) { html += "<tr><td>" + r[0] + "</td><td>" + fmtNT(r[1]) + "</td></tr>"; });
+          html += "<tr class='total'><td>交屋前現金需求合計</td><td>" + fmtNT(cashNeed) + "</td></tr>";
+          $("costBody").innerHTML = html;
+
+          /* headline cards */
+          $("rCashNeed").textContent = fmtNT(cashNeed);
+          $("rDown").textContent = fmtNT(down);
+          $("rClosing").textContent = fmtNT(closing);
+          var savings = num("inSavings", 0) * 10000;
+          if (savings > 0) {
+            if (savings >= cashNeed) {
+              $("rGap").innerHTML = "自備款 " + fmtNT(savings) + "，足夠，還剩 <b>" + fmtNT(savings - cashNeed) + "</b> 可留作裝潢與緊急預備金。";
+            } else {
+              $("rGap").innerHTML = "自備款 " + fmtNT(savings) + "，<span class='danger-badge'>還差 " + fmtNT(cashNeed - savings) + "</span> 才補得上頭期款加稅費。";
+            }
+          } else { $("rGap").textContent = "在左側填入自備款，這裡會告訴你還差多少。"; }
+
+          var pm = Math.round(num("inPhaseMonths", 36));
+          var phasePay = state.twoPhase ? sim.paymentAt(pm + 1) : null;
+          if (state.method === "annuity") {
+            if (graceM > 0) {
+              $("rPayTitle").textContent = "每月還款（寬限期 → 期滿後）";
+              $("rPayMain").innerHTML = fmtNT(sim.gracePay) + " <span style='font-size:1rem;color:var(--ink-2)'>→</span> " + fmtNT(sim.postPay);
+              var jumpPct = sim.gracePay > 0 ? Math.round((sim.postPay / sim.gracePay - 1) * 100) : 0;
+              $("rPaySub").innerHTML = "寬限期 " + graceY + " 年只繳利息；期滿後月付跳高 <span class='jump'>+" + jumpPct + "%</span>" +
+                (state.twoPhase && pm > graceM ? "；優惠期在第 " + pm + " 個月結束後，還會依第二段利率調整為 " + fmtNT(phasePay) + "。" : "，之後維持到還清。");
+            } else if (state.twoPhase) {
+              $("rPayTitle").textContent = "每月還款（優惠期 → 期滿後）";
+              $("rPayMain").innerHTML = fmtNT(sim.firstPay) + " <span style='font-size:1rem;color:var(--ink-2)'>→</span> " + fmtNT(phasePay);
+              $("rPaySub").textContent = "前 " + pm + " 個月用優惠利率；期滿後依第二段利率（目前假設 " + num("inRate2", 2.5) + "%）重新計算，之後維持到還清。";
+            } else {
+              $("rPayTitle").textContent = "每月還款（本息平均）";
+              $("rPayMain").textContent = fmtNT(sim.postPay);
+              $("rPaySub").textContent = "全期固定，繳到最後一個月為止。";
+            }
+          } else {
+            $("rPayTitle").textContent = "每月還款（本金平均，逐月遞減）";
+            $("rPayMain").innerHTML = fmtNT(sim.postPay) + " <span style='font-size:1rem;color:var(--ink-2)'>起</span>";
+            var lastY = sim.yearly[sim.yearly.length - 1];
+            $("rPaySub").textContent = graceM > 0
+              ? "寬限期月付 " + fmtNT(sim.gracePay) + "（只繳息）；期滿後從 " + fmtNT(sim.postPay) + " 逐月遞減。"
+              : "第一個月最高，之後每個月遞減；末期年度月均約 " + fmtNT(lastY ? lastY.paid / 12 : 0) + "。";
+          }
+          $("rTotalInterest").textContent = fmtNT(sim.totalInt);
+          $("rTotalPaid").textContent = fmtNT(sim.totalPaid);
+
+          /* affordability */
+          var income = num("inIncome", 0);
+          var burdenBase = sim.postPay;
+          if (state.twoPhase && state.method === "annuity") {
+            burdenBase = Math.max(sim.postPay, sim.paymentAt(pm + 1));
+            if (graceM === 0) burdenBase = Math.max(sim.firstPay, sim.paymentAt(pm + 1));
+          }
+          if (income > 0) {
+            var ratio = burdenBase / income * 100;
+            $("rBurden").textContent = (Math.round(ratio * 10) / 10) + "%";
+            var badge, cls;
+            if (ratio <= 30) { badge = "穩健"; cls = "ok-badge"; }
+            else if (ratio <= 40) { badge = "偏緊"; cls = "warn-badge"; }
+            else { badge = "過重"; cls = "danger-badge"; }
+            $("rBurdenBadge").innerHTML = "<span class='" + cls + "'>" + badge + "</span>";
+            $("gaugeMarker").style.left = Math.min(100, ratio) + "%";
+            var pir = income > 0 ? (price / (income * 12)).toFixed(1) : "—";
+            $("rBurdenSub").textContent = (graceM > 0 ? "以寬限期後月付 " : "以月付高峰 ") + fmtNT(burdenBase) + " 計算。房價所得比約 " + pir + " 倍" +
+              (graceM > 0 ? "；寬限期內負擔率只有 " + (Math.round(sim.gracePay / income * 1000) / 10) + "%，別被前幾年的輕鬆騙了。" : "。");
+          } else {
+            $("rBurden").textContent = "—";
+            $("rBurdenBadge").innerHTML = "";
+            $("rBurdenSub").textContent = "填入每月實拿收入後，這裡會評估負擔率。";
+          }
+
+          $("mbPay").textContent = fmtNT(burdenBase);
+          $("mbCash").textContent = fmtNT(cashNeed);
+
+          /* yearly table */
+          var yh = "";
+          sim.yearly.forEach(function (y) {
+            yh += "<tr><td>第 " + y.year + " 年</td><td>" + fmtNT(y.paid) + "</td><td>" + fmtNT(y.prin) + "</td><td>" + fmtNT(y.intr) + "</td><td>" + fmtNT(y.bal) + "</td></tr>";
+          });
+          $("yearBody").innerHTML = yh;
+
+          /* scenarios: same loan & rates, annuity method */
+          var scen = [
+            { name: "A", term: 20, grace: 0 },
+            { name: "B", term: 30, grace: 0 },
+            { name: "C", term: 30, grace: 3 }
+          ].map(function (s) {
+            var r = simulate(loan, s.term * 12, s.grace * 12, rateFn, "annuity");
+            return { s: s, r: r };
+          });
+          var minInt = Math.min(scen[0].r.totalInt, scen[1].r.totalInt, scen[2].r.totalInt);
+          function cell(v, best) { return "<td" + (best ? " class='best'" : "") + ">" + v + "</td>"; }
+          var sh = "";
+          sh += "<tr><td>每月還款</td>" + scen.map(function (x) {
+            return cell(x.s.grace > 0 ? fmtNT(x.r.gracePay) + " → " + fmtNT(x.r.postPay) : fmtNT(x.r.postPay));
+          }).join("") + "</tr>";
+          sh += "<tr><td>全期總利息</td>" + scen.map(function (x) {
+            return cell(fmtNT(x.r.totalInt), x.r.totalInt === minInt);
+          }).join("") + "</tr>";
+          sh += "<tr><td>利息比最省情境多</td>" + scen.map(function (x) {
+            return cell(x.r.totalInt === minInt ? "—（最省）" : "+" + fmtNT(x.r.totalInt - minInt), x.r.totalInt === minInt);
+          }).join("") + "</tr>";
+          sh += "<tr><td>第 10 年底貸款餘額</td>" + scen.map(function (x) {
+            var snap = snapshotAt(loan, x.s.term * 12, x.s.grace * 12, rateFn, "annuity", 120);
+            return cell(fmtNT(snap.balance));
+          }).join("") + "</tr>";
+          $("scenBody").innerHTML = sh;
+          drawChart(scen, loan);
+
+          /* sell scenario */
+          var holdY = num("inHoldYears", 6);
+          var sellPrice = num("inSellPrice", 0) * 10000;
+          var selfUse = $("inSelfUse").value === "yes";
+          $("selfUseHint").textContent = selfUse && holdY < 6
+            ? "注意：自住優惠要持有並設籍滿 6 年，目前持有年數不足，下方先按一般稅率計算。"
+            : "自住優惠需持有並設籍滿 6 年才用得到。";
+          var fee;
+          if ($("inFeeMode").value === "custom") fee = num("inFeeCustom", 0);
+          else fee = Math.min(sellPrice * 0.03, 300000);
+          var landInc = num("inLandInc", 0) * 10000;
+          var gain = sellPrice - price - fee - landInc;
+          var rate, rateLabel;
+          if (selfUse && holdY >= 6) { rate = 0.10; rateLabel = "自住優惠 10%（400 萬免稅額度）"; }
+          else if (holdY <= 2) { rate = 0.45; rateLabel = "45%（持有 2 年以內）"; }
+          else if (holdY <= 5) { rate = 0.35; rateLabel = "35%（持有超過 2 年、5 年以內）"; }
+          else if (holdY <= 10) { rate = 0.20; rateLabel = "20%（持有超過 5 年、10 年以內）"; }
+          else { rate = 0.15; rateLabel = "15%（持有超過 10 年）"; }
+          var taxable = gain;
+          var tax = 0;
+          if (gain > 0) {
+            if (selfUse && holdY >= 6) tax = Math.max(0, gain - 4000000) * 0.10;
+            else tax = gain * rate;
+          }
+          var snapSell = snapshotAt(loan, termM, graceM, rateFn, state.method, Math.round(holdY * 12));
+          var agentSell = sellPrice * num("inAgentSell", 4) / 100;
+          var net = sellPrice - snapSell.balance - tax - agentSell;
+          var sellRows = [
+            ["預估賣出價", fmtNT(sellPrice)],
+            ["減：取得成本（當初買價）", "−" + fmtNT(price)],
+            ["減：必要費用", "−" + fmtNT(fee)],
+            ["減：土地漲價總數額", "−" + fmtNT(landInc)],
+            ["課稅所得", gain > 0 ? fmtNT(gain) : "無獲利，不課稅"],
+            ["適用稅率", rateLabel],
+            ["房地合一稅", fmtNT(tax)],
+            ["減：賣出時剩餘貸款餘額", "−" + fmtNT(snapSell.balance)],
+            ["減：賣方仲介費", "−" + fmtNT(agentSell)]
+          ];
+          var sellHtml = "";
+          sellRows.forEach(function (r) { sellHtml += "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>"; });
+          sellHtml += "<tr class='total'><td>賣出後真正落袋（未扣持有期間已繳利息）</td><td>" + fmtNT(net) + "</td></tr>";
+          sellHtml += "<tr><td>持有期間已繳利息（持有成本）</td><td>" + fmtNT(snapSell.interestPaid) + "</td></tr>";
+          sellHtml += "<tr><td>持有期間已還本金</td><td>" + fmtNT(loan - snapSell.balance) + "</td></tr>";
+          $("sellBody").innerHTML = sellHtml;
+        }
+
+        function drawChart(scen, loan) {
+          var W = 660, H = 250, padL = 56, padR = 64, padT = 14, padB = 30;
+          var maxY = loan, maxX = 30;
+          var colors = ["#0f6a4f", "#c08a1d", "#b3382e"];
+          function X(y) { return padL + (W - padL - padR) * (y / maxX); }
+          function Y(v) { return padT + (H - padT - padB) * (1 - v / maxY); }
+          var svg = "<svg viewBox='0 0 " + W + " " + H + "' width='100%' role='img' aria-label='三種情境貸款餘額曲線圖' style='display:block'>";
+          [0, 0.25, 0.5, 0.75, 1].forEach(function (f) {
+            var v = maxY * f, y = Y(v);
+            svg += "<line x1='" + padL + "' y1='" + y + "' x2='" + (W - padR) + "' y2='" + y + "' stroke='var(--line)' stroke-width='1'/>";
+            svg += "<text x='" + (padL - 8) + "' y='" + (y + 4) + "' text-anchor='end' font-size='11' fill='var(--ink-2)'>" + Math.round(v / 10000).toLocaleString("zh-Hant-TW") + "萬</text>";
+          });
+          [0, 10, 20, 30].forEach(function (yr) {
+            svg += "<text x='" + X(yr) + "' y='" + (H - 8) + "' text-anchor='middle' font-size='11' fill='var(--ink-2)'>" + yr + " 年</text>";
+          });
+          scen.forEach(function (x, i) {
+            var pts = [];
+            var years = Math.min(x.s.term, 30);
+            for (var y = 0; y <= years; y++) {
+              var snap = y === 0 ? { balance: loan } : snapshotAt(loan, x.s.term * 12, x.s.grace * 12, rateFnFactory(), "annuity", y * 12);
+              pts.push(X(y).toFixed(1) + "," + Y(Math.max(0, snap.balance)).toFixed(1));
+            }
+            svg += "<polyline points='" + pts.join(" ") + "' fill='none' stroke='" + colors[i] + "' stroke-width='2.5' stroke-linejoin='round'/>";
+            var endBal = snapshotAt(loan, x.s.term * 12, x.s.grace * 12, rateFnFactory(), "annuity", years * 12).balance;
+            svg += "<text x='" + (X(years) + 8) + "' y='" + (Y(Math.max(0, endBal)) + 4) + "' font-size='12' font-weight='700' fill='" + colors[i] + "'>" + x.s.name + "</text>";
+          });
+          svg += "</svg>";
+          $("chart").innerHTML = svg;
+        }
+
+        applyPhaseVisibility();
+        updateSellFromGrowth();
+        update();
+      })();
+    </script>
+  </body>
+</html>

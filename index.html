@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<title>導航網站</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800;900&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F3EF;
+    --surface:#FFFFFF;
+    --surface-2:#ECEAE3;
+    --ink:#171A19;
+    --muted:#6B7280;
+    --line:#E2E0D8;
+    --accent:#0F766E;
+    --accent-ink:#0B4F4A;
+    --shadow:0 1px 2px rgba(0,0,0,.05), 0 10px 30px rgba(0,0,0,.05);
+    --radius:20px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#131615;
+      --surface:#1C1F1E;
+      --surface-2:#242827;
+      --ink:#F2F2ED;
+      --muted:#9AA3A0;
+      --line:#2E3331;
+      --accent:#2DD4BF;
+      --accent-ink:#99F6E4;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.28);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Noto Sans TC","Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  button{font:inherit}
+
+  .wrap{max-width:1020px;margin:0 auto;padding:28px 20px 40px}
+  @media(max-width:640px){.wrap{padding:20px 16px 32px}}
+
+  /* Header */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-mark{
+    width:44px;height:44px;border-radius:12px;background:var(--ink);color:var(--bg);
+    display:grid;place-items:center;flex-shrink:0;
+  }
+  .brand-mark svg{width:22px;height:22px}
+  .brand-text{line-height:1.1}
+  .brand-text strong{font-size:15px;font-weight:800;letter-spacing:.02em;display:block}
+  .brand-text span{font-size:12.5px;color:var(--muted);font-weight:500}
+  .count-badge{
+    font-size:13px;font-weight:700;background:var(--surface);border:1px solid var(--line);
+    padding:8px 12px;border-radius:999px;white-space:nowrap;
+  }
+  .count-badge b{color:var(--accent)}
+
+  /* Tool dropdown menu */
+  .top-actions{display:flex;align-items:center;gap:10px}
+  .menu-wrap{position:relative}
+  .menu-btn{
+    height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);
+    font-size:13.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:var(--ink);
+  }
+  .menu-btn svg{width:15px;height:15px;transition:transform .15s}
+  .menu-btn[aria-expanded="true"] svg{transform:rotate(180deg)}
+  .menu-panel{
+    position:absolute;right:0;top:calc(100% + 8px);min-width:260px;max-width:320px;max-height:60vh;overflow:auto;
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+    padding:6px;z-index:30;
+  }
+  .menu-group{padding:8px 10px 4px;font-size:11.5px;font-weight:800;letter-spacing:.04em;color:var(--muted)}
+  .menu-item{
+    display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border:0;border-radius:9px;
+    background:transparent;color:var(--ink);font-size:14px;font-weight:700;cursor:pointer;text-align:left;
+  }
+  .menu-item:hover{background:var(--surface-2)}
+  .menu-item .dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex-shrink:0}
+  .menu-item .go{margin-left:auto;color:var(--muted);font-size:12px;flex-shrink:0}
+  .menu-cat{
+    display:flex;align-items:center;gap:10px;width:100%;padding:10px;border:0;border-radius:9px;
+    background:transparent;color:var(--ink);font-size:14px;font-weight:800;cursor:pointer;text-align:left;
+  }
+  .menu-cat:hover{background:var(--surface-2)}
+  .menu-cat .dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex-shrink:0}
+  .menu-cat .cnt{margin-left:auto;font-size:11px;font-weight:700;color:var(--muted);background:var(--surface-2);border-radius:999px;padding:2px 7px}
+  .menu-cat .chev{color:var(--muted);font-size:14px;font-weight:800}
+  .menu-back{
+    display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border:0;border-radius:9px;
+    background:transparent;color:var(--accent);font-size:13.5px;font-weight:800;cursor:pointer;text-align:left;
+  }
+  .menu-back:hover{background:var(--surface-2)}
+  .menu-panel{animation:panelIn .18s ease both}
+  @keyframes panelIn{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
+  .menu-item,.menu-cat,.menu-back{animation:menuRowIn .2s ease both}
+  @keyframes menuRowIn{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
+  @media(max-width:640px){
+    .count-badge{display:none}
+    .menu-btn{padding:0 11px}
+    .menu-panel{min-width:230px}
+  }
+
+  .hero{margin:4px 0 18px}
+  .hero h1{font-size:30px;line-height:1.05;font-weight:900;letter-spacing:-.02em;margin:0}
+  .hero h1 em{font-style:normal;color:var(--accent)}
+  .hero p{margin:8px 0 0;color:var(--muted);font-size:14.5px;line-height:1.6;max-width:560px}
+  @media(max-width:640px){.hero h1{font-size:26px}}
+
+  /* Search */
+  .search-row{display:flex;gap:10px;margin:22px 0 14px}
+  .search-box{
+    flex:1;display:flex;align-items:center;gap:10px;background:var(--surface);
+    border:1.5px solid var(--line);border-radius:14px;padding:0 14px;height:52px;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .search-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent)}
+  .search-box svg{width:20px;height:20px;color:var(--muted);flex-shrink:0}
+  .search-box input{
+    flex:1;border:0;outline:0;background:transparent;color:var(--ink);
+    font-size:16px;font-family:inherit;min-width:0;height:100%;
+  }
+  .search-box input::placeholder{color:var(--muted)}
+  .search-box kbd{
+    font-family:inherit;font-size:11px;font-weight:700;color:var(--muted);
+    background:var(--surface-2);border:1px solid var(--line);border-bottom-width:2px;
+    padding:3px 7px;border-radius:6px;
+  }
+  @media(max-width:640px){.search-box kbd{display:none}}
+
+  /* Filters */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .chip{
+    height:38px;padding:0 16px;border-radius:999px;border:1px solid var(--line);
+    background:var(--surface);color:var(--muted);font-weight:700;font-size:13.5px;
+    cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  }
+  .chip:hover{color:var(--ink);border-color:var(--muted)}
+  .chip.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .chip .n{font-size:11px;opacity:.75;background:rgba(127,127,127,.15);padding:2px 6px;border-radius:999px}
+
+  /* Grid */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:940px){.grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:680px){.grid{grid-template-columns:1fr}}
+
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow);
+    position:relative;overflow:hidden;
+  }
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c)}
+  .card-main{display:flex;gap:12px;align-items:flex-start}
+  .icon{
+    width:44px;height:44px;border-radius:12px;flex-shrink:0;display:grid;place-items:center;
+    background:color-mix(in srgb, var(--c) 13%, var(--surface));
+    color:var(--c);border:1px solid color-mix(in srgb, var(--c) 18%, transparent);
+  }
+  .icon svg{width:22px;height:22px}
+  .card-info{flex:1;min-width:0}
+  .card-info h2{margin:0;font-size:15.5px;font-weight:800;line-height:1.25;letter-spacing:-.01em}
+  .card-info p{
+    margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.5;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+  .tag{font-size:11px;font-weight:700;letter-spacing:.02em;padding:3px 7px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+
+  .card-foot{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    border-top:1px solid var(--line);padding-top:10px;
+  }
+  .domain{
+    font-family:"Inter",ui-monospace,monospace;font-size:12.5px;font-weight:600;color:var(--muted);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;
+  }
+  .actions{display:flex;gap:8px;flex-shrink:0}
+  .btn-copy{
+    height:34px;padding:0 11px;border-radius:10px;border:1px solid var(--line);background:var(--surface);
+    font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:var(--ink);
+  }
+  .btn-copy svg{width:15px;height:15px}
+  .btn-open{
+    height:34px;padding:0 13px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);
+    font-size:13px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+  }
+  .btn-open svg{width:15px;height:15px}
+  .btn-copy:active,.btn-open:active{transform:scale(.97)}
+  @media(max-width:520px){
+    .card-foot{flex-wrap:wrap}
+    .domain{flex:1 1 100%;white-space:normal;word-break:break-all}
+    .actions{margin-left:auto}
+  }
+
+  .empty{
+    display:none;text-align:center;padding:44px 20px;background:var(--surface);
+    border:1px dashed var(--line);border-radius:var(--radius);
+  }
+  .empty.show{display:block}
+  .empty strong{display:block;font-size:16px;margin-bottom:6px}
+  .empty p{margin:0;color:var(--muted);font-size:14px}
+  .empty button{margin-top:14px;height:40px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-weight:700;cursor:pointer}
+
+  .foot-note{
+    margin-top:22px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    color:var(--muted);font-size:12.5px;line-height:1.6;
+  }
+  .foot-note kbd{font-family:inherit;background:var(--surface);border:1px solid var(--line);border-bottom-width:2px;padding:1px 6px;border-radius:5px;font-size:11px}
+  .foot-copy{text-align:center;font-size:12.5px;color:var(--muted);margin-top:10px}
+
+  .toast{
+    position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(16px);
+    background:var(--ink);color:var(--bg);font-size:13.5px;font-weight:700;
+    padding:11px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;z-index:20;
+    box-shadow:0 10px 30px rgba(0,0,0,.22);white-space:nowrap;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <div class="brand-text">
+        <strong>我的導航</strong>
+        <span>HILL'S LAUNCHPAD</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="count-badge">共 <b id="totalCount">4</b> 個網站</div>
+      <div class="menu-wrap">
+        <button type="button" class="menu-btn" id="menuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="toolMenu">
+          工具選單
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="menu-panel" id="toolMenu" role="menu" hidden></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>所有網站，<em>一頁搞定。</em></h1>
+    <p>你做過的工具與服務都收在這裡。搜尋、點一下就開，不用再翻聊天紀錄找網址。之後新增的功能網站也會直接加進這一頁。</p>
+  </section>
+
+  <div class="search-row">
+    <label class="search-box" for="searchInput">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="searchInput" type="search" placeholder="搜尋網站名稱、功能或網址…" autocomplete="off" />
+      <kbd>/</kbd>
+    </label>
+  </div>
+
+  <nav class="filters" id="filters" aria-label="分類篩選"></nav>
+
+  <main>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="emptyState">
+      <strong>找不到符合的網站</strong>
+      <p>換個關鍵字試試，或清除篩選看全部。</p>
+      <button id="clearBtn" type="button">顯示全部網站</button>
+    </div>
+  </main>
+
+  <div class="foot-note">
+    <span>提示：按數字鍵 1–9 可直接開啟對應網站，按 <kbd>/</kbd> 快速搜尋，<kbd>Enter</kbd> 開啟第一個結果。</span>
+    <span id="resultHint"></span>
+  </div>
+  <div class="foot-copy">© 2026 HILL 版權所有</div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">已複製網址</div>
+
+<script>
+  // === 網站清單：之後新增功能網站，只要在這裡加一筆就會自動出現在頁面上 ===
+  var SITES = [
+    {
+      id: "short-url",
+      name: "短短 URL 短網址",
+      desc: "長網址一秒變短。把冗長連結縮成 dududu 短網址，可自訂代碼，分享更乾淨俐落。",
+      url: "https://dududu.kdns.fr/",
+      display: "dududu.kdns.fr",
+      category: "tool",
+      categoryLabel: "實用工具",
+      tags: ["短連結", "分享"],
+      color: "#0E7490",
+      icon: "link"
+    },
+    {
+      id: "kvideo",
+      name: "KVideo 影音聚合",
+      desc: "影音聚合網站，隨開即看。追劇、看影片不用再到處找入口。",
+      url: "https://kvideo.dududu.kdns.fr/",
+      display: "kvideo.dududu.kdns.fr",
+      category: "media",
+      categoryLabel: "影音娛樂",
+      tags: ["影片", "線上看"],
+      color: "#C2410C",
+      icon: "play"
+    },
+    {
+      id: "music",
+      name: "音樂播放器",
+      desc: "AlgerMusicPlayer 網頁版，搜歌、歌詞、播放一次到位，播不了時自動改走 YouTube 備用音源。",
+      url: "https://dududu.kdns.fr/music",
+      display: "dududu.kdns.fr/music",
+      category: "media",
+      categoryLabel: "影音娛樂",
+      tags: ["音樂", "播放器"],
+      color: "#15803D",
+      icon: "music"
+    },
+    {
+      id: "blink-mail",
+      name: "瞬郵 Blink Mail",
+      desc: "臨時電子信箱，註冊測試、收驗證信時用，不用暴露自己的真實信箱。",
+      url: "https://blink-mail.kdns.fr/",
+      display: "blink-mail.kdns.fr",
+      category: "tool",
+      categoryLabel: "實用工具",
+      tags: ["臨時信箱", "驗證信"],
+      color: "#B45309",
+      icon: "mail"
+    },
+    {
+      id: "pocket-list",
+      name: "口袋名單",
+      desc: "收藏的愛店清單都在這裡：不知道吃什麼時先翻口袋名單，照著推薦去吃就對了。",
+      url: "/kou-dai-ming-dan/",
+      display: "dudu.xwx.me/kou-dai-ming-dan",
+      category: "tool",
+      categoryLabel: "實用工具",
+      tags: ["美食", "愛店推薦"],
+      color: "#BE185D",
+      icon: "utensils"
+    },
+    {
+      id: "mai-fang",
+      name: "台灣買房全貌試算",
+      desc: "一次算完買房交易稅費、寬限期前後月付跳幅、負擔能力與賣房的房地合一稅，附三種貸款情境並排比較。",
+      url: "/mai-fang-shi-suan/",
+      display: "dudu.xwx.me/mai-fang-shi-suan",
+      category: "tool",
+      categoryLabel: "實用工具",
+      tags: ["買房", "試算"],
+      color: "#1D4ED8",
+      icon: "home"
+    },
+    {
+      id: "qr-check",
+      name: "QR 碼連結檢查",
+      desc: "把有 QR 碼的照片丟進來，先解出它真正連到的網址與網域，再決定要不要開啟。照片只在你的裝置上解碼，不上傳。",
+      url: "/qr-lian-jie-jian-cha/",
+      display: "dudu.xwx.me/qr-lian-jie-jian-cha",
+      category: "tool",
+      categoryLabel: "實用工具",
+      tags: ["QR 碼", "安全檢查"],
+      color: "#7C3AED",
+      icon: "qr"
+    },
+    {
+      id: "what-to-eat",
+      name: "今天吃什麼",
+      desc: "從口袋名單 6 間店隨機抽一間，解決不知道吃什麼，抽中顯示地址、評分與營業時間。",
+      url: "/jin-tian-chi-shen-me/",
+      display: "dudu.xwx.me/jin-tian-chi-shen-me",
+      category: "tool",
+      categoryLabel: "實用工具",
+      tags: ["美食", "隨機挑"],
+      color: "#EA580C",
+      icon: "dices"
+    },
+    {
+      id: "pomodoro",
+      name: "番茄鐘",
+      desc: "專注 25 分鐘、短休息 5 分鐘，4 輪後長休息 15 分鐘，時間到有提示音，時間可自訂。",
+      url: "/fan-qie-zhong/",
+      display: "dudu.xwx.me/fan-qie-zhong",
+      category: "tool",
+      categoryLabel: "實用工具",
+      tags: ["專注", "計時"],
+      color: "#DC2626",
+      icon: "timer"
+    },
+    {
+      id: "giveaway",
+      name: "直播抽獎小幫手",
+      desc: "貼上參加者名單隨機抽獎，可一次抽 1、3 或 5 位，抽過的不會重複中獎。",
+      url: "/zhi-bo-chou-jiang-xiao-bang-shou/",
+      display: "dudu.xwx.me/zhi-bo-chou-jiang-xiao-bang-shou",
+      category: "tool",
+      categoryLabel: "實用工具",
+      tags: ["抽獎", "直播"],
+      color: "#CA8A04",
+      icon: "gift"
+    },
+    {
+      id: "ximalaya",
+      name: "喜馬拉雅",
+      desc: "有聲書、播客、相聲與音樂，官方網頁版免安裝，瀏覽器打開就能聽。",
+      url: "https://www.ximalaya.com",
+      display: "www.ximalaya.com",
+      category: "media",
+      categoryLabel: "影音娛樂",
+      tags: ["有聲書", "播客"],
+      color: "#E11D48",
+      icon: "music"
+    }
+  ];
+
+  var ICONS = {
+    link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+    play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/></svg>',
+    music: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M22 7l-10 6L2 7"/></svg>',
+    utensils: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V2"/><path d="M6 2v20"/><path d="M20 15V2a5 5 0 0 0-4 5v6a2 2 0 0 0 2 2h2Zm0 0v7"/></svg>',
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg>',
+    qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3v.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>',
+    dices: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="12" height="12" x="2" y="10" rx="2"/><rect width="12" height="12" x="10" y="2" rx="2"/><path d="M7.5 15.5h.01"/><path d="M11 12.5h.01"/><path d="M15.5 6.5h.01"/><path d="M19 9.5h.01"/></svg>',
+    timer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>',
+    gift: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>'
+  };
+
+  var CATEGORIES = [
+    { key: "all", label: "全部" },
+    { key: "tool", label: "實用工具" },
+    { key: "media", label: "影音娛樂" }
+  ];
+
+  var state = { q: "", cat: "all" };
+  var grid = document.getElementById("grid");
+  var emptyState = document.getElementById("emptyState");
+  var filtersEl = document.getElementById("filters");
+  var searchInput = document.getElementById("searchInput");
+  var resultHint = document.getElementById("resultHint");
+  var toast = document.getElementById("toast");
+  var toastTimer = null;
+
+  document.getElementById("totalCount").textContent = SITES.length;
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove("show"); }, 1800);
+  }
+
+  function copyUrl(url, btn){
+    function done(){ showToast("已複製網址：" + url.replace("https://","")); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done).catch(function(){ fallback(); });
+    } else { fallback(); }
+    function fallback(){
+      var ta = document.createElement("textarea");
+      ta.value = url; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch(e){ showToast(url); }
+      document.body.removeChild(ta);
+    }
+  }
+
+  function renderFilters(){
+    filtersEl.innerHTML = "";
+    CATEGORIES.forEach(function(c){
+      var n = c.key === "all" ? SITES.length : SITES.filter(function(s){ return s.category === c.key; }).length;
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip" + (state.cat === c.key ? " active" : "");
+      b.innerHTML = c.label + ' <span class="n">' + n + "</span>";
+      b.setAttribute("aria-pressed", state.cat === c.key ? "true" : "false");
+      b.addEventListener("click", function(){ state.cat = c.key; render(); });
+      filtersEl.appendChild(b);
+    });
+  }
+
+  function filtered(){
+    var q = state.q.trim().toLowerCase();
+    return SITES.filter(function(s){
+      if (state.cat !== "all" && s.category !== state.cat) return false;
+      if (!q) return true;
+      var hay = (s.name + " " + s.desc + " " + s.display + " " + s.categoryLabel + " " + s.tags.join(" ")).toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
+  }
+
+  function render(){
+    renderFilters();
+    var list = filtered();
+    grid.innerHTML = "";
+    list.forEach(function(s, idx){
+      var card = document.createElement("article");
+      card.className = "card";
+      card.style.setProperty("--c", s.color);
+
+      var tagsHtml = s.tags.map(function(t){ return '<span class="tag">' + t + "</span>"; }).join("");
+      tagsHtml = '<span class="tag">' + s.categoryLabel + "</span>" + tagsHtml;
+
+      card.innerHTML =
+        '<div class="card-main">' +
+          '<div class="icon" aria-hidden="true">' + (ICONS[s.icon] || ICONS.link) + "</div>" +
+          '<div class="card-info"><h2>' + (idx + 1) + ". " + s.name + "</h2><p>" + s.desc + '</p><div class="tags">' + tagsHtml + "</div></div>" +
+        "</div>" +
+        '<div class="card-foot">' +
+          '<span class="domain" title="' + s.url + '">' + s.display + "</span>" +
+          '<div class="actions">' +
+            '<button type="button" class="btn-copy" aria-label="複製 ' + s.name + ' 網址"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>複製</button>' +
+            '<a class="btn-open" href="' + s.url + '" target="_blank" rel="noopener noreferrer">開啟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></a>' +
+          "</div>" +
+        "</div>";
+
+      card.querySelector(".btn-copy").addEventListener("click", function(){ copyUrl(s.url); });
+      grid.appendChild(card);
+    });
+
+    emptyState.classList.toggle("show", list.length === 0);
+    grid.style.display = list.length === 0 ? "none" : "";
+    resultHint.textContent = list.length === SITES.length ? "" : ("目前顯示 " + list.length + " / " + SITES.length + " 個");
+  }
+
+  searchInput.addEventListener("input", function(){ state.q = searchInput.value; render(); });
+  searchInput.addEventListener("keydown", function(e){
+    if (e.key === "Enter") {
+      var list = filtered();
+      if (list.length) window.open(list[0].url, "_blank", "noopener");
+    }
+  });
+  document.getElementById("clearBtn").addEventListener("click", function(){
+    state.q = ""; state.cat = "all"; searchInput.value = ""; render(); searchInput.focus();
+  });
+
+  document.addEventListener("keydown", function(e){
+    var tag = (document.activeElement && document.activeElement.tagName) || "";
+    var typing = tag === "INPUT" || tag === "TEXTAREA";
+    if (e.key === "/" && !typing) { e.preventDefault(); searchInput.focus(); return; }
+    if (!typing && ["1","2","3","4","5","6","7","8","9"].indexOf(e.key) !== -1) {
+      var i = parseInt(e.key, 10) - 1;
+      if (SITES[i]) window.open(SITES[i].url, "_blank", "noopener");
+    }
+  });
+
+  /* Tool dropdown menu: two levels — level 1 lists categories, level 2 lists that category's sites.
+     Desktop: hover opens the menu and hover switches levels (no click needed).
+     Touch: tap still works via the click handlers. */
+  var menuBtn = document.getElementById("menuBtn");
+  var toolMenu = document.getElementById("toolMenu");
+  var menuWrap = document.querySelector(".menu-wrap");
+  var menuLevel = "cats"; // "cats" or a category key
+  var openTimer = null;
+  var closeTimer = null;
+  // True once the mouse has actually moved after the last menu rebuild.
+  // Rebuilding swaps the rows under a stationary cursor, which can fire a
+  // stray mouseenter on the new row — ignore those so levels don't flicker.
+  var movedSinceBuild = false;
+  document.addEventListener("mousemove", function(){ movedSinceBuild = true; });
+
+  function menuItemEl(s, i){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "menu-item";
+    b.setAttribute("role", "menuitem");
+    b.style.setProperty("--c", s.color);
+    b.style.animationDelay = ((i || 0) * 30) + "ms";
+    b.innerHTML = '<span class="dot"></span>' + s.name + '<span class="go">開啟 ↗</span>';
+    b.addEventListener("click", function(e){ e.stopPropagation(); closeMenu(); window.open(s.url, "_blank", "noopener"); });
+    return b;
+  }
+
+  function buildMenu(){
+    toolMenu.innerHTML = "";
+    movedSinceBuild = false;
+    if (menuLevel === "cats") {
+      CATEGORIES.filter(function(c){ return c.key !== "all"; }).forEach(function(c, i){
+        var items = SITES.filter(function(s){ return s.category === c.key; });
+        if (!items.length) return;
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "menu-cat";
+        b.setAttribute("role", "menuitem");
+        b.style.setProperty("--c", items[0].color);
+        b.style.animationDelay = (i * 30) + "ms";
+        b.innerHTML = '<span class="dot"></span>' + c.label + '<span class="cnt">' + items.length + ' 個</span><span class="chev">›</span>';
+        b.addEventListener("click", function(e){ e.stopPropagation(); menuLevel = c.key; buildMenu(); });
+        b.addEventListener("mouseenter", function(){ if (movedSinceBuild) { menuLevel = c.key; buildMenu(); } });
+        toolMenu.appendChild(b);
+      });
+    } else {
+      var cat = null;
+      CATEGORIES.forEach(function(c){ if (c.key === menuLevel) cat = c; });
+      var back = document.createElement("button");
+      back.type = "button";
+      back.className = "menu-back";
+      back.innerHTML = "‹ 全部類別";
+      back.addEventListener("click", function(e){ e.stopPropagation(); menuLevel = "cats"; buildMenu(); });
+      back.addEventListener("mouseenter", function(){ if (movedSinceBuild) { menuLevel = "cats"; buildMenu(); } });
+      toolMenu.appendChild(back);
+      var g = document.createElement("div");
+      g.className = "menu-group";
+      g.textContent = cat ? cat.label : "";
+      toolMenu.appendChild(g);
+      SITES.filter(function(s){ return s.category === menuLevel; }).forEach(function(s, i){
+        toolMenu.appendChild(menuItemEl(s, i));
+      });
+    }
+  }
+  function openMenu(){ clearTimeout(closeTimer); menuLevel = "cats"; buildMenu(); toolMenu.hidden = false; menuBtn.setAttribute("aria-expanded", "true"); }
+  function closeMenu(){ clearTimeout(openTimer); toolMenu.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); }
+  menuBtn.addEventListener("click", function(e){ e.stopPropagation(); if (toolMenu.hidden) { openMenu(); } else { closeMenu(); } });
+  // Hover: open shortly after the mouse rests on the button, close shortly after it leaves the whole menu area.
+  menuWrap.addEventListener("mouseenter", function(){ clearTimeout(closeTimer); openTimer = setTimeout(openMenu, 120); });
+  menuWrap.addEventListener("mouseleave", function(){ clearTimeout(openTimer); closeTimer = setTimeout(closeMenu, 180); });
+  document.addEventListener("click", function(e){ if (!toolMenu.hidden && e.target.isConnected && !toolMenu.contains(e.target)) closeMenu(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeMenu(); });
+
+  render();
+</script>
+</body>
+</html>

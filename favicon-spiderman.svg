@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="mask" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F04444"/>
+      <stop offset=".55" stop-color="#E02424"/>
+      <stop offset="1" stop-color="#C01414"/>
+    </linearGradient>
+    <clipPath id="headClip">
+      <path d="M256,50 C370,50 450,146 450,264 C450,388 364,474 256,474 C148,474 62,388 62,264 C62,146 142,50 256,50 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- head -->
+  <path d="M256,50 C370,50 450,146 450,264 C450,388 364,474 256,474 C148,474 62,388 62,264 C62,146 142,50 256,50 Z"
+        fill="url(#mask)" stroke="#7F1D1D" stroke-width="12"/>
+
+  <!-- spider web, clipped to the head -->
+  <g clip-path="url(#headClip)" stroke="#8B1A1A" stroke-width="5" opacity="0.42" fill="none" stroke-linecap="round">
+    <!-- radials from the nose bridge -->
+    <line x1="256" y1="318" x2="256" y2="50"/>
+    <line x1="256" y1="318" x2="168" y2="66"/>
+    <line x1="256" y1="318" x2="344" y2="66"/>
+    <line x1="256" y1="318" x2="96" y2="138"/>
+    <line x1="256" y1="318" x2="416" y2="138"/>
+    <line x1="256" y1="318" x2="62" y2="252"/>
+    <line x1="256" y1="318" x2="450" y2="252"/>
+    <line x1="256" y1="318" x2="104" y2="384"/>
+    <line x1="256" y1="318" x2="408" y2="384"/>
+    <line x1="256" y1="318" x2="180" y2="466"/>
+    <line x1="256" y1="318" x2="332" y2="466"/>
+    <!-- concentric web arcs -->
+    <path d="M150,152 Q256,112 362,152"/>
+    <path d="M108,224 Q256,172 404,224"/>
+    <path d="M96,322 Q256,272 416,322"/>
+    <path d="M128,412 Q256,372 384,412"/>
+  </g>
+
+  <!-- classic tall white lenses, no pupils, clear gap between them -->
+  <ellipse cx="180" cy="250" rx="58" ry="74" fill="#FFFFFF" stroke="#1F2937" stroke-width="9" transform="rotate(-18 180 250)"/>
+  <ellipse cx="332" cy="250" rx="58" ry="74" fill="#FFFFFF" stroke="#1F2937" stroke-width="9" transform="rotate(18 332 250)"/>
+</svg>

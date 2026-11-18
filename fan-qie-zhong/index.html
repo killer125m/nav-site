@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<title>番茄鐘</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F3EF;
+    --surface:#FFFFFF;
+    --surface-2:#ECEAE3;
+    --ink:#1A2421;
+    --ink-2:#5A6660;
+    --ink-3:#8A948E;
+    --teal:#0F766E;
+    --teal-dark:#0B4F4A;
+    --teal-light:#E6F2F0;
+    --teal-mid:#CCEBE6;
+    --amber:#D97706;
+    --amber-bg:#FEF3C7;
+    --line:#E2E0D8;
+    --radius:20px;
+    --shadow:0 10px 30px rgba(11,79,74,.08), 0 2px 8px rgba(11,79,74,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Noto Sans TC", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+  }
+  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.25rem}
+  button{font-family:inherit;cursor:pointer}
+  input{font-family:inherit}
+
+  .wrap{
+    width:100%;
+    max-width:720px;
+    margin:0 auto;
+    padding:28px 20px 0;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* header line */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    margin-bottom:22px;
+  }
+  .topbar h1{
+    font-size:28px;line-height:1.1;margin:0;font-weight:900;letter-spacing:-.02em;
+  }
+  .topbar h1 span{color:var(--teal)}
+  .topbar p{margin:6px 0 0;color:var(--ink-2);font-size:14px;line-height:1.5}
+  .badge{
+    flex-shrink:0;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:8px 14px;
+    font-size:13px;font-weight:700;color:var(--teal-dark);
+    display:flex;align-items:center;gap:7px;
+    white-space:nowrap;
+  }
+  .badge i{width:8px;height:8px;border-radius:50%;background:var(--teal);display:block}
+  .badge.is-break i{background:var(--amber)}
+
+  /* alert banner */
+  .alert{
+    display:none;
+    background:var(--teal-dark);color:#fff;
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:16px;
+    align-items:flex-start;gap:12px;
+  }
+  .alert.show{display:flex}
+  .alert strong{display:block;font-size:15px}
+  .alert span{font-size:13px;opacity:.9;line-height:1.5}
+  .alert button{
+    margin-left:auto;flex-shrink:0;
+    background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.25);
+    border-radius:999px;padding:0 14px;font-weight:700;font-size:13px;min-height:36px;
+  }
+
+  /* mode tabs */
+  .modes{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;
+    background:var(--surface);border:1px solid var(--line);
+    padding:6px;border-radius:999px;
+    margin-bottom:22px;
+  }
+  .mode-btn{
+    border:0;background:transparent;border-radius:999px;
+    padding:10px 6px;min-height:44px;
+    font-size:14px;font-weight:700;color:var(--ink-2);
+    display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.2;
+  }
+  .mode-btn small{font-size:11px;font-weight:500;color:var(--ink-3)}
+  .mode-btn.active{background:var(--teal);color:#fff}
+  .mode-btn.active small{color:rgba(255,255,255,.85)}
+  .mode-btn.active.break{background:#B45309}
+  .mode-btn.active.longbreak{background:var(--teal-dark)}
+
+  /* timer card */
+  .timer-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:28px;
+    box-shadow:var(--shadow);
+    padding:28px 20px 24px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .timer-card::before{
+    content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--teal);
+  }
+  .timer-card.is-break::before{background:var(--amber)}
+  .timer-card.is-longbreak::before{background:var(--teal-dark)}
+  .timer-card.flash{animation:flashBg .7s ease 0s 4}
+  @keyframes flashBg{
+    0%,100%{background:var(--surface)}
+    50%{background:var(--teal-light)}
+  }
+
+  .ring-wrap{
+    width:min(78vw,340px);aspect-ratio:1;margin:2px auto 6px;position:relative;
+  }
+  .ring-wrap svg{width:100%;height:100%;display:block;transform:rotate(-90deg)}
+  .ring-bg{fill:none;stroke:var(--surface-2);stroke-width:10}
+  .ring-fg{fill:none;stroke:var(--teal);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .35s linear, stroke .3s}
+  .ring-wrap.is-break .ring-fg{stroke:#D97706}
+  .ring-wrap.is-longbreak .ring-fg{stroke:var(--teal-dark)}
+  .ring-center{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;
+  }
+  .phase-label{
+    font-size:13px;font-weight:800;letter-spacing:.14em;color:var(--teal);
+    background:var(--teal-light);border-radius:999px;padding:6px 12px;margin-bottom:10px;
+  }
+  .ring-wrap.is-break + * {}
+  .timer-card.is-break .phase-label{background:var(--amber-bg);color:#92400E}
+  .timer-card.is-longbreak .phase-label{background:var(--teal-mid);color:var(--teal-dark)}
+  .time{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:clamp(64px,18vw,92px);
+    line-height:.95;font-weight:700;letter-spacing:-.04em;font-variant-numeric:tabular-nums;
+  }
+  .time-sub{margin-top:10px;font-size:14px;color:var(--ink-2);line-height:1.5;min-height:21px}
+  .time-sub strong{color:var(--ink)}
+
+  /* rounds */
+  .rounds{
+    display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:18px;
+  }
+  .dots{display:flex;gap:8px;align-items:center;justify-content:center}
+  .dot{
+    width:36px;height:36px;border-radius:50%;
+    border:2px solid var(--line);background:#fff;
+    display:grid;place-items:center;font-size:15px;
+    transition:.2s;
+  }
+  .dot.done{background:var(--teal);border-color:var(--teal);color:#fff}
+  .dot.current{border-color:var(--teal);color:var(--teal-dark);font-weight:800;box-shadow:0 0 0 4px var(--teal-light)}
+  .dot .tom{font-size:17px;line-height:1}
+  .round-text{font-size:14px;color:var(--ink-2);text-align:center;line-height:1.6}
+  .round-text b{color:var(--ink);font-size:15px}
+  .round-text .sep{margin:0 6px;color:var(--ink-3)}
+
+  /* controls */
+  .controls{
+    display:grid;grid-template-columns:1fr auto auto;gap:10px;margin-top:22px;
+  }
+  .btn{
+    border-radius:999px;border:1px solid transparent;
+    min-height:52px;padding:0 20px;font-size:16px;font-weight:800;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .btn-primary{background:var(--teal);color:#fff;box-shadow:0 8px 20px rgba(15,118,110,.28)}
+  .btn-primary:hover{background:#0D655E}
+  .btn-primary.is-pause{background:var(--teal-dark)}
+  .btn-ghost{background:#fff;border-color:var(--line);color:var(--ink);font-size:15px;padding:0 18px}
+  .btn-ghost:active{transform:scale(.98)}
+  .btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+
+  .hint{margin:14px 2px 0;font-size:12.5px;color:var(--ink-3);text-align:center;line-height:1.6}
+
+  /* settings + info grid */
+  .grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;
+  }
+  @media (max-width:620px){ .grid{grid-template-columns:1fr} .controls{grid-template-columns:1fr 1fr} .btn-primary{grid-column:1 / -1} }
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;
+  }
+  .card h2{margin:0 0 4px;font-size:16px;font-weight:800}
+  .card p.desc{margin:0 0 14px;font-size:13px;color:var(--ink-2);line-height:1.6}
+  .field{margin-bottom:12px}
+  .field label{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:700;margin-bottom:6px}
+  .field label span{font-size:12px;color:var(--ink-3);font-weight:500}
+  .field-row{display:flex;gap:8px;align-items:center}
+  .field input{
+    width:100%;border:1.5px solid var(--line);background:#FBFAF7;border-radius:12px;
+    padding:10px 12px;font-size:17px;font-weight:700;text-align:center;min-height:48px;
+  }
+  .field input:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+  .unit{font-size:13px;color:var(--ink-2);white-space:nowrap;font-weight:600}
+  .apply-btn{
+    width:100%;margin-top:4px;background:var(--ink);color:#fff;border:0;border-radius:999px;min-height:46px;font-weight:800;font-size:15px;
+  }
+  .apply-msg{font-size:13px;text-align:center;min-height:20px;margin-top:8px;color:var(--teal-dark);font-weight:700}
+  .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+  .steps li{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.6;color:var(--ink-2)}
+  .steps li b{color:var(--ink)}
+  .num{
+    flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--teal-light);color:var(--teal-dark);
+    display:grid;place-items:center;font-size:13px;font-weight:800;margin-top:1px;
+  }
+  .stats{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px;
+  }
+  .stat{background:#FBFAF7;border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center}
+  .stat strong{display:block;font-size:20px;line-height:1;font-family:"IBM Plex Mono",monospace}
+  .stat span{font-size:11.5px;color:var(--ink-2);font-weight:600}
+
+  footer{
+    margin-top:auto;
+    padding:28px 20px 22px;
+    text-align:center;
+    font-size:13px;color:var(--ink-3);
+  }
+  footer .foot-line{width:44px;height:3px;background:var(--teal);border-radius:99px;margin:0 auto 12px;opacity:.9}
+
+  @media (prefers-reduced-motion: reduce){
+    .timer-card.flash{animation:none}
+    .ring-fg{transition:none}
+  }
+</style>
+</head>
+<body>
+  <a href="/" style="position:fixed;top:16px;left:16px;z-index:9999;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#0F766E;color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.15);font-family:inherit;">← 回首頁</a>
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <h1>番茄<span>鐘</span></h1>
+      <p>專注一顆番茄的時間，把事情一件一件做完。</p>
+    </div>
+    <div class="badge" id="statusBadge"><i></i><span id="statusText">待開始</span></div>
+  </div>
+
+  <div class="alert" id="alertBox" role="alert">
+    <div>
+      <strong id="alertTitle">時間到！</strong>
+      <span id="alertBody">這一輪完成了。</span>
+    </div>
+    <button type="button" id="alertClose">知道了</button>
+  </div>
+
+  <div class="modes" role="tablist" aria-label="計時模式">
+    <button type="button" class="mode-btn active" data-mode="focus" role="tab" aria-selected="true">專注 <small id="focusTabMin">25 分鐘</small></button>
+    <button type="button" class="mode-btn" data-mode="short" role="tab" aria-selected="false">短休息 <small id="shortTabMin">5 分鐘</small></button>
+    <button type="button" class="mode-btn" data-mode="long" role="tab" aria-selected="false">長休息 <small id="longTabMin">15 分鐘</small></button>
+  </div>
+
+  <section class="timer-card" id="timerCard" aria-label="倒數計時">
+    <div class="ring-wrap" id="ringWrap">
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="ring-bg" cx="100" cy="100" r="88"></circle>
+        <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="88" stroke-dasharray="553" stroke-dashoffset="0"></circle>
+      </svg>
+      <div class="ring-center">
+        <div class="phase-label" id="phaseLabel">專注時間</div>
+        <div class="time" id="timeDisplay">25:00</div>
+        <div class="time-sub" id="timeSub">按下開始，專心做這一件事</div>
+      </div>
+    </div>
+
+    <div class="rounds" aria-label="輪次進度">
+      <div class="dots" id="dots">
+        <div class="dot current" data-dot="1"><span class="tom">🍅</span></div>
+        <div class="dot" data-dot="2"><span style="font-size:13px;font-weight:700">2</span></div>
+        <div class="dot" data-dot="3"><span style="font-size:13px;font-weight:700">3</span></div>
+        <div class="dot" data-dot="4"><span style="font-size:13px;font-weight:700">4</span></div>
+      </div>
+      <div class="round-text">
+        <b id="roundText">第 1 輪</b><span class="sep">·</span>已完成 <b id="doneText">0</b> 顆番茄<span class="sep">·</span><span id="cycleHint">再 4 輪長休息</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button type="button" class="btn btn-primary" id="mainBtn">▶&nbsp; 開始專注</button>
+      <button type="button" class="btn btn-ghost" id="pauseBtn" disabled>暫停</button>
+      <button type="button" class="btn btn-ghost" id="resetBtn">重設</button>
+    </div>
+    <p class="hint">空白鍵也可以開始／暫停。時間到會響提示音，並自動切到下一個階段，你按開始即可繼續。</p>
+  </section>
+
+  <div class="grid">
+    <section class="card" aria-label="時間設定">
+      <h2>自訂時間</h2>
+      <p class="desc">三種時間都可以改，改完按套用。正在計時的那一輪不會被打斷，下一輪開始生效；待機時會立刻更新。</p>
+
+      <div class="field">
+        <label for="focusInput">專注時間 <span>建議 20–30 分鐘</span></label>
+        <div class="field-row"><input id="focusInput" type="number" min="1" max="120" step="1" value="25" inputmode="numeric"><span class="unit">分鐘</span></div>
+      </div>
+      <div class="field">
+        <label for="shortInput">短休息 <span>起來走走、喝水</span></label>
+        <div class="field-row"><input id="shortInput" type="number" min="1" max="60" step="1" value="5" inputmode="numeric"><span class="unit">分鐘</span></div>
+      </div>
+      <div class="field">
+        <label for="longInput">長休息 <span>每 4 輪一次</span></label>
+        <div class="field-row"><input id="longInput" type="number" min="1" max="60" step="1" value="15" inputmode="numeric"><span class="unit">分鐘</span></div>
+      </div>
+      <button type="button" class="apply-btn" id="applyBtn">套用設定</button>
+      <div class="apply-msg" id="applyMsg" aria-live="polite"></div>
+    </section>
+
+    <section class="card" aria-label="使用方式與統計">
+      <h2>怎麼運作</h2>
+      <p class="desc">標準番茄工作法，一輪一輪往前走，不用自己記。</p>
+      <ol class="steps">
+        <li><span class="num">1</span><div><b>專注 25 分鐘</b> — 只做一件事，不滑手機。</div></li>
+        <li><span class="num">2</span><div><b>短休息 5 分鐘</b> — 離開座位，讓腦袋放空。</div></li>
+        <li><span class="num">3</span><div><b>連續 4 輪後長休息 15 分鐘</b> — 好好充電，再開始下一組。</div></li>
+      </ol>
+      <div class="stats">
+        <div class="stat"><strong id="statDone">0</strong><span>完成番茄</span></div>
+        <div class="stat"><strong id="statFocus">0</strong><span>專注分鐘</span></div>
+        <div class="stat"><strong id="statRound">1 / 4</strong><span>本組進度</span></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="foot-line"></div>
+    © 2026 HILL 版權所有
+  </footer>
+</div>
+
+<script>
+(function(){
+  var CIRC = 553; // 2 * pi * 88 ≈ 553
+
+  var durations = { focus: 25*60, short: 5*60, long: 15*60 };
+  var labels = { focus: '專注時間', short: '短休息', long: '長休息' };
+  var startLabels = { focus: '開始專注', short: '開始休息', long: '開始長休息' };
+
+  var state = {
+    mode: 'focus',
+    remaining: durations.focus,
+    total: durations.focus,
+    running: false,
+    endAt: null,
+    timerId: null,
+    completed: 0,       // total pomodoros done
+    roundInCycle: 1,    // 1..4
+    focusMinutesTotal: 0
+  };
+
+  var els = {
+    time: document.getElementById('timeDisplay'),
+    sub: document.getElementById('timeSub'),
+    phase: document.getElementById('phaseLabel'),
+    ringFg: document.getElementById('ringFg'),
+    ringWrap: document.getElementById('ringWrap'),
+    card: document.getElementById('timerCard'),
+    mainBtn: document.getElementById('mainBtn'),
+    pauseBtn: document.getElementById('pauseBtn'),
+    resetBtn: document.getElementById('resetBtn'),
+    badge: document.getElementById('statusBadge'),
+    statusText: document.getElementById('statusText'),
+    roundText: document.getElementById('roundText'),
+    doneText: document.getElementById('doneText'),
+    cycleHint: document.getElementById('cycleHint'),
+    dots: document.querySelectorAll('#dots .dot'),
+    alertBox: document.getElementById('alertBox'),
+    alertTitle: document.getElementById('alertTitle'),
+    alertBody: document.getElementById('alertBody'),
+    statDone: document.getElementById('statDone'),
+    statFocus: document.getElementById('statFocus'),
+    statRound: document.getElementById('statRound'),
+    focusInput: document.getElementById('focusInput'),
+    shortInput: document.getElementById('shortInput'),
+    longInput: document.getElementById('longInput'),
+    applyMsg: document.getElementById('applyMsg')
+  };
+
+  var audioCtx = null;
+  function ensureAudio(){
+    if(!audioCtx){
+      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){}
+    }
+    if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume(); }
+    return audioCtx;
+  }
+  function beep(freq, startOffset, dur){
+    if(!audioCtx) return;
+    var t = audioCtx.currentTime + startOffset;
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = 'sine'; osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.28, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(t); osc.stop(t + dur + 0.05);
+  }
+  function playDoneSound(isFocus){
+    ensureAudio();
+    if(!audioCtx) return;
+    if(isFocus){
+      beep(880, 0, 0.22); beep(880, 0.28, 0.22); beep(1174.66, 0.56, 0.38);
+    } else {
+      beep(659.25, 0, 0.22); beep(880, 0.28, 0.35);
+    }
+  }
+
+  function fmt(sec){
+    sec = Math.max(0, Math.ceil(sec));
+    var m = Math.floor(sec/60), s = sec % 60;
+    return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  }
+
+  function render(){
+    els.time.textContent = fmt(state.remaining);
+    document.title = (state.running ? fmt(state.remaining)+' · ' : '') + labels[state.mode] + ' — 番茄鐘';
+
+    var frac = state.total > 0 ? state.remaining / state.total : 0;
+    els.ringFg.style.strokeDashoffset = String(CIRC * (1 - frac));
+
+    els.phase.textContent = labels[state.mode];
+    var isBreak = state.mode !== 'focus';
+    els.card.classList.toggle('is-break', state.mode==='short');
+    els.card.classList.toggle('is-longbreak', state.mode==='long');
+    els.ringWrap.classList.toggle('is-break', state.mode==='short');
+    els.ringWrap.classList.toggle('is-longbreak', state.mode==='long');
+    els.badge.classList.toggle('is-break', isBreak);
+
+    // status + buttons
+    if(state.running){
+      els.statusText.textContent = state.mode==='focus' ? '專注中' : '休息中';
+      els.mainBtn.textContent = '進行中…';
+      els.mainBtn.disabled = true;
+      els.mainBtn.classList.add('is-pause');
+      els.pauseBtn.disabled = false;
+      els.pauseBtn.textContent = '暫停';
+      els.sub.innerHTML = state.mode==='focus' ? '保持專注，這一輪快完成了' : '放鬆一下，下一輪再繼續';
+    } else if(state.remaining < state.total && state.remaining > 0){
+      els.statusText.textContent = '已暫停';
+      els.mainBtn.textContent = '▶  繼續';
+      els.mainBtn.disabled = false;
+      els.mainBtn.classList.remove('is-pause');
+      els.pauseBtn.disabled = true;
+      els.sub.innerHTML = '已暫停，按繼續接著計時';
+    } else {
+      els.statusText.textContent = '待開始';
+      els.mainBtn.textContent = '▶  ' + startLabels[state.mode];
+      els.mainBtn.disabled = false;
+      els.mainBtn.classList.remove('is-pause');
+      els.pauseBtn.disabled = true;
+      els.sub.innerHTML = state.mode==='focus' ? '按下開始，專心做這一件事' : (state.mode==='short' ? '短暫休息，起來動一動' : '長休息，好好放鬆一下');
+    }
+
+    // rounds
+    els.roundText.textContent = '第 ' + state.roundInCycle + ' 輪';
+    els.doneText.textContent = String(state.completed);
+    var left = 4 - state.roundInCycle;
+    // if currently in focus, remaining rounds including current until long break:
+    if(state.mode==='focus'){
+      els.cycleHint.textContent = state.roundInCycle===4 ? '這一輪後長休息' : ('再 ' + (4 - state.roundInCycle) + ' 輪長休息');
+    } else if(state.mode==='long'){
+      els.cycleHint.textContent = '休息完開始新一組';
+    } else {
+      els.cycleHint.textContent = '休息完接第 ' + (state.roundInCycle+1 > 4 ? 1 : state.roundInCycle+1) + ' 輪';
+    }
+    els.dots.forEach(function(d, idx){
+      var n = idx+1;
+      d.classList.toggle('done', n < state.roundInCycle || (state.mode!=='focus' && n <= state.roundInCycle && state.completed>0 && n===state.roundInCycle && state.mode!=='focus'));
+      // simpler: done if n < roundInCycle, or if we're in a break following that round
+      var done = n < state.roundInCycle || (state.mode!=='focus' && n === state.roundInCycle && state._inBreak);
+      // after long break reset, roundInCycle is 1 and mode focus -> none done in new cycle visually except total count carries
+      if(state.mode==='focus' && state.roundInCycle===1 && state.completed>0 && state.completed % 4 === 0){
+        done = false;
+      }
+      d.classList.toggle('done', done);
+      d.classList.toggle('current', n === state.roundInCycle && state.mode==='focus' || (state.mode!=='focus' && n === state.roundInCycle));
+      d.innerHTML = done ? '<span class="tom">🍅</span>' : (n===1 ? '<span class="tom">🍅</span>' : '<span style="font-size:13px;font-weight:700">'+n+'</span>');
+      if(done) d.innerHTML = '<span style="font-size:14px">✓</span>';
+    });
+
+    els.statDone.textContent = String(state.completed);
+    els.statFocus.textContent = String(state.focusMinutesTotal);
+    els.statRound.textContent = state.roundInCycle + ' / 4';
+
+    // mode tabs
+    document.querySelectorAll('.mode-btn').forEach(function(b){
+      var active = b.getAttribute('data-mode') === state.mode;
+      b.classList.toggle('active', active);
+      b.classList.toggle('break', active && state.mode==='short');
+      b.classList.toggle('longbreak', active && state.mode==='long');
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    document.getElementById('focusTabMin').textContent = Math.round(durations.focus/60) + ' 分鐘';
+    document.getElementById('shortTabMin').textContent = Math.round(durations.short/60) + ' 分鐘';
+    document.getElementById('longTabMin').textContent = Math.round(durations.long/60) + ' 分鐘';
+  }
+
+  function stopTick(){
+    if(state.timerId){ clearInterval(state.timerId); state.timerId = null; }
+  }
+  function tick(){
+    var left = (state.endAt - Date.now())/1000;
+    if(left <= 0){
+      state.remaining = 0;
+      render();
+      finishPhase();
+      return;
+    }
+    state.remaining = left;
+    render();
+  }
+  function startTimer(){
+    ensureAudio();
+    hideAlert();
+    els.card.classList.remove('flash');
+    state.running = true;
+    state.endAt = Date.now() + state.remaining*1000;
+    stopTick();
+    state.timerId = setInterval(tick, 200);
+    render();
+  }
+  function pauseTimer(){
+    if(!state.running) return;
+    state.remaining = Math.max(0, (state.endAt - Date.now())/1000);
+    state.running = false;
+    stopTick();
+    render();
+  }
+  function setMode(mode, keepCounts){
+    stopTick();
+    state.running = false;
+    if(mode === 'focus'){ state._inBreak = false; }
+    state.mode = mode;
+    state.total = durations[mode];
+    state.remaining = durations[mode];
+    state.endAt = null;
+    render();
+  }
+  function resetTimer(){
+    stopTick();
+    state.running = false;
+    state.remaining = durations[state.mode];
+    state.total = durations[state.mode];
+    hideAlert();
+    els.card.classList.remove('flash');
+    render();
+  }
+  function resetAll(){
+    state.completed = 0;
+    state.roundInCycle = 1;
+    state.focusMinutesTotal = 0;
+    setMode('focus');
+  }
+
+  function showAlert(title, body){
+    els.alertTitle.textContent = title;
+    els.alertBody.textContent = body;
+    els.alertBox.classList.add('show');
+  }
+  function hideAlert(){ els.alertBox.classList.remove('show'); }
+
+  function finishPhase(){
+    stopTick();
+    state.running = false;
+    var finished = state.mode;
+    playDoneSound(finished==='focus');
+    if(navigator.vibrate){ try{ navigator.vibrate([180,80,180]); }catch(e){} }
+    els.card.classList.remove('flash');
+    // force reflow for animation restart
+    void els.card.offsetWidth;
+    els.card.classList.add('flash');
+
+    if(finished === 'focus'){
+      state.completed += 1;
+      state.focusMinutesTotal += Math.round(durations.focus/60);
+      if(state.roundInCycle >= 4){
+        showAlert('🍅 第 4 輪完成，長休息時間到！', '你已經完成一組 4 顆番茄。接下來是 ' + Math.round(durations.long/60) + ' 分鐘長休息，按「開始長休息」即可。');
+        state._inBreak = true;
+        setMode('long');
+        // keep roundInCycle at 4 during long break display, reset on next focus start via flag
+        state.roundInCycle = 4;
+        render();
+        // store pending reset
+        state._afterLong = true;
+      } else {
+        showAlert('🍅 專注完成！休息一下', '第 ' + state.roundInCycle + ' 輪完成了。接下來短休息 ' + Math.round(durations.short/60) + ' 分鐘，按開始即可。');
+        var finishedRound = state.roundInCycle;
+        state._inBreak = true;
+        setMode('short');
+        state.roundInCycle = finishedRound;
+        render();
+      }
+    } else if(finished === 'short'){
+      var nextRound = state.roundInCycle + 1;
+      if(nextRound > 4) nextRound = 1;
+      showAlert('休息結束，回到專注', '準備好就開始第 ' + nextRound + ' 輪專注（' + Math.round(durations.focus/60) + ' 分鐘）。');
+      state.roundInCycle = nextRound;
+      setMode('focus');
+      state.roundInCycle = nextRound;
+      render();
+    } else { // long
+      showAlert('長休息結束，新一組開始', '充電完成！從第 1 輪重新開始，專注 ' + Math.round(durations.focus/60) + ' 分鐘。');
+      state.roundInCycle = 1;
+      state._afterLong = false;
+      setMode('focus');
+      state.roundInCycle = 1;
+      render();
+    }
+    document.title = '⏰ 時間到！— 番茄鐘';
+  }
+
+  // controls
+  els.mainBtn.addEventListener('click', function(){
+    // if we just finished long break cycle, round already handled in finishPhase
+    startTimer();
+  });
+  els.pauseBtn.addEventListener('click', pauseTimer);
+  els.resetBtn.addEventListener('click', function(){
+    // double purpose: if long-press? keep simple: reset current phase; if already at full, reset all counts
+    if(state.remaining === durations[state.mode] && !state.running && (state.completed>0 || state.roundInCycle>1)){
+      // second reset at full resets everything — hint via confirm-less: do full reset
+      // To avoid accidental wipe, only full-reset when user clicks reset while at start AND alert not shown?
+      // We implement: reset current timer; counts reset via separate logic below (triple check)
+    }
+    resetTimer();
+  });
+  // long press reset button (800ms) resets all counts
+  var pressTimer = null;
+  els.resetBtn.addEventListener('pointerdown', function(){
+    pressTimer = setTimeout(function(){
+      resetAll();
+      showAlert('已全部重設', '完成番茄與輪次都歸零，從第 1 輪重新開始。');
+    }, 800);
+  });
+  ['pointerup','pointerleave','pointercancel'].forEach(function(ev){
+    els.resetBtn.addEventListener(ev, function(){ if(pressTimer) clearTimeout(pressTimer); });
+  });
+
+  document.getElementById('alertClose').addEventListener('click', hideAlert);
+
+  document.querySelectorAll('.mode-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var m = btn.getAttribute('data-mode');
+      if(m === state.mode && !state.running) { resetTimer(); return; }
+      // switching mode manually: if switching to focus, keep round as is; if from long-break pending, reset round
+      if(m==='focus' && state._afterLong){ state.roundInCycle = 1; state._afterLong = false; }
+      state._inBreak = false;
+      setMode(m);
+      hideAlert();
+    });
+  });
+
+  // settings
+  function clampVal(v, min, max, fallback){
+    v = parseInt(v, 10);
+    if(isNaN(v)) return fallback;
+    return Math.min(max, Math.max(min, v));
+  }
+  document.getElementById('applyBtn').addEventListener('click', function(){
+    var f = clampVal(els.focusInput.value, 1, 120, 25);
+    var s = clampVal(els.shortInput.value, 1, 60, 5);
+    var l = clampVal(els.longInput.value, 1, 60, 15);
+    els.focusInput.value = f; els.shortInput.value = s; els.longInput.value = l;
+    durations.focus = f*60; durations.short = s*60; durations.long = l*60;
+    if(!state.running){
+      state.total = durations[state.mode];
+      state.remaining = durations[state.mode];
+    }
+    els.applyMsg.textContent = '✓ 已套用：專注 ' + f + ' 分 · 短休息 ' + s + ' 分 · 長休息 ' + l + ' 分';
+    setTimeout(function(){ els.applyMsg.textContent=''; }, 3500);
+    render();
+  });
+
+  // keyboard: space toggles
+  document.addEventListener('keydown', function(e){
+    if(e.code === 'Space' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){
+      e.preventDefault();
+      if(state.running) pauseTimer(); else startTimer();
+    }
+  });
+
+  // visibility: when tab returns, tick recalculates from endAt automatically via interval; force a tick
+  document.addEventListener('visibilitychange', function(){
+    if(!document.hidden && state.running) tick();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

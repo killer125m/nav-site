@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png" />
+<link rel="shortcut icon" href="/favicon.ico" />
+    <title>直播抽獎小幫手</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #F4F3EF;
+        --surface: #FFFFFF;
+        --surface-soft: #FBFAF6;
+        --ink: #1C2B29;
+        --muted: #5F6B68;
+        --teal: #0F766E;
+        --teal-dark: #0B4F4A;
+        --teal-deep: #083F3B;
+        --teal-soft: #E2EFEC;
+        --line: #E0DED4;
+        --gold: #F5C04E;
+        --gold-ink: #B45309;
+        --radius: 14px;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      button { font-family: inherit; cursor: pointer; }
+      button:disabled { cursor: not-allowed; opacity: .45; }
+
+      .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 0; }
+
+      header.page-head { margin-bottom: 22px; }
+      header.page-head h1 {
+        margin: 0 0 6px;
+        font-size: clamp(1.7rem, 4vw, 2.4rem);
+        font-weight: 900;
+        letter-spacing: .01em;
+        color: var(--teal-dark);
+      }
+      header.page-head p { margin: 0; color: var(--muted); font-size: 1rem; }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 20px;
+      }
+      .panel h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--ink);
+      }
+      .panel-head {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 12px; margin-bottom: 12px;
+      }
+      .count-badge {
+        background: var(--teal-soft);
+        color: var(--teal-dark);
+        font-weight: 700;
+        font-size: .9rem;
+        padding: 3px 12px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+
+      label.field-label { display: block; font-size: .9rem; color: var(--muted); margin-bottom: 8px; }
+      textarea#namesInput {
+        width: 100%;
+        min-height: 220px;
+        resize: vertical;
+        border: 1.5px solid var(--line);
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-family: inherit;
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--ink);
+        background: var(--surface-soft);
+      }
+      textarea#namesInput:focus { outline: 2px solid var(--teal); outline-offset: 1px; border-color: var(--teal); }
+      textarea#namesInput:disabled { opacity: .6; }
+
+      .parse-note { min-height: 1.4em; font-size: .85rem; color: var(--gold-ink); margin: 8px 0 0; }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 14px 0 4px;
+      }
+      .stat {
+        background: var(--surface-soft);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 6px;
+        text-align: center;
+      }
+      .stat .num { display: block; font-size: 1.5rem; font-weight: 900; color: var(--teal-dark); line-height: 1.15; }
+      .stat .cap { font-size: .8rem; color: var(--muted); }
+
+      .pool-wrap { margin-top: 14px; }
+      .pool-wrap h3 { margin: 0 0 8px; font-size: .9rem; font-weight: 700; color: var(--muted); }
+      .pool {
+        display: flex; flex-wrap: wrap; gap: 6px;
+        max-height: 168px; overflow-y: auto;
+        padding: 2px;
+      }
+      .pool .chip {
+        background: var(--teal-soft);
+        color: var(--teal-dark);
+        border-radius: 999px;
+        padding: 3px 11px;
+        font-size: .88rem;
+        font-weight: 500;
+      }
+      .pool .none { color: var(--muted); font-size: .9rem; }
+
+      .list-actions { margin-top: 16px; display: flex; gap: 10px; }
+      .btn-ghost {
+        min-height: 44px;
+        padding: 8px 16px;
+        border-radius: 10px;
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+        color: var(--muted);
+        font-size: .95rem;
+        font-weight: 500;
+      }
+      .btn-ghost:hover:not(:disabled) { border-color: var(--teal); color: var(--teal-dark); }
+
+      /* ---------- Stage ---------- */
+      .stage {
+        background: radial-gradient(120% 150% at 50% 0%, #127A70 0%, var(--teal-dark) 55%, var(--teal-deep) 100%);
+        border-radius: var(--radius);
+        color: #fff;
+        text-align: center;
+        padding: 40px 20px 34px;
+        min-height: 240px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        overflow: hidden;
+      }
+      .stage-label {
+        font-size: .95rem;
+        letter-spacing: .35em;
+        text-indent: .35em;
+        color: #9FD8D0;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .stage-name {
+        font-size: clamp(2.6rem, 7.5vw, 4.6rem);
+        font-weight: 900;
+        line-height: 1.15;
+        word-break: break-all;
+        max-width: 100%;
+      }
+      .stage-name.long { font-size: clamp(1.8rem, 5.5vw, 3.2rem); }
+      .stage-name.rolling { color: #D9EFEB; }
+      .stage-name.landed { color: var(--gold); animation: pop .45s cubic-bezier(.2, 1.6, .4, 1); }
+      @keyframes pop {
+        0% { transform: scale(.6); }
+        100% { transform: scale(1); }
+      }
+      .stage-sub { margin-top: 12px; color: #BFE3DE; font-size: 1rem; min-height: 1.5em; }
+      .round-live { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+      .round-live .win-chip {
+        background: rgba(255,255,255,.14);
+        border: 1.5px solid var(--gold);
+        color: #FFE9B0;
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 5px 16px;
+        font-size: 1.05rem;
+        animation: pop .35s cubic-bezier(.2, 1.6, .4, 1);
+      }
+
+      .controls { margin-top: 20px; }
+      .count-row {
+        display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .count-row .cap { font-weight: 700; font-size: .95rem; }
+      .segmented {
+        display: inline-flex;
+        background: var(--surface-soft);
+        border: 1.5px solid var(--line);
+        border-radius: 999px;
+        padding: 4px;
+        gap: 4px;
+      }
+      .segmented button {
+        min-height: 44px;
+        min-width: 76px;
+        border: none;
+        background: transparent;
+        border-radius: 999px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--muted);
+        padding: 8px 14px;
+      }
+      .segmented button[aria-pressed="true"] { background: var(--teal); color: #fff; }
+      .clamp-note { font-size: .88rem; color: var(--gold-ink); }
+
+      .btn-draw {
+        width: 100%;
+        min-height: 60px;
+        border: none;
+        border-radius: 12px;
+        background: var(--teal);
+        color: #fff;
+        font-size: 1.3rem;
+        font-weight: 900;
+        letter-spacing: .12em;
+        box-shadow: 0 4px 0 var(--teal-dark);
+        transition: transform .06s ease, box-shadow .06s ease;
+      }
+      .btn-draw:hover:not(:disabled) { background: #128276; }
+      .btn-draw:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--teal-dark); }
+      .btn-draw:disabled { box-shadow: none; }
+
+      .secondary-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+      .secondary-row .btn-ghost { flex: 1 1 auto; }
+
+      /* ---------- Winners ---------- */
+      .winners { margin-top: 26px; border-top: 1px solid var(--line); padding-top: 18px; }
+      .winners .panel-head { margin-bottom: 10px; }
+      .round-block { margin-bottom: 14px; }
+      .round-title { font-size: .88rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+      .round-names { display: flex; flex-wrap: wrap; gap: 8px; }
+      .winner-chip {
+        background: var(--teal);
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        border-radius: 10px;
+        padding: 7px 16px;
+      }
+      .empty-note { color: var(--muted); font-size: .95rem; margin: 4px 0 0; }
+
+      footer.site-footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: .9rem;
+        padding: 30px 0 26px;
+      }
+
+      #confettiCanvas {
+        position: fixed; inset: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 60;
+      }
+      .visually-hidden {
+        position: absolute; width: 1px; height: 1px;
+        overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+      }
+
+      @media (max-width: 860px) {
+        .layout { grid-template-columns: 1fr; }
+        .wrap { padding: 20px 14px 0; }
+        .panel { padding: 16px; }
+        .stage { min-height: 210px; padding: 30px 14px 26px; }
+        .segmented button { min-width: 64px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .stage-name.landed, .round-live .win-chip { animation: none; }
+        .btn-draw { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+  <a href="/" style="position:fixed;top:16px;left:16px;z-index:9999;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#0F766E;color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.15);font-family:inherit;">← 回首頁</a>
+    <div class="wrap">
+      <header class="page-head">
+        <h1>直播抽獎小幫手</h1>
+        <p>貼上參加者名單，按下抽獎，現場輪播公布中獎者。抽過的人不會重複中獎。</p>
+      </header>
+
+      <main class="layout">
+        <!-- 名單 -->
+        <section class="panel" aria-labelledby="listTitle">
+          <div class="panel-head">
+            <h2 id="listTitle">參加者名單</h2>
+            <span class="count-badge" id="countBadge">0 人</span>
+          </div>
+          <label class="field-label" for="namesInput">每行一個名字，貼上即可，空白行和重複名字會自動去掉。</label>
+          <textarea id="namesInput" placeholder="王小明&#10;陳小美&#10;林大同&#10;……" autocomplete="off" spellcheck="false"></textarea>
+          <p class="parse-note" id="parseNote" aria-live="polite"></p>
+
+          <div class="stats">
+            <div class="stat"><span class="num" id="statTotal">0</span><span class="cap">參加人數</span></div>
+            <div class="stat"><span class="num" id="statLeft">0</span><span class="cap">剩餘可抽</span></div>
+            <div class="stat"><span class="num" id="statWon">0</span><span class="cap">已中獎</span></div>
+          </div>
+
+          <div class="pool-wrap">
+            <h3>尚未中獎名單</h3>
+            <div class="pool" id="pool"><span class="none">還沒有名單</span></div>
+          </div>
+
+          <div class="list-actions">
+            <button type="button" class="btn-ghost" id="clearListBtn">清空名單</button>
+          </div>
+        </section>
+
+        <!-- 舞台 + 控制 -->
+        <section class="panel" aria-labelledby="stageTitle">
+          <h2 id="stageTitle" class="visually-hidden">抽獎舞台</h2>
+          <div class="stage" id="stage">
+            <div class="stage-label">中 獎 者</div>
+            <div class="stage-name" id="stageName">準備好了嗎？</div>
+            <div class="stage-sub" id="stageSub">貼上名單後，按下開始抽獎</div>
+            <div class="round-live" id="roundLive"></div>
+          </div>
+
+          <div class="controls">
+            <div class="count-row">
+              <span class="cap" id="countCap">一次抽出</span>
+              <div class="segmented" role="group" aria-labelledby="countCap">
+                <button type="button" data-count="1" aria-pressed="true">1 位</button>
+                <button type="button" data-count="3" aria-pressed="false">3 位</button>
+                <button type="button" data-count="5" aria-pressed="false">5 位</button>
+              </div>
+              <span class="clamp-note" id="clampNote"></span>
+            </div>
+
+            <button type="button" class="btn-draw" id="drawBtn" disabled>開始抽獎</button>
+
+            <div class="secondary-row">
+              <button type="button" class="btn-ghost" id="resetBtn" disabled>全部重設</button>
+              <button type="button" class="btn-ghost" id="soundBtn" aria-pressed="true">音效：開</button>
+            </div>
+          </div>
+
+          <div class="winners">
+            <div class="panel-head">
+              <h2>中獎名單</h2>
+              <span class="count-badge" id="winnerBadge">共 0 位</span>
+            </div>
+            <div id="rounds"></div>
+            <p class="empty-note" id="noWinners">還沒有人中獎，第一輪就從這裡開始。</p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">© 2026 HILL 版權所有</footer>
+    </div>
+
+    <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+    <div class="visually-hidden" aria-live="polite" id="liveAnnouncer"></div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var namesInput = document.getElementById("namesInput");
+        var parseNote = document.getElementById("parseNote");
+        var countBadge = document.getElementById("countBadge");
+        var statTotal = document.getElementById("statTotal");
+        var statLeft = document.getElementById("statLeft");
+        var statWon = document.getElementById("statWon");
+        var poolEl = document.getElementById("pool");
+        var clearListBtn = document.getElementById("clearListBtn");
+        var stageName = document.getElementById("stageName");
+        var stageSub = document.getElementById("stageSub");
+        var roundLive = document.getElementById("roundLive");
+        var drawBtn = document.getElementById("drawBtn");
+        var resetBtn = document.getElementById("resetBtn");
+        var soundBtn = document.getElementById("soundBtn");
+        var clampNote = document.getElementById("clampNote");
+        var roundsEl = document.getElementById("rounds");
+        var noWinners = document.getElementById("noWinners");
+        var winnerBadge = document.getElementById("winnerBadge");
+        var announcer = document.getElementById("liveAnnouncer");
+        var countButtons = Array.prototype.slice.call(document.querySelectorAll(".segmented button"));
+
+        var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        var allNames = [];        // 去重後的完整名單（依輸入順序）
+        var wonSet = new Set();   // 已中獎者
+        var rounds = [];          // 每一輪的中獎者陣列
+        var drawCount = 1;
+        var drawing = false;
+        var hasDrawn = false;
+        var soundOn = true;
+
+        /* ---------- 名單解析 ---------- */
+        function parseNames() {
+          var rawLines = namesInput.value.split(/\r?\n/);
+          var seen = new Set();
+          var list = [];
+          var dupCount = 0;
+          rawLines.forEach(function (line) {
+            var name = line.trim();
+            if (!name) return;
+            if (seen.has(name)) { dupCount++; return; }
+            seen.add(name);
+            list.push(name);
+          });
+          allNames = list;
+
+          // 名單被改動時，移除已不在名單裡的中獎紀錄
+          var valid = new Set(allNames);
+          var pruned = false;
+          wonSet.forEach(function (n) { if (!valid.has(n)) { wonSet.delete(n); pruned = true; } });
+          if (pruned) {
+            rounds = rounds
+              .map(function (r) { return r.filter(function (n) { return valid.has(n); }); })
+              .filter(function (r) { return r.length > 0; });
+            if (wonSet.size === 0) hasDrawn = false;
+          }
+
+          parseNote.textContent = dupCount > 0 ? "已自動移除 " + dupCount + " 個重複名字。" : "";
+          render();
+        }
+
+        function pool() {
+          return allNames.filter(function (n) { return !wonSet.has(n); });
+        }
+
+        /* ---------- 畫面更新 ---------- */
+        function render() {
+          var p = pool();
+          countBadge.textContent = allNames.length + " 人";
+          statTotal.textContent = allNames.length;
+          statLeft.textContent = p.length;
+          statWon.textContent = wonSet.size;
+          winnerBadge.textContent = "共 " + wonSet.size + " 位";
+
+          // 尚未中獎名單 chips
+          poolEl.innerHTML = "";
+          if (p.length === 0) {
+            var none = document.createElement("span");
+            none.className = "none";
+            none.textContent = allNames.length === 0 ? "還沒有名單" : "全部都中獎了";
+            poolEl.appendChild(none);
+          } else {
+            p.forEach(function (n) {
+              var chip = document.createElement("span");
+              chip.className = "chip";
+              chip.textContent = n;
+              poolEl.appendChild(chip);
+            });
+          }
+
+          // 中獎名單（最新一輪在最上面）
+          roundsEl.innerHTML = "";
+          for (var i = rounds.length - 1; i >= 0; i--) {
+            var block = document.createElement("div");
+            block.className = "round-block";
+            var title = document.createElement("div");
+            title.className = "round-title";
+            title.textContent = "第 " + (i + 1) + " 輪";
+            var namesRow = document.createElement("div");
+            namesRow.className = "round-names";
+            rounds[i].forEach(function (n) {
+              var chip = document.createElement("span");
+              chip.className = "winner-chip";
+              chip.textContent = n;
+              namesRow.appendChild(chip);
+            });
+            block.appendChild(title);
+            block.appendChild(namesRow);
+            roundsEl.appendChild(block);
+          }
+          noWinners.style.display = rounds.length === 0 ? "" : "none";
+
+          // 抽出人數按鈕：超過剩餘人數的選項停用
+          countButtons.forEach(function (btn) {
+            var v = parseInt(btn.getAttribute("data-count"), 10);
+            btn.disabled = drawing || (p.length > 0 && v > p.length);
+            btn.setAttribute("aria-pressed", v === drawCount ? "true" : "false");
+          });
+          if (p.length > 0 && drawCount > p.length) {
+            clampNote.textContent = "剩餘 " + p.length + " 人，本輪將抽出 " + p.length + " 位";
+          } else {
+            clampNote.textContent = "";
+          }
+
+          // 主按鈕狀態
+          if (drawing) {
+            drawBtn.disabled = true;
+            drawBtn.textContent = "抽獎中…";
+          } else if (p.length === 0) {
+            drawBtn.disabled = true;
+            drawBtn.textContent = allNames.length === 0 ? "開始抽獎" : "全部抽完了";
+          } else {
+            drawBtn.disabled = false;
+            drawBtn.textContent = hasDrawn ? "再抽一次" : "開始抽獎";
+          }
+          resetBtn.disabled = drawing || wonSet.size === 0;
+          clearListBtn.disabled = drawing;
+          namesInput.disabled = drawing;
+        }
+
+        /* ---------- 音效 ---------- */
+        var audioCtx = null;
+        function ensureAudio() {
+          if (!audioCtx) {
+            try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { audioCtx = null; }
+          }
+          if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+        }
+        function blip(freq, dur, type, vol) {
+          if (!soundOn || !audioCtx) return;
+          var t = audioCtx.currentTime;
+          var osc = audioCtx.createOscillator();
+          var gain = audioCtx.createGain();
+          osc.type = type;
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(vol, t);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(t);
+          osc.stop(t + dur);
+        }
+        function playTick() { blip(620 + Math.random() * 60, 0.03, "square", 0.012); }
+        function playWin() {
+          if (!soundOn || !audioCtx) return;
+          [523.25, 659.25, 783.99].forEach(function (f, i) {
+            setTimeout(function () { blip(f, 0.22, "triangle", 0.06); }, i * 90);
+          });
+        }
+
+        /* ---------- 五彩紙屑 ---------- */
+        var canvas = document.getElementById("confettiCanvas");
+        var ctx = canvas.getContext("2d");
+        var particles = [];
+        var confettiRunning = false;
+        function sizeCanvas() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        function confettiBurst() {
+          if (reducedMotion) return;
+          sizeCanvas();
+          var colors = ["#0F766E", "#14B8A6", "#F5C04E", "#FFE9B0", "#FFFFFF", "#0B4F4A"];
+          for (var i = 0; i < 130; i++) {
+            particles.push({
+              x: Math.random() * canvas.width,
+              y: -20 - Math.random() * canvas.height * 0.35,
+              w: 6 + Math.random() * 6,
+              h: 8 + Math.random() * 8,
+              vy: 2.2 + Math.random() * 3.4,
+              vx: -1.2 + Math.random() * 2.4,
+              rot: Math.random() * Math.PI,
+              vr: -0.12 + Math.random() * 0.24,
+              color: colors[i % colors.length]
+            });
+          }
+          if (!confettiRunning) {
+            confettiRunning = true;
+            requestAnimationFrame(confettiStep);
+          }
+        }
+        function confettiStep() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          particles = particles.filter(function (pt) { return pt.y < canvas.height + 30; });
+          particles.forEach(function (pt) {
+            pt.x += pt.vx; pt.y += pt.vy; pt.rot += pt.vr;
+            ctx.save();
+            ctx.translate(pt.x, pt.y);
+            ctx.rotate(pt.rot);
+            ctx.fillStyle = pt.color;
+            ctx.fillRect(-pt.w / 2, -pt.h / 2, pt.w, pt.h);
+            ctx.restore();
+          });
+          if (particles.length > 0) {
+            requestAnimationFrame(confettiStep);
+          } else {
+            confettiRunning = false;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+          }
+        }
+        window.addEventListener("resize", function () { if (confettiRunning) sizeCanvas(); });
+
+        /* ---------- 抽獎流程 ---------- */
+        function wait(ms) { return new Promise(function (res) { setTimeout(res, ms); }); }
+
+        function shuffled(arr) {
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+          }
+          return a;
+        }
+
+        function setStageName(name) {
+          stageName.textContent = name;
+          stageName.classList.toggle("long", name.length > 7);
+        }
+
+        function rollDisplay(candidates, duration) {
+          if (reducedMotion || candidates.length <= 1) {
+            if (candidates.length) setStageName(candidates[Math.floor(Math.random() * candidates.length)]);
+            return Promise.resolve();
+          }
+          return new Promise(function (resolve) {
+            var start = performance.now();
+            stageName.classList.add("rolling");
+            function tick(now) {
+              var t = (now - start) / duration;
+              if (t >= 1) {
+                stageName.classList.remove("rolling");
+                resolve();
+                return;
+              }
+              setStageName(candidates[Math.floor(Math.random() * candidates.length)]);
+              playTick();
+              var delay = 40 + 190 * t * t; // 越接近停止越慢
+              setTimeout(function () { requestAnimationFrame(tick); }, delay);
+            }
+            requestAnimationFrame(tick);
+          });
+        }
+
+        async function draw() {
+          if (drawing) return;
+          var p = pool();
+          if (p.length === 0) return;
+          ensureAudio();
+
+          var n = Math.min(drawCount, p.length);
+          var winners = shuffled(p).slice(0, n);
+          var roundIndex = rounds.length;
+          var thisRound = [];
+          rounds.push(thisRound);
+
+          drawing = true;
+          hasDrawn = true;
+          roundLive.innerHTML = "";
+          render();
+
+          var landed = [];
+          for (var i = 0; i < winners.length; i++) {
+            stageSub.textContent = "第 " + (roundIndex + 1) + " 輪 · 正在抽第 " + (i + 1) + " 位（共 " + n + " 位）";
+            var candidates = p.filter(function (name) { return landed.indexOf(name) === -1; });
+            await rollDisplay(candidates, i === 0 ? 2100 : 1200);
+            setStageName(winners[i]);
+            stageName.classList.add("landed");
+            playWin();
+            landed.push(winners[i]);
+            wonSet.add(winners[i]);
+            thisRound.push(winners[i]);
+
+            var chip = document.createElement("span");
+            chip.className = "win-chip";
+            chip.textContent = winners[i];
+            roundLive.appendChild(chip);
+            render();
+            await wait(reducedMotion ? 60 : 700);
+            stageName.classList.remove("landed");
+          }
+
+          stageSub.textContent = "第 " + (roundIndex + 1) + " 輪完成，恭喜中獎者！";
+          announcer.textContent = "第 " + (roundIndex + 1) + " 輪中獎者：" + winners.join("、");
+          confettiBurst();
+          drawing = false;
+          render();
+        }
+
+        /* ---------- 事件 ---------- */
+        namesInput.addEventListener("input", parseNames);
+
+        countButtons.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            drawCount = parseInt(btn.getAttribute("data-count"), 10);
+            render();
+          });
+        });
+
+        drawBtn.addEventListener("click", draw);
+
+        resetBtn.addEventListener("click", function () {
+          if (drawing) return;
+          wonSet.clear();
+          rounds = [];
+          hasDrawn = false;
+          roundLive.innerHTML = "";
+          setStageName("準備好了嗎？");
+          stageSub.textContent = "已全部重設，可以重新抽獎";
+          announcer.textContent = "已全部重設";
+          render();
+        });
+
+        clearListBtn.addEventListener("click", function () {
+          if (drawing) return;
+          namesInput.value = "";
+          wonSet.clear();
+          rounds = [];
+          hasDrawn = false;
+          roundLive.innerHTML = "";
+          setStageName("準備好了嗎？");
+          stageSub.textContent = "貼上名單後，按下開始抽獎";
+          parseNames();
+          namesInput.focus();
+        });
+
+        soundBtn.addEventListener("click", function () {
+          soundOn = !soundOn;
+          soundBtn.setAttribute("aria-pressed", soundOn ? "true" : "false");
+          soundBtn.textContent = soundOn ? "音效：開" : "音效：關";
+          if (soundOn) { ensureAudio(); playWin(); }
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<title>今天吃什麼</title>
+<style>
+  :root{
+    --bg:#F4F3EF;
+    --surface:#FFFFFF;
+    --surface-2:#ECEAE2;
+    --ink:#1C2321;
+    --ink-2:#5A6660;
+    --line:#DDDAD0;
+    --teal:#0F766E;
+    --teal-dark:#0B4F4A;
+    --teal-soft:#E0F0ED;
+    --amber:#D97706;
+    --amber-soft:#FDF0DC;
+    --radius:20px;
+    --shadow:0 10px 30px rgba(28,35,33,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#141816;
+      --surface:#1E2422;
+      --surface-2:#262D2A;
+      --ink:#EDF1EE;
+      --ink-2:#A7B3AC;
+      --line:#333B37;
+      --teal:#2DBFAE;
+      --teal-dark:#7FE3D5;
+      --teal-soft:#17332F;
+      --amber:#F2A93B;
+      --amber-soft:#3A2C14;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"PingFang TC","PingFang SC","Microsoft JhengHei","Noto Sans TC",system-ui,-apple-system,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.25rem}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 0}
+
+  /* ---------- Hero ---------- */
+  .hero{text-align:center;padding:18px 0 6px}
+  .hero .mark{
+    width:56px;height:56px;margin:0 auto 14px;border-radius:16px;
+    background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+    display:flex;align-items:center;justify-content:center;
+  }
+  .hero .mark svg{width:30px;height:30px}
+  .hero h1{font-size:clamp(30px,6vw,42px);line-height:1.2;margin:0 0 8px;font-weight:800;letter-spacing:.02em}
+  .hero p{margin:0;color:var(--ink-2);font-size:16px}
+  .hero p b{color:var(--teal);font-weight:700}
+
+  /* ---------- Slot machine ---------- */
+  .stage{
+    margin-top:26px;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
+  }
+  .stage-top{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 20px;border-bottom:1px dashed var(--line);
+    font-size:13px;color:var(--ink-2);letter-spacing:.06em;
+  }
+  .stage-top .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);display:inline-block;margin-right:7px;vertical-align:1px}
+  .stage-top .dot.pulse{animation:pulse 0.5s ease-in-out infinite alternate}
+  @keyframes pulse{from{opacity:.35}to{opacity:1}}
+
+  .display{
+    min-height:148px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:30px 22px 26px;text-align:center;position:relative;
+  }
+  .display .hint{font-size:14px;color:var(--ink-2);margin:0 0 6px}
+  .display .rolling{
+    font-size:clamp(26px,5.6vw,38px);font-weight:800;line-height:1.3;margin:0;
+    min-height:1.3em;word-break:break-word;
+  }
+  .display .rolling.spinning{color:var(--ink-2)}
+  .display .rolling.landed{color:var(--teal-dark);animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+  @keyframes pop{0%{transform:scale(.86)}100%{transform:scale(1)}}
+  .display .sub{margin:8px 0 0;font-size:15px;color:var(--ink-2);min-height:1.5em}
+  .display .sub:empty{display:none}
+
+  .stage-actions{padding:0 22px 26px;display:flex;flex-direction:column;gap:10px;align-items:stretch}
+  .btn-draw{
+    appearance:none;border:0;cursor:pointer;width:100%;
+    background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+    color:#fff;font-family:inherit;font-size:21px;font-weight:800;letter-spacing:.04em;
+    padding:18px 20px;border-radius:16px;min-height:64px;
+    box-shadow:0 10px 22px rgba(15,118,110,.32);
+    transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  }
+  .btn-draw:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 14px 26px rgba(15,118,110,.36)}
+  .btn-draw:active:not(:disabled){transform:translateY(1px) scale(.99)}
+  .btn-draw:disabled{opacity:.65;cursor:wait}
+  .btn-again{
+    appearance:none;cursor:pointer;width:100%;
+    background:transparent;color:var(--teal);border:2px solid var(--teal);
+    font-family:inherit;font-size:16px;font-weight:700;
+    padding:12px 20px;border-radius:14px;min-height:52px;
+    transition:background .12s ease;
+  }
+  .btn-again:hover{background:var(--teal-soft)}
+  .btn-again[hidden]{display:none}
+
+  /* ---------- Result card ---------- */
+  .result{margin-top:20px}
+  .result[hidden]{display:none}
+  .result-card{
+    background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--teal);
+    border-radius:var(--radius);box-shadow:var(--shadow);padding:24px 22px 20px;
+    animation:rise .4s ease both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion: reduce){
+    .result-card,.display .rolling.landed{animation:none}
+    .stage-top .dot.pulse{animation:none}
+  }
+  .result-card .verdict{font-size:13px;letter-spacing:.08em;color:var(--teal);font-weight:700;margin:0 0 4px}
+  .result-card h2{font-size:clamp(24px,5vw,30px);margin:0 0 6px;line-height:1.3;font-weight:800}
+  .result-card .note{margin:0 0 18px;color:var(--ink-2);font-size:15px}
+  .result-card .note:empty{display:none}
+
+  .facts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:520px){.facts{grid-template-columns:1fr}}
+  .fact{background:var(--surface-2);border-radius:14px;padding:13px 15px}
+  .fact .k{font-size:12px;letter-spacing:.08em;color:var(--ink-2);margin:0 0 3px;font-weight:700}
+  .fact .v{font-size:16px;font-weight:600;margin:0;line-height:1.45}
+  .fact .v small{display:block;font-weight:400;color:var(--ink-2);font-size:13px;margin-top:2px}
+  .stars{color:var(--amber);letter-spacing:2px;font-size:15px}
+  .stars .off{color:var(--line)}
+
+  .result-actions{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px}
+  .btn-map{
+    display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+    background:var(--teal);color:#fff;font-weight:700;font-size:15px;
+    padding:11px 18px;border-radius:12px;min-height:48px;
+  }
+  .btn-map:hover{background:var(--teal-dark)}
+  .btn-map svg{width:17px;height:17px;flex:none}
+
+  /* ---------- All stores ---------- */
+  .all{margin-top:34px}
+  .all h3{font-size:17px;margin:0 0 4px;font-weight:800}
+  .all .all-sub{margin:0 0 14px;color:var(--ink-2);font-size:14px}
+  .store-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:560px){.store-list{grid-template-columns:1fr}}
+  .store{
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    padding:15px 16px;text-align:left;width:100%;cursor:pointer;font-family:inherit;color:var(--ink);
+    transition:border-color .12s ease, box-shadow .12s ease;min-height:44px;
+  }
+  .store:hover{border-color:var(--teal);box-shadow:var(--shadow)}
+  .store.picked{border-color:var(--teal);background:var(--teal-soft)}
+  .store .s-name{font-size:16px;font-weight:700;margin:0 0 3px;line-height:1.4}
+  .store .s-meta{font-size:13.5px;color:var(--ink-2);margin:0}
+  .store .s-rate{color:var(--amber);font-weight:700}
+
+  footer{
+    margin-top:44px;border-top:1px solid var(--line);
+    padding:20px 0 30px;text-align:center;color:var(--ink-2);font-size:13.5px;
+  }
+</style>
+</head>
+<body>
+  <a href="/" style="position:fixed;top:16px;left:16px;z-index:9999;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#0F766E;color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.15);font-family:inherit;">← 回首頁</a>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 11h16"/><path d="M5 11c0 4.4 3.1 8 7 8s7-3.6 7-8"/>
+        <path d="M9 7c0-1.2 1-1.3 1-2.5M13.5 7c0-1.2 1-1.3 1-2.5"/>
+      </svg>
+    </div>
+    <h1>今天吃什麼</h1>
+    <p>想不到要吃什麼？從口袋名單 <b>6 間愛店</b>裡，交給運氣決定。</p>
+  </header>
+
+  <section class="stage" aria-label="隨機抽店">
+    <div class="stage-top">
+      <span><span class="dot" id="statusDot"></span><span id="statusText">口袋名單 · 共 6 間</span></span>
+    </div>
+
+    <div class="display">
+      <p class="hint" id="displayHint">按下按鈕，馬上幫你選一間</p>
+      <p class="rolling" id="rollingName">？？？</p>
+      <p class="sub" id="rollingSub"></p>
+    </div>
+
+    <div class="stage-actions">
+      <button type="button" class="btn-draw" id="drawBtn">🎲 幫我決定吃什麼</button>
+      <button type="button" class="btn-again" id="againBtn" hidden>不喜歡？再抽一次</button>
+    </div>
+  </section>
+
+  <section class="result" id="result" hidden aria-live="polite">
+    <div class="result-card">
+      <p class="verdict">就決定是它了</p>
+      <h2 id="rName"></h2>
+      <p class="note" id="rNote"></p>
+      <div class="facts">
+        <div class="fact">
+          <p class="k">地區</p>
+          <p class="v" id="rArea"></p>
+        </div>
+        <div class="fact">
+          <p class="k">類型</p>
+          <p class="v" id="rType"></p>
+        </div>
+        <div class="fact">
+          <p class="k">地址</p>
+          <p class="v" id="rAddress"></p>
+        </div>
+        <div class="fact">
+          <p class="k">Google 評分</p>
+          <p class="v" id="rRating"></p>
+        </div>
+        <div class="fact">
+          <p class="k">營業時間</p>
+          <p class="v" id="rHours"></p>
+        </div>
+        <div class="fact">
+          <p class="k">備註</p>
+          <p class="v" id="rExtra"></p>
+        </div>
+      </div>
+      <div class="result-actions">
+        <a class="btn-map" id="mapLink" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 1 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          在 Google 地圖打開
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="all" aria-label="全部店家">
+    <h3>口袋名單全部 6 間</h3>
+    <p class="all-sub">點任一間可以直接看它的資料，或按上面的按鈕隨機抽。</p>
+    <div class="store-list" id="storeList"></div>
+  </section>
+
+  <footer>© 2026 HILL 版權所有</footer>
+</div>
+
+<script>
+var STORES = [
+  {
+    name: "TEAMARS 茶馬司・繁星店",
+    area: "台中・南屯",
+    type: "茶飲・茶館",
+    address: "台中市南屯區龍富路四段 309 號 1F",
+    rating: 4.6,
+    hours: "營業時間請以店家公告為準",
+    extra: "口袋名單愛店",
+    note: "南屯的茶館愛店，適合想坐下來好好吃一餐、喝杯茶的時候。"
+  },
+  {
+    name: "The Cafe by 想 台中",
+    area: "台中・南屯七期",
+    type: "義大利餐廳",
+    address: "台中市南屯區惠中路二段 146 號",
+    rating: 4.1,
+    hours: "營業時間請以店家公告為準",
+    extra: "七期・義式料理",
+    note: "七期的義大利餐廳，想吃義大利麵、燉飯這類西式料理就選它。"
+  },
+  {
+    name: "江技舊記・苗栗店",
+    area: "苗栗・苗栗市",
+    type: "餛飩老店",
+    address: "苗栗市新苗街 88 號",
+    rating: 4.1,
+    hours: "10:00 – 20:00",
+    extra: "1949 年開業",
+    note: "1949 年開業的餛飩老店，在苗栗想吃古早味就是這一味。"
+  },
+  {
+    name: "臭霸王臭豆腐",
+    area: "台中・東區",
+    type: "臭豆腐・小吃",
+    address: "台中市東區旱溪西路一段 443 號",
+    rating: 3.8,
+    hours: "17:00 開始營業",
+    extra: "每日手工現作，售完為止",
+    note: "每日手工現作、賣完就沒了，想吃要趁早，晚餐時段剛剛好。"
+  },
+  {
+    name: "一品香春捲臭豆腐",
+    area: "台中・東區",
+    type: "素食餐廳・春捲臭豆腐",
+    address: "台中市東區精武東路 110 號",
+    rating: 4.4,
+    hours: "16:00 – 21:00",
+    extra: "週三、週日公休",
+    note: "素食也能吃得很滿足，春捲配臭豆腐是招牌組合。注意週三、週日休息。"
+  },
+  {
+    name: "21 風味館（21PLUS）",
+    area: "全台門市",
+    type: "烤雞・炸雞連鎖",
+    address: "全台 65 間門市（台中昌平、烏日高鐵等）",
+    rating: null,
+    hours: "依各門市公告為準",
+    extra: "招牌：21 種香料烤雞",
+    note: "想吃烤雞就它了，招牌 21 種香料烤雞，全台門市都找得到。"
+  }
+];
+
+var rollingName = document.getElementById('rollingName');
+var rollingSub  = document.getElementById('rollingSub');
+var displayHint = document.getElementById('displayHint');
+var statusText  = document.getElementById('statusText');
+var statusDot   = document.getElementById('statusDot');
+var drawBtn     = document.getElementById('drawBtn');
+var againBtn    = document.getElementById('againBtn');
+var resultBox   = document.getElementById('result');
+var spinning = false;
+var lastIndex = -1;
+
+function starString(rating){
+  if (rating == null) return '—';
+  var full = Math.round(rating);
+  var s = '';
+  for (var i = 0; i < 5; i++) s += (i < full) ? '★' : '☆';
+  return s;
+}
+
+function showResult(store){
+  document.getElementById('rName').textContent = store.name;
+  document.getElementById('rNote').textContent = store.note || '';
+  document.getElementById('rArea').textContent = store.area;
+  document.getElementById('rType').textContent = store.type;
+  document.getElementById('rAddress').textContent = store.address;
+  document.getElementById('rHours').textContent = store.hours;
+  document.getElementById('rExtra').textContent = store.extra;
+
+  var ratingEl = document.getElementById('rRating');
+  if (store.rating == null){
+    ratingEl.textContent = '—（連鎖門市，各店評分不同）';
+  } else {
+    ratingEl.innerHTML = '';
+    var stars = document.createElement('span');
+    stars.className = 'stars';
+    stars.textContent = starString(store.rating);
+    var num = document.createElement('span');
+    num.textContent = ' ' + store.rating.toFixed(1);
+    ratingEl.appendChild(stars);
+    ratingEl.appendChild(num);
+  }
+
+  var q = encodeURIComponent(store.name + ' ' + store.address);
+  document.getElementById('mapLink').href = 'https://www.google.com/maps/search/?api=1&query=' + q;
+
+  resultBox.hidden = false;
+
+  var cards = document.querySelectorAll('.store');
+  for (var i = 0; i < cards.length; i++){
+    cards[i].classList.toggle('picked', STORES[i] === store);
+  }
+}
+
+function pickIndex(){
+  var idx;
+  do { idx = Math.floor(Math.random() * STORES.length); }
+  while (STORES.length > 1 && idx === lastIndex);
+  return idx;
+}
+
+function spin(){
+  if (spinning) return;
+  spinning = true;
+  drawBtn.disabled = true;
+  drawBtn.textContent = '抽選中…';
+  againBtn.hidden = true;
+  statusDot.classList.add('pulse');
+  statusText.textContent = '正在從 6 間裡面挑一間…';
+  displayHint.textContent = '會是哪一間呢…';
+  rollingName.classList.remove('landed');
+  rollingName.classList.add('spinning');
+
+  var target = pickIndex();
+  var duration = 2100;
+  var start = null;
+  var current = Math.floor(Math.random() * STORES.length);
+
+  function frame(ts){
+    if (!start) start = ts;
+    var t = ts - start;
+    var progress = Math.min(t / duration, 1);
+    // ease-out: interval grows from ~50ms to ~340ms
+    var interval = 50 + 290 * progress * progress;
+
+    if (!frame.next || ts >= frame.next){
+      current = (current + 1 + Math.floor(Math.random() * 2)) % STORES.length;
+      if (progress > 0.92) current = target;
+      rollingName.textContent = STORES[current].name;
+      rollingSub.textContent = STORES[current].area + ' · ' + STORES[current].type;
+      frame.next = ts + interval;
+    }
+
+    if (progress < 1){
+      requestAnimationFrame(frame);
+    } else {
+      land(target);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+function land(idx){
+  lastIndex = idx;
+  var store = STORES[idx];
+  rollingName.textContent = store.name;
+  rollingName.classList.remove('spinning');
+  rollingName.classList.add('landed');
+  rollingSub.textContent = store.area + ' · ' + store.type;
+  displayHint.textContent = '抽好了，今天就吃這間';
+  statusDot.classList.remove('pulse');
+  statusText.textContent = '口袋名單 · 共 6 間';
+  drawBtn.disabled = false;
+  drawBtn.textContent = '🎲 再抽一次';
+  againBtn.hidden = true;
+  spinning = false;
+  showResult(store);
+  resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+drawBtn.addEventListener('click', spin);
+againBtn.addEventListener('click', spin);
+
+// Build the full store list
+var listEl = document.getElementById('storeList');
+STORES.forEach(function(store){
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'store';
+
+  var name = document.createElement('p');
+  name.className = 's-name';
+  name.textContent = store.name;
+
+  var meta = document.createElement('p');
+  meta.className = 's-meta';
+  var rateTxt = store.rating == null ? '全台門市' : 'Google ' + store.rating.toFixed(1);
+  meta.textContent = store.area + ' · ' + store.type + ' · ';
+  var rate = document.createElement('span');
+  rate.className = 's-rate';
+  rate.textContent = rateTxt;
+  meta.appendChild(rate);
+
+  btn.appendChild(name);
+  btn.appendChild(meta);
+  btn.addEventListener('click', function(){
+    if (spinning) return;
+    lastIndex = STORES.indexOf(store);
+    rollingName.textContent = store.name;
+    rollingName.classList.remove('spinning');
+    rollingName.classList.add('landed');
+    rollingSub.textContent = store.area + ' · ' + store.type;
+    displayHint.textContent = '你選了這間';
+    drawBtn.textContent = '🎲 幫我決定吃什麼';
+    showResult(store);
+    resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+  listEl.appendChild(btn);
+});
+</script>
+</body>
+</html>
