@@ -181,6 +181,35 @@
       .rate-card .name { font-size: 13px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .rate-card .val { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
+      .trend-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+      #trendChart { width: 100%; height: 220px; display: block; }
+      .trend-stats { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+      .trend-stat { flex: 1 1 120px; background: var(--surface-2); border-radius: 10px; padding: 8px 12px; }
+      .trend-stat .k { font-size: 12px; color: var(--ink-soft); font-weight: 700; letter-spacing: .06em; }
+      .trend-stat .v { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+      .trend-stat .v.up { color: #b3261e; }
+      .trend-stat .v.down { color: #0c6b4a; }
+      .mini-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; margin-top: 10px; }
+      .mini-row .grow { flex: 1 1 140px; }
+      .mini-row input, .mini-row select { width: 100%; font: inherit; font-size: 16px; color: var(--ink); background: var(--surface-2); border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+      .btn-accent { background: var(--accent); color: var(--accent-ink); border: 1.5px solid var(--accent); border-radius: 10px; padding: 8px 18px; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+      .btn-accent:disabled { opacity: .5; cursor: default; }
+      .btn-ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); border-radius: 10px; padding: 8px 14px; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+      .callout { border-radius: 12px; padding: 12px 16px; margin-top: 12px; font-size: 15px; }
+      .callout.hit { background: #fdf0e4; border: 1px solid #e8b25a; color: #7a4a00; }
+      .callout.wait { background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-soft); }
+      .callout b { color: var(--ink); }
+      .cmp-table, .price-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+      .cmp-table th, .cmp-table td, .price-table th, .price-table td { padding: 9px 16px; font-variant-numeric: tabular-nums; }
+      .cmp-table th, .price-table th { background: var(--surface-2); font-size: 13px; letter-spacing: .06em; color: var(--ink-soft); text-align: right; font-weight: 700; }
+      .cmp-table th:first-child, .price-table th:first-child { text-align: left; }
+      .cmp-table td, .price-table td { border-top: 1px solid var(--line); text-align: right; font-size: 16px; }
+      .cmp-table td:first-child, .price-table td:first-child { text-align: left; font-weight: 500; }
+      .cmp-table td.best { color: var(--accent); font-weight: 700; }
+      .note-box { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: var(--ink-soft); margin-top: 34px; }
+      .note-box h2 { margin-top: 0; }
+      .note-box p { margin: 0 0 8px; }
+
       footer { margin-top: 36px; color: var(--ink-faint); font-size: 13px; border-top: 1px solid var(--line); padding-top: 14px; }
       footer p { margin: 0 0 6px; }
 
@@ -258,6 +287,97 @@
       <h2>各幣別對台幣匯率</h2>
       <p class="section-note">以下為 1 單位外幣可換多少新台幣。點任一張卡片，就把該幣別帶入換算器（換成台幣）。</p>
       <div class="rate-grid" id="rateGrid"></div>
+
+      <h2>30 天匯率走勢</h2>
+      <p class="section-note" id="trendNote">跟著上方換算器的幣別組合走：現在看的是美元換台幣的走勢。</p>
+      <div class="trend-wrap">
+        <canvas id="trendChart" height="220" aria-label="30 天匯率走勢圖"></canvas>
+        <div class="trend-stats">
+          <div class="trend-stat"><div class="k">目前</div><div class="v" id="trendNow">—</div></div>
+          <div class="trend-stat"><div class="k">30 天最高</div><div class="v" id="trendHigh">—</div></div>
+          <div class="trend-stat"><div class="k">30 天最低</div><div class="v" id="trendLow">—</div></div>
+          <div class="trend-stat"><div class="k">30 天漲跌</div><div class="v" id="trendChg">—</div></div>
+        </div>
+        <p class="section-note" id="trendStatus" style="margin: 10px 0 0;">走勢載入中…</p>
+      </div>
+
+      <h2>目標匯率提醒</h2>
+      <p class="section-note">設一個想換的價位，打開這個頁面就告訴你到了沒。提醒存在你的裝置上，只在開頁時檢查，不會主動推播通知。</p>
+      <div class="mini-row">
+        <div class="grow">
+          <label class="field-label" for="targetRate">當 1 美元跌到多少台幣以下，提醒我</label>
+          <input id="targetRate" type="text" inputmode="decimal" autocomplete="off" placeholder="例如 31.5" />
+        </div>
+        <button class="btn-accent" id="saveTarget" type="button">設定提醒</button>
+        <button class="btn-ghost" id="clearTarget" type="button">清除</button>
+      </div>
+      <div class="callout wait" id="targetStatus">尚未設定目標匯率。</div>
+
+      <h2>旅遊購物試算</h2>
+      <p class="section-note">在國外看到售價，先算台幣價，再加計信用卡海外手續費，結帳前心裡有底。</p>
+      <div class="mini-row">
+        <div class="grow">
+          <label class="field-label" for="shopAmount">當地售價</label>
+          <input id="shopAmount" type="text" inputmode="decimal" autocomplete="off" value="1000" />
+        </div>
+        <div class="grow">
+          <label class="field-label" for="shopCur">幣別</label>
+          <select id="shopCur"></select>
+        </div>
+      </div>
+      <div class="callout wait" id="shopResult">—</div>
+      <p class="section-note" style="margin-top: 8px;">小提醒：在國外刷卡結帳時選「當地貨幣」，不要選台幣結帳（DCC），選台幣的話匯率會再差一截。以上以 1.5% 海外交易手續費試算，實際依發卡銀行為準。</p>
+
+      <h2>換匯比一比</h2>
+      <p class="section-note">同一筆錢，三種換法差多少：拿現鈔、刷卡、線上換匯比給你看。</p>
+      <div class="mini-row">
+        <div class="grow">
+          <label class="field-label" for="cmpAmount">想換到的外幣金額</label>
+          <input id="cmpAmount" type="text" inputmode="decimal" autocomplete="off" value="10000" />
+        </div>
+        <div class="grow">
+          <label class="field-label" for="cmpCur">幣別</label>
+          <select id="cmpCur"></select>
+        </div>
+      </div>
+      <table class="cmp-table" style="margin-top: 12px;">
+        <thead><tr><th>方式</th><th>要花台幣</th><th>與最划算差</th></tr></thead>
+        <tbody id="cmpBody"></tbody>
+      </table>
+      <p class="section-note" style="margin-top: 8px;">試算假設：現鈔價以即期匯率加 0.5%、線上換匯加 0.1%、刷卡加 1.5% 海外手續費；實際以各銀行牌告與發卡銀行為準。</p>
+
+      <h2>常用物價對照</h2>
+      <p class="section-note">一碗拉麵、一杯咖啡在當地是多少台幣？當地價是常見參考價，實際依店家為準，台幣價用最新匯率換算。</p>
+      <table class="price-table">
+        <thead><tr><th>品項</th><th>當地價</th><th>約台幣</th></tr></thead>
+        <tbody id="priceBody"></tbody>
+      </table>
+
+      <h2>旅行分帳</h2>
+      <p class="section-note">一筆錢幾個人分，每人出多少，一次算好。</p>
+      <div class="mini-row">
+        <div class="grow">
+          <label class="field-label" for="splitTotal">總金額</label>
+          <input id="splitTotal" type="text" inputmode="decimal" autocomplete="off" value="5000" />
+        </div>
+        <div class="grow">
+          <label class="field-label" for="splitCur">幣別</label>
+          <select id="splitCur"></select>
+        </div>
+        <div class="grow">
+          <label class="field-label" for="splitPeople">人數</label>
+          <input id="splitPeople" type="text" inputmode="numeric" autocomplete="off" value="2" />
+        </div>
+      </div>
+      <div class="callout wait" id="splitResult">—</div>
+
+      <div class="note-box">
+        <h2>用之前先知道的事</h2>
+        <p>這裡的匯率是市場中間價（即期匯率），銀行臨櫃換現鈔的「現鈔賣出價」通常會比即期貴一點，刷卡則是結帳當天的即期匯率再加海外交易手續費（多數信用卡 1.5%）。所以同樣一筆錢，換法不同、拿到的台幣真的會不一樣，上面「換匯比一比」就是幫你算這個。</p>
+        <p>走勢圖看的是過去 30 天的收盤匯率，幫你判斷現在換是貴還是便宜，但過去走勢不代表未來，急著用的錢不要等匯率，真的想等可以設目標匯率提醒，每天開頁面看一眼。</p>
+        <p>信用卡在國外結帳時，刷卡機問你要用當地貨幣還是台幣結帳，一律選當地貨幣。選台幣結帳（DCC）是商店那邊的匯率，通常比發卡銀行差，還可能被多收一筆手續費。</p>
+        <p>本頁匯率僅供參考，實際交易金額以銀行牌告與發卡銀行結匯為準。</p>
+      </div>
 
       <footer>
         <p id="srcLine">資料來源：Currency API（fawazahmed0/currency-api，經 jsDelivr 提供），匯率日期 <span id="srcDate">2026-11-18</span>。此為市場參考匯率，銀行買賣與信用卡結匯會另有價差與手續費，實際金額以交易當下為準。</p>
@@ -381,6 +501,8 @@
           tr.appendChild(td1); tr.appendChild(td2);
           body.appendChild(tr);
         });
+        renderPrices();
+        checkTarget();
       }
 
       // 對台幣匯率卡片（抓到新匯率後會重建）
@@ -496,8 +618,235 @@
       }
       refreshBtn.addEventListener("click", loadRates);
 
+      // ===== 差異化功能：走勢圖、目標匯率提醒、購物試算、換匯比一比、物價對照、旅行分帳 =====
+
+      // --- 30 天走勢圖（Currency API 歷史資料：版本號即日期）---
+      var trendCache = {};
+      var trendRun = 0;
+      function drawTrend(pts, from, to) {
+        var cv = document.getElementById("trendChart");
+        var ctx = cv.getContext("2d");
+        var dpr = window.devicePixelRatio || 1;
+        var W = cv.clientWidth || 600, H = 220;
+        cv.width = W * dpr; cv.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, W, H);
+        var rates = pts.map(function (p) { return p.rate; });
+        var min = Math.min.apply(null, rates), max = Math.max.apply(null, rates);
+        if (max === min) max = min + 0.000001;
+        var padL = 8, padR = 8, padT = 14, padB = 22;
+        function X(i) { return padL + (W - padL - padR) * (pts.length === 1 ? 0 : i / (pts.length - 1)); }
+        function Y(v) { return padT + (H - padT - padB) * (1 - (v - min) / (max - min)); }
+        ctx.strokeStyle = "rgba(127,127,127,.25)"; ctx.fillStyle = "#7d8a81";
+        ctx.font = "11px sans-serif"; ctx.lineWidth = 1;
+        [min, (min + max) / 2, max].forEach(function (v) {
+          ctx.beginPath(); ctx.moveTo(padL, Y(v)); ctx.lineTo(W - padR, Y(v)); ctx.stroke();
+          ctx.fillText(fmtRate(v), padL + 2, Y(v) - 3);
+        });
+        var accent = "#0c6b4a";
+        ctx.beginPath();
+        pts.forEach(function (p, i) { if (i === 0) ctx.moveTo(X(i), Y(p.rate)); else ctx.lineTo(X(i), Y(p.rate)); });
+        ctx.strokeStyle = accent; ctx.lineWidth = 2; ctx.stroke();
+        ctx.lineTo(X(pts.length - 1), H - padB); ctx.lineTo(X(0), H - padB); ctx.closePath();
+        ctx.fillStyle = "rgba(12,107,74,.12)"; ctx.fill();
+        ctx.beginPath(); ctx.arc(X(pts.length - 1), Y(pts[pts.length - 1].rate), 4, 0, Math.PI * 2);
+        ctx.fillStyle = accent; ctx.fill();
+        ctx.fillStyle = "#7d8a81";
+        ctx.fillText(pts[0].date.slice(5), padL, H - 6);
+        var endLabel = pts[pts.length - 1].date.slice(5);
+        ctx.fillText(endLabel, W - padR - ctx.measureText(endLabel).width, H - 6);
+        var now = pts[pts.length - 1].rate, first = pts[0].rate;
+        var chg = (now - first) / first * 100;
+        document.getElementById("trendNow").textContent = fmtRate(now) + " " + to;
+        document.getElementById("trendHigh").textContent = fmtRate(max) + " " + to;
+        document.getElementById("trendLow").textContent = fmtRate(min) + " " + to;
+        var chgEl = document.getElementById("trendChg");
+        chgEl.textContent = (chg >= 0 ? "+" : "") + chg.toFixed(2) + "%";
+        chgEl.className = "v " + (chg >= 0 ? "up" : "down");
+        document.getElementById("trendStatus").textContent = "資料區間 " + pts[0].date + " 至 " + pts[pts.length - 1].date + "（共 " + pts.length + " 天），來源 Currency API。";
+      }
+      async function loadTrend() {
+        var from = fromEl.value, to = toEl.value;
+        var key = from + "-" + to;
+        document.getElementById("trendNote").textContent = "跟著上方換算器的幣別組合走：現在看的是" + NAMES[from] + "換" + NAMES[to] + "的走勢。";
+        if (trendCache[key]) { drawTrend(trendCache[key], from, to); return; }
+        var myRun = ++trendRun;
+        document.getElementById("trendStatus").textContent = "走勢載入中…";
+        var dates = [];
+        var today = new Date();
+        for (var i = 29; i >= 0; i--) {
+          var d = new Date(today); d.setDate(d.getDate() - i);
+          dates.push(d.toISOString().slice(0, 10));
+        }
+        var results = await Promise.allSettled(dates.map(function (dt) {
+          return fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@" + dt + "/v1/currencies/usd.min.json", { cache: "no-store" })
+            .then(function (r) { if (!r.ok) throw new Error(dt); return r.json(); });
+        }));
+        if (myRun !== trendRun) return;
+        var pts = [];
+        results.forEach(function (res) {
+          if (res.status !== "fulfilled") return;
+          var data = res.value;
+          if (!data || !data.usd || !data.date) return;
+          var a = from === "USD" ? 1 : data.usd[from.toLowerCase()];
+          var b = to === "USD" ? 1 : data.usd[to.toLowerCase()];
+          if (typeof a !== "number" || typeof b !== "number" || a <= 0) return;
+          pts.push({ date: data.date, rate: b / a });
+        });
+        pts.sort(function (x, y) { return x.date < y.date ? -1 : 1; });
+        if (pts.length < 2) {
+          document.getElementById("trendStatus").textContent = "走勢資料抓取失敗，請按上方「重新整理匯率」再試一次。";
+          return;
+        }
+        trendCache[key] = pts;
+        drawTrend(pts, from, to);
+      }
+
+      // --- 目標匯率提醒（存在裝置 localStorage）---
+      function targetKey(from, to) { return "huilu-target-" + from + "-" + to; }
+      function checkTarget() {
+        var from = fromEl.value, to = toEl.value;
+        var label = document.querySelector('label[for="targetRate"]');
+        if (label) label.textContent = "當 1 " + NAMES[from] + "跌到多少" + NAMES[to] + "以下，提醒我";
+        var el = document.getElementById("targetStatus");
+        var saved = null;
+        try { saved = localStorage.getItem(targetKey(from, to)); } catch (e) { saved = null; }
+        if (saved === null || saved === "") {
+          el.className = "callout wait";
+          el.textContent = "尚未設定目標匯率。";
+          return;
+        }
+        var target = parseFloat(saved);
+        var now = convert(1, from, to);
+        if (isNaN(target) || target <= 0) {
+          el.className = "callout wait";
+          el.textContent = "尚未設定目標匯率。";
+          return;
+        }
+        if (now <= target) {
+          el.className = "callout hit";
+          el.innerHTML = "<b>到了！</b>目前 1 " + NAMES[from] + " = " + fmtRate(now) + " " + NAMES[to] + "，已經低於目標 " + fmtRate(target) + "，現在換最划算。";
+        } else {
+          var diff = now - target;
+          el.className = "callout wait";
+          el.innerHTML = "還沒到：目前 1 " + NAMES[from] + " = " + fmtRate(now) + " " + NAMES[to] + "，距離目標 " + fmtRate(target) + " 還差 " + fmtRate(diff) + "（約 " + (diff / now * 100).toFixed(1) + "%）。";
+        }
+      }
+      document.getElementById("saveTarget").addEventListener("click", function () {
+        var v = parseFloat(String(document.getElementById("targetRate").value).replace(/[^0-9.]/g, ""));
+        if (isNaN(v) || v <= 0) {
+          document.getElementById("targetStatus").className = "callout wait";
+          document.getElementById("targetStatus").textContent = "請先輸一個大於 0 的目標匯率。";
+          return;
+        }
+        try { localStorage.setItem(targetKey(fromEl.value, toEl.value), String(v)); } catch (e) {}
+        checkTarget();
+      });
+      document.getElementById("clearTarget").addEventListener("click", function () {
+        try { localStorage.removeItem(targetKey(fromEl.value, toEl.value)); } catch (e) {}
+        document.getElementById("targetRate").value = "";
+        checkTarget();
+      });
+
+      // --- 旅遊購物試算 ---
+      var shopAmountEl = document.getElementById("shopAmount");
+      var shopCurEl = document.getElementById("shopCur");
+      fillSelect(shopCurEl, "JPY");
+      function renderShop() {
+        var amt = parseFloat(String(shopAmountEl.value).replace(/[^0-9.]/g, "")) || 0;
+        var cur = shopCurEl.value;
+        var twd = convert(amt, cur, "TWD");
+        var card = twd * 1.015;
+        document.getElementById("shopResult").innerHTML =
+          "<b>" + fmt(cur, amt) + " " + NAMES[cur] + "</b> 約 <b>NT$ " + fmt("TWD", twd) + "</b>；刷卡加 1.5% 手續費後約 <b>NT$ " + fmt("TWD", card) + "</b>。";
+      }
+      shopAmountEl.addEventListener("input", renderShop);
+      shopCurEl.addEventListener("change", renderShop);
+
+      // --- 換匯比一比（拿台幣換外幣，要花多少台幣）---
+      var cmpAmountEl = document.getElementById("cmpAmount");
+      var cmpCurEl = document.getElementById("cmpCur");
+      fillSelect(cmpCurEl, "JPY");
+      function renderCompare() {
+        var amt = parseFloat(String(cmpAmountEl.value).replace(/[^0-9.]/g, "")) || 0;
+        var cur = cmpCurEl.value;
+        var base = convert(amt, cur, "TWD");
+        var rows = [
+          { name: "線上換匯", v: base * 1.001 },
+          { name: "拿現鈔", v: base * 1.005 },
+          { name: "刷卡", v: base * 1.015 }
+        ];
+        rows.sort(function (a, b) { return a.v - b.v; });
+        var best = rows[0].v;
+        var body = document.getElementById("cmpBody");
+        body.innerHTML = "";
+        rows.forEach(function (r) {
+          var tr = document.createElement("tr");
+          var td1 = document.createElement("td"); td1.textContent = r.name;
+          var td2 = document.createElement("td");
+          td2.textContent = "NT$ " + fmt("TWD", r.v);
+          if (r.v === best) td2.className = "best";
+          var td3 = document.createElement("td");
+          td3.textContent = r.v === best ? "最划算" : "+NT$ " + fmt("TWD", r.v - best);
+          tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+          body.appendChild(tr);
+        });
+      }
+      cmpAmountEl.addEventListener("input", renderCompare);
+      cmpCurEl.addEventListener("change", renderCompare);
+
+      // --- 常用物價對照（當地價為常見參考價）---
+      var PRICE_ITEMS = [
+        { name: "日本拉麵", cur: "JPY", price: 900 },
+        { name: "日本咖啡", cur: "JPY", price: 450 },
+        { name: "日本便利商店飯糰", cur: "JPY", price: 150 },
+        { name: "韓國炸雞", cur: "KRW", price: 20000 },
+        { name: "韓國咖啡", cur: "KRW", price: 4500 },
+        { name: "美國漢堡", cur: "USD", price: 8 },
+        { name: "美國咖啡", cur: "USD", price: 5 },
+        { name: "香港菠蘿包", cur: "HKD", price: 12 }
+      ];
+      function renderPrices() {
+        var body = document.getElementById("priceBody");
+        if (!body) return;
+        body.innerHTML = "";
+        PRICE_ITEMS.forEach(function (it) {
+          var tr = document.createElement("tr");
+          var td1 = document.createElement("td"); td1.textContent = it.name;
+          var td2 = document.createElement("td"); td2.textContent = fmt(it.cur, it.price) + " " + it.cur;
+          var td3 = document.createElement("td"); td3.textContent = "NT$ " + fmt("TWD", convert(it.price, it.cur, "TWD"));
+          tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+          body.appendChild(tr);
+        });
+      }
+
+      // --- 旅行分帳 ---
+      var splitTotalEl = document.getElementById("splitTotal");
+      var splitCurEl = document.getElementById("splitCur");
+      var splitPeopleEl = document.getElementById("splitPeople");
+      fillSelect(splitCurEl, "JPY");
+      function renderSplit() {
+        var total = parseFloat(String(splitTotalEl.value).replace(/[^0-9.]/g, "")) || 0;
+        var n = parseInt(String(splitPeopleEl.value).replace(/[^0-9]/g, ""), 10) || 0;
+        var cur = splitCurEl.value;
+        var el = document.getElementById("splitResult");
+        if (n <= 0) { el.textContent = "人數至少要 1 人。"; return; }
+        var each = total / n;
+        el.innerHTML = "<b>" + n + " 人分，每人 " + fmt(cur, each) + " " + NAMES[cur] + "</b>（約 NT$ " + fmt("TWD", convert(each, cur, "TWD")) + "）。";
+      }
+      splitTotalEl.addEventListener("input", renderSplit);
+      splitCurEl.addEventListener("change", renderSplit);
+      splitPeopleEl.addEventListener("input", renderSplit);
+
+      // 換算器幣別變動時：走勢圖跟著換，物價與提醒用最新匯率重算
+      fromEl.addEventListener("change", loadTrend);
+      toEl.addEventListener("change", loadTrend);
+
       render();
+      renderShop(); renderCompare(); renderPrices(); renderSplit();
+      checkTarget();
       loadRates();
+      loadTrend();
     </script>
   </body>
 </html>
