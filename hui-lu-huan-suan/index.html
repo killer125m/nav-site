@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>匯率換算</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
+
+      :root {
+        --bg: #f4f6f3;
+        --surface: #ffffff;
+        --surface-2: #eef1ec;
+        --ink: #17251d;
+        --ink-soft: #4c5a51;
+        --ink-faint: #7d8a81;
+        --line: #d9dfd8;
+        --accent: #0c6b4a;
+        --accent-ink: #ffffff;
+        --accent-soft: #e2efe8;
+        --gold: #b07d2b;
+        --focus: #0c6b4a;
+        --shadow: 0 1px 2px rgba(23, 37, 29, .06), 0 10px 30px -18px rgba(23, 37, 29, .35);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #101613;
+          --surface: #182019;
+          --surface-2: #1f2a21;
+          --ink: #e8efe9;
+          --ink-soft: #aebbb1;
+          --ink-faint: #7e8d82;
+          --line: #2c3a2f;
+          --accent: #3cb98a;
+          --accent-ink: #0b1f16;
+          --accent-soft: #1d3327;
+          --gold: #d9a44e;
+          --focus: #3cb98a;
+          --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.7);
+        }
+      }
+
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+        line-height: 1.55;
+      }
+      .wrap { max-width: 880px; margin: 0 auto; padding: 28px 18px 56px; }
+
+      header { margin-bottom: 22px; }
+      h1 {
+        font-family: "Noto Serif TC", "Noto Sans TC", serif;
+        font-weight: 900;
+        font-size: clamp(30px, 6vw, 42px);
+        letter-spacing: .04em;
+        margin: 0 0 6px;
+      }
+      .asof { color: var(--ink-soft); font-size: 14px; margin: 0; }
+      .asof strong { color: var(--ink); font-weight: 700; }
+      .refresh-btn {
+        border: 1px solid var(--accent); background: transparent; color: var(--accent);
+        border-radius: 999px; padding: 2px 12px; font: inherit; font-size: 13px; font-weight: 700;
+        cursor: pointer; margin-left: 6px; vertical-align: middle;
+      }
+      .refresh-btn:hover { background: var(--accent-soft); }
+      .refresh-btn:disabled { opacity: .5; cursor: default; }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 22px;
+      }
+
+      .field-label { display: block; font-size: 13px; font-weight: 700; letter-spacing: .08em; color: var(--ink-soft); margin-bottom: 8px; }
+
+      .amount-row { display: flex; gap: 10px; flex-wrap: wrap; }
+      .amount-box {
+        flex: 1 1 220px;
+        display: flex; align-items: baseline; gap: 8px;
+        background: var(--surface-2);
+        border: 1.5px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 14px;
+      }
+      .amount-box:focus-within { border-color: var(--focus); }
+      .amount-box .sym { font-size: 20px; font-weight: 700; color: var(--ink-soft); }
+      #amount {
+        flex: 1; min-width: 0; width: 100%;
+        border: 0; background: transparent; color: var(--ink);
+        font: inherit; font-size: 30px; font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        outline: none; padding: 0;
+      }
+      .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+      .chip {
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft);
+        border-radius: 999px; padding: 4px 14px; font: inherit; font-size: 14px; font-weight: 500;
+        cursor: pointer; font-variant-numeric: tabular-nums;
+      }
+      .chip:hover { border-color: var(--accent); color: var(--accent); }
+      .chip:active { background: var(--accent-soft); }
+
+      .pair-row {
+        display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: end;
+        margin-top: 20px;
+      }
+      select {
+        width: 100%;
+        font: inherit; font-size: 16px; font-weight: 500; color: var(--ink);
+        background: var(--surface-2);
+        border: 1.5px solid var(--line); border-radius: 10px;
+        padding: 8px 10px; cursor: pointer;
+      }
+      select:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+      #swap {
+        width: 44px; height: 44px; border-radius: 50%;
+        border: 1.5px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+        font-size: 19px; line-height: 1; cursor: pointer;
+        display: grid; place-items: center; margin-bottom: 2px;
+        transition: transform .25s ease;
+      }
+      #swap:hover { transform: rotate(180deg); }
+      @media (prefers-reduced-motion: reduce) { #swap:hover { transform: none; } }
+
+      .result { margin-top: 24px; border-top: 1px dashed var(--line); padding-top: 18px; }
+      .result .r-label { font-size: 13px; font-weight: 700; letter-spacing: .08em; color: var(--ink-soft); }
+      .result .r-value {
+        font-size: clamp(32px, 7vw, 46px); font-weight: 900; line-height: 1.2;
+        font-variant-numeric: tabular-nums; word-break: break-all; margin: 2px 0 4px;
+      }
+      .result .r-value .cur { font-size: .5em; font-weight: 700; color: var(--gold); margin-left: 6px; letter-spacing: .05em; }
+      .rate-line { color: var(--ink-soft); font-size: 15px; font-variant-numeric: tabular-nums; margin: 0; }
+      .rate-line + .rate-line { margin-top: 2px; }
+
+      .quick-pairs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+      .quick-pairs .qp-label { width: 100%; font-size: 13px; font-weight: 700; letter-spacing: .08em; color: var(--ink-soft); }
+      .qp {
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+        border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer;
+      }
+      .qp:hover { border-color: var(--accent); color: var(--accent); }
+      .qp[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+      h2 {
+        font-family: "Noto Serif TC", "Noto Sans TC", serif;
+        font-size: 21px; font-weight: 900; letter-spacing: .03em;
+        margin: 34px 0 6px;
+      }
+      .section-note { color: var(--ink-soft); font-size: 14px; margin: 0 0 12px; }
+
+      .ladder { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+      .ladder th, .ladder td { padding: 9px 16px; font-variant-numeric: tabular-nums; }
+      .ladder th { background: var(--surface-2); font-size: 13px; letter-spacing: .06em; color: var(--ink-soft); text-align: right; font-weight: 700; }
+      .ladder th:first-child { text-align: left; }
+      .ladder td { border-top: 1px solid var(--line); text-align: right; font-size: 16px; }
+      .ladder td:first-child { text-align: left; font-weight: 500; }
+
+      .rate-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+      .rate-card {
+        display: flex; align-items: center; gap: 12px; text-align: left;
+        background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+        padding: 12px 14px; font: inherit; color: var(--ink); cursor: pointer; width: 100%;
+      }
+      .rate-card:hover { border-color: var(--accent); }
+      .rate-card .code {
+        font-weight: 900; font-size: 17px; letter-spacing: .04em; color: var(--accent);
+        background: var(--accent-soft); border-radius: 8px; padding: 6px 9px; min-width: 58px; text-align: center;
+      }
+      .rate-card .meta { min-width: 0; }
+      .rate-card .name { font-size: 13px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .rate-card .val { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+      footer { margin-top: 36px; color: var(--ink-faint); font-size: 13px; border-top: 1px solid var(--line); padding-top: 14px; }
+      footer p { margin: 0 0 6px; }
+
+      @media (max-width: 560px) {
+        .wrap { padding: 20px 14px 44px; }
+        .panel { padding: 18px 16px; }
+        .pair-row { grid-template-columns: 1fr auto 1fr; gap: 8px; }
+        #amount { font-size: 26px; }
+      }
+    </style>
+  </head>
+  <body>
+    <a href="/" style="position:fixed;top:16px;left:16px;z-index:9999;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#0F766E;color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.15);font-family:inherit;">← 回首頁</a>
+    <main class="wrap">
+      <header>
+        <h1>匯率換算</h1>
+        <p class="asof">匯率資料日期：<strong id="asofDate">2026 年 11 月 18 日</strong><span id="asofNote">（備份資料，正在抓取最新匯率…）</span> <button id="refreshRates" type="button" class="refresh-btn">重新整理匯率</button></p>
+      </header>
+
+      <section class="panel" aria-label="換算器">
+        <label class="field-label" for="amount">金額</label>
+        <div class="amount-row">
+          <div class="amount-box">
+            <span class="sym" id="amountSym">$</span>
+            <input id="amount" type="text" inputmode="decimal" autocomplete="off" value="100" aria-label="輸入金額" />
+          </div>
+        </div>
+        <div class="chips" role="group" aria-label="快速金額">
+          <button class="chip" type="button" data-amt="100">100</button>
+          <button class="chip" type="button" data-amt="500">500</button>
+          <button class="chip" type="button" data-amt="1000">1,000</button>
+          <button class="chip" type="button" data-amt="5000">5,000</button>
+          <button class="chip" type="button" data-amt="10000">10,000</button>
+          <button class="chip" type="button" data-amt="100000">100,000</button>
+        </div>
+
+        <div class="pair-row">
+          <div>
+            <label class="field-label" for="fromCur">從</label>
+            <select id="fromCur"></select>
+          </div>
+          <button id="swap" type="button" aria-label="交換幣別" title="交換幣別">⇄</button>
+          <div>
+            <label class="field-label" for="toCur">換成</label>
+            <select id="toCur"></select>
+          </div>
+        </div>
+
+        <div class="result" aria-live="polite">
+          <div class="r-label" id="rLabel">換算結果</div>
+          <div class="r-value"><span id="rValue">—</span><span class="cur" id="rCur"></span></div>
+          <p class="rate-line" id="rateLine">—</p>
+          <p class="rate-line" id="rateLineInv">—</p>
+        </div>
+
+        <div class="quick-pairs" role="group" aria-label="熱門幣別組合">
+          <span class="qp-label">熱門組合</span>
+          <button class="qp" type="button" data-from="USD" data-to="TWD">美元 → 台幣</button>
+          <button class="qp" type="button" data-from="JPY" data-to="TWD">日圓 → 台幣</button>
+          <button class="qp" type="button" data-from="TWD" data-to="JPY">台幣 → 日圓</button>
+          <button class="qp" type="button" data-from="CNY" data-to="TWD">人民幣 → 台幣</button>
+          <button class="qp" type="button" data-from="EUR" data-to="TWD">歐元 → 台幣</button>
+          <button class="qp" type="button" data-from="KRW" data-to="TWD">韓元 → 台幣</button>
+          <button class="qp" type="button" data-from="USD" data-to="JPY">美元 → 日圓</button>
+        </div>
+      </section>
+
+      <h2>常用金額對照</h2>
+      <p class="section-note" id="ladderNote">—</p>
+      <table class="ladder">
+        <thead><tr><th id="ladderFromHead">金額</th><th id="ladderToHead">換算</th></tr></thead>
+        <tbody id="ladderBody"></tbody>
+      </table>
+
+      <h2>各幣別對台幣匯率</h2>
+      <p class="section-note">以下為 1 單位外幣可換多少新台幣。點任一張卡片，就把該幣別帶入換算器（換成台幣）。</p>
+      <div class="rate-grid" id="rateGrid"></div>
+
+      <footer>
+        <p id="srcLine">資料來源：Currency API（fawazahmed0/currency-api，經 jsDelivr 提供），匯率日期 <span id="srcDate">2026-11-18</span>。此為市場參考匯率，銀行買賣與信用卡結匯會另有價差與手續費，實際金額以交易當下為準。</p>
+        <p>© 2026 HILL 版權所有</p>
+      </footer>
+    </main>
+
+    <script>
+      // 備份匯率快照：2026-11-18 抓取，基準為 1 美元（USD）可換多少該幣別。
+      // 來源：Currency API (fawazahmed0/currency-api) via jsDelivr。
+      // 頁面開啟時先用這份備份立即顯示，再去抓最新匯率並更新畫面。
+      var FALLBACK_DATE = "2026-11-18";
+      var FALLBACK_RATES = {
+        USD: 1, TWD: 32.97406063, JPY: 159.29003817, CNY: 6.6662016, HKD: 7.84563248,
+        EUR: 0.91080569, GBP: 0.75809074, KRW: 1332.96137679, AUD: 1.48774966, CAD: 1.4319452,
+        SGD: 1.28979456, THB: 33.88928617, VND: 25687.00391491, PHP: 63.7283752, IDR: 18263.97004598,
+        MYR: 4.12855848, CHF: 0.84135847, NZD: 1.82154105, INR: 93.32614706, AED: 3.6725,
+        SEK: 10.14685484, NOK: 9.64536754, DKK: 6.80800729, PLN: 4.01203915, CZK: 22.19232701,
+        HUF: 334.3089589, TRY: 50.43278606, ZAR: 16.96902142, BRL: 5.77828238, MXN: 18.45420564,
+        RUB: 82.21723098
+      };
+      var RATE_DATE = FALLBACK_DATE;
+      var RATES = Object.assign({}, FALLBACK_RATES);
+      var NAMES = {
+        TWD: "新台幣", USD: "美元", JPY: "日圓", CNY: "人民幣", HKD: "港幣",
+        EUR: "歐元", GBP: "英鎊", KRW: "韓元", AUD: "澳幣", CAD: "加幣",
+        SGD: "新加坡幣", THB: "泰銖", VND: "越南盾", PHP: "菲律賓披索", IDR: "印尼盾",
+        MYR: "馬來西亞令吉", CHF: "瑞士法郎", NZD: "紐西蘭幣", INR: "印度盧比", AED: "阿聯酋迪拉姆",
+        SEK: "瑞典克朗", NOK: "挪威克朗", DKK: "丹麥克朗", PLN: "波蘭茲羅提", CZK: "捷克克朗",
+        HUF: "匈牙利福林", TRY: "土耳其里拉", ZAR: "南非蘭特", BRL: "巴西雷亞爾", MXN: "墨西哥披索",
+        RUB: "俄羅斯盧布"
+      };
+      var SYMBOLS = {
+        TWD: "NT$", USD: "$", JPY: "¥", CNY: "¥", HKD: "HK$", EUR: "€", GBP: "£", KRW: "₩",
+        AUD: "A$", CAD: "C$", SGD: "S$", THB: "฿", VND: "₫", PHP: "₱", IDR: "Rp", MYR: "RM",
+        CHF: "CHF", NZD: "NZ$", INR: "₹", AED: "د.إ", SEK: "kr", NOK: "kr", DKK: "kr",
+        PLN: "zł", CZK: "Kč", HUF: "Ft", TRY: "₺", ZAR: "R", BRL: "R$", MXN: "$", RUB: "₽"
+      };
+      // 下拉選單順序：台幣、美元優先，其餘依常用程度
+      var ORDER = ["TWD","USD","JPY","CNY","HKD","EUR","GBP","KRW","THB","SGD","AUD","CAD","CHF","NZD","VND","PHP","IDR","MYR","INR","AED","SEK","NOK","DKK","PLN","CZK","HUF","TRY","ZAR","BRL","MXN","RUB"];
+      // 對台幣卡片順序
+      var CARD_ORDER = ["USD","JPY","CNY","HKD","EUR","GBP","KRW","THB","SGD","AUD","CAD","CHF","VND","PHP","MYR","NZD"];
+
+      var amountEl = document.getElementById("amount");
+      var fromEl = document.getElementById("fromCur");
+      var toEl = document.getElementById("toCur");
+      var symEl = document.getElementById("amountSym");
+      var rValue = document.getElementById("rValue");
+      var rCur = document.getElementById("rCur");
+      var rLabel = document.getElementById("rLabel");
+      var rateLine = document.getElementById("rateLine");
+      var rateLineInv = document.getElementById("rateLineInv");
+
+      function fillSelect(sel, selected) {
+        ORDER.forEach(function (code) {
+          var opt = document.createElement("option");
+          opt.value = code;
+          opt.textContent = code + " · " + NAMES[code];
+          if (code === selected) opt.selected = true;
+          sel.appendChild(opt);
+        });
+      }
+      fillSelect(fromEl, "USD");
+      fillSelect(toEl, "TWD");
+
+      // 依金額大小決定小數位數：大額整數幣別不顯示小數，小額保留足夠精度
+      function decimalsFor(code, value) {
+        var zeroDec = { JPY: 1, KRW: 1, VND: 1, IDR: 1, HUF: 1, TWD: 1 };
+        if (Math.abs(value) >= 1000) return zeroDec[code] ? 0 : 2;
+        if (Math.abs(value) >= 1) return 2;
+        if (Math.abs(value) >= 0.01) return 4;
+        return 6;
+      }
+      function fmt(code, value) {
+        var d = decimalsFor(code, value);
+        return value.toLocaleString("zh-Hant", { minimumFractionDigits: d, maximumFractionDigits: d });
+      }
+      function fmtRate(value) {
+        if (value >= 100) return value.toLocaleString("zh-Hant", { maximumFractionDigits: 2 });
+        if (value >= 1) return value.toLocaleString("zh-Hant", { maximumFractionDigits: 4 });
+        return value.toLocaleString("zh-Hant", { maximumFractionDigits: 6 });
+      }
+      function parseAmount() {
+        var v = parseFloat(String(amountEl.value).replace(/[^0-9.]/g, ""));
+        return isNaN(v) ? 0 : v;
+      }
+      function convert(amount, from, to) {
+        return amount / RATES[from] * RATES[to];
+      }
+
+      function render() {
+        var from = fromEl.value, to = toEl.value;
+        var amount = parseAmount();
+        symEl.textContent = SYMBOLS[from] || from;
+        var result = convert(amount, from, to);
+        rLabel.textContent = fmt(from, amount) + " " + NAMES[from] + "（" + from + "）＝";
+        rValue.textContent = fmt(to, result);
+        rCur.textContent = to;
+        var r1 = convert(1, from, to);
+        var r2 = convert(1, to, from);
+        rateLine.textContent = "1 " + from + " = " + fmtRate(r1) + " " + to;
+        rateLineInv.textContent = "1 " + to + " = " + fmtRate(r2) + " " + from;
+
+        document.querySelectorAll(".qp").forEach(function (b) {
+          b.setAttribute("aria-pressed", (b.dataset.from === from && b.dataset.to === to) ? "true" : "false");
+        });
+
+        // 對照表
+        document.getElementById("ladderNote").textContent = NAMES[from] + "（" + from + "）換" + NAMES[to] + "（" + to + "）的常用金額。";
+        document.getElementById("ladderFromHead").textContent = from + " " + NAMES[from];
+        document.getElementById("ladderToHead").textContent = to + " " + NAMES[to];
+        var steps = [1, 10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000];
+        var body = document.getElementById("ladderBody");
+        body.innerHTML = "";
+        steps.forEach(function (s) {
+          var tr = document.createElement("tr");
+          var td1 = document.createElement("td");
+          var td2 = document.createElement("td");
+          td1.textContent = fmt(from, s);
+          td2.textContent = fmt(to, convert(s, from, to));
+          tr.appendChild(td1); tr.appendChild(td2);
+          body.appendChild(tr);
+        });
+      }
+
+      // 對台幣匯率卡片（抓到新匯率後會重建）
+      var grid = document.getElementById("rateGrid");
+      function buildCards() {
+      grid.innerHTML = "";
+      CARD_ORDER.forEach(function (code) {
+        var perTwd = RATES.TWD / RATES[code];
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "rate-card";
+        btn.setAttribute("aria-label", "用 " + NAMES[code] + " 換台幣");
+        var c = document.createElement("span"); c.className = "code"; c.textContent = code;
+        var meta = document.createElement("span"); meta.className = "meta";
+        var nm = document.createElement("div"); nm.className = "name"; nm.textContent = NAMES[code];
+        var vl = document.createElement("div"); vl.className = "val";
+        vl.textContent = "1 " + code + " = " + fmtRate(perTwd) + " TWD";
+        meta.appendChild(nm); meta.appendChild(vl);
+        btn.appendChild(c); btn.appendChild(meta);
+        btn.addEventListener("click", function () {
+          fromEl.value = code; toEl.value = "TWD";
+          render();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        grid.appendChild(btn);
+      });
+      }
+      buildCards();
+
+      amountEl.addEventListener("input", render);
+      fromEl.addEventListener("change", render);
+      toEl.addEventListener("change", render);
+      document.getElementById("swap").addEventListener("click", function () {
+        var t = fromEl.value; fromEl.value = toEl.value; toEl.value = t;
+        render();
+      });
+      document.querySelectorAll(".chip").forEach(function (b) {
+        b.addEventListener("click", function () {
+          amountEl.value = b.dataset.amt;
+          render();
+        });
+      });
+      document.querySelectorAll(".qp").forEach(function (b) {
+        b.addEventListener("click", function () {
+          fromEl.value = b.dataset.from; toEl.value = b.dataset.to;
+          render();
+        });
+      });
+
+      // 抓取最新匯率：先試 Currency API，失敗改試 Frankfurter（歐洲央行），都失敗就留著備份並提示
+      var asofDateEl = document.getElementById("asofDate");
+      var asofNoteEl = document.getElementById("asofNote");
+      var srcDateEl = document.getElementById("srcDate");
+      var refreshBtn = document.getElementById("refreshRates");
+      function fmtDateZh(d) {
+        var p = String(d).split("-");
+        return p.length === 3 ? (parseInt(p[0], 10) + " 年 " + parseInt(p[1], 10) + " 月 " + parseInt(p[2], 10) + " 日") : String(d);
+      }
+      function setStatus(kind, dateStr, sourceNote) {
+        asofDateEl.textContent = fmtDateZh(dateStr);
+        srcDateEl.textContent = dateStr;
+        if (kind === "ok") {
+          asofNoteEl.textContent = "（最新匯率，開啟時自動抓取" + (sourceNote ? "，" + sourceNote : "") + "）";
+        } else if (kind === "loading") {
+          asofNoteEl.textContent = "（正在抓取最新匯率…）";
+        } else {
+          asofNoteEl.textContent = "（抓取失敗，目前顯示 " + fmtDateZh(dateStr) + " 的備份匯率，請按「重新整理匯率」再試）";
+        }
+      }
+      function applyRates(ratesObj, dateStr) {
+        var updated = 0;
+        ORDER.forEach(function (code) {
+          var v = ratesObj[code.toLowerCase()];
+          if (typeof v !== "number") v = ratesObj[code]; // Frankfurter 用大寫 key
+          if (typeof v === "number" && isFinite(v) && v > 0) { RATES[code] = v; updated++; }
+        });
+        if (updated > 0) { RATE_DATE = dateStr; render(); buildCards(); return true; }
+        return false;
+      }
+      async function loadRates() {
+        setStatus("loading", RATE_DATE);
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = "抓取中…";
+        try {
+          var res = await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.min.json", { cache: "no-store" });
+          if (!res.ok) throw new Error("Currency API HTTP " + res.status);
+          var data = await res.json();
+          if (data && data.usd && data.date && applyRates(data.usd, data.date)) {
+            setStatus("ok", data.date, "來源：Currency API");
+            return;
+          }
+          throw new Error("Currency API 回應不完整");
+        } catch (e1) {
+          try {
+            var res2 = await fetch("https://api.frankfurter.dev/v1/latest?base=USD", { cache: "no-store" });
+            if (!res2.ok) throw new Error("Frankfurter HTTP " + res2.status);
+            var data2 = await res2.json();
+            if (data2 && data2.rates && data2.date && applyRates(data2.rates, data2.date)) {
+              setStatus("ok", data2.date, "來源：Frankfurter／歐洲央行");
+              return;
+            }
+            throw new Error("Frankfurter 回應不完整");
+          } catch (e2) {
+            RATES = Object.assign({}, FALLBACK_RATES);
+            RATE_DATE = FALLBACK_DATE;
+            render(); buildCards();
+            setStatus("fallback", FALLBACK_DATE);
+          }
+        } finally {
+          refreshBtn.disabled = false;
+          refreshBtn.textContent = "重新整理匯率";
+        }
+      }
+      refreshBtn.addEventListener("click", loadRates);
+
+      render();
+      loadRates();
+    </script>
+  </body>
+</html>
