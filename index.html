@@ -4,11 +4,12 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
+<meta name="description" content="HILL 自製的免費小工具：買房試算、今天吃什麼、QR 連結檢查、臨時信箱、匯率換算與口袋名單。無廣告、免註冊，點了就用。" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png" />
 <link rel="shortcut icon" href="/favicon.ico" />
-<title>導航網站</title>
+<title>我的導航 HILL'S LAUNCHPAD｜HILL 做給自己用的工具箱</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800;900&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
@@ -64,56 +65,6 @@
   .brand-text{line-height:1.1}
   .brand-text strong{font-size:15px;font-weight:800;letter-spacing:.02em;display:block}
   .brand-text span{font-size:12.5px;color:var(--muted);font-weight:500}
-  .count-badge{
-    font-size:13px;font-weight:700;background:var(--surface);border:1px solid var(--line);
-    padding:8px 12px;border-radius:999px;white-space:nowrap;
-  }
-  .count-badge b{color:var(--accent)}
-
-  /* Tool dropdown menu */
-  .top-actions{display:flex;align-items:center;gap:10px}
-  .menu-wrap{position:relative}
-  .menu-btn{
-    height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);
-    font-size:13.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:var(--ink);
-  }
-  .menu-btn svg{width:15px;height:15px;transition:transform .15s}
-  .menu-btn[aria-expanded="true"] svg{transform:rotate(180deg)}
-  .menu-panel{
-    position:absolute;right:0;top:calc(100% + 8px);min-width:260px;max-width:320px;max-height:60vh;overflow:auto;
-    background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
-    padding:6px;z-index:30;
-  }
-  .menu-group{padding:8px 10px 4px;font-size:11.5px;font-weight:800;letter-spacing:.04em;color:var(--muted)}
-  .menu-item{
-    display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border:0;border-radius:9px;
-    background:transparent;color:var(--ink);font-size:14px;font-weight:700;cursor:pointer;text-align:left;
-  }
-  .menu-item:hover{background:var(--surface-2)}
-  .menu-item .dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex-shrink:0}
-  .menu-item .go{margin-left:auto;color:var(--muted);font-size:12px;flex-shrink:0}
-  .menu-cat{
-    display:flex;align-items:center;gap:10px;width:100%;padding:10px;border:0;border-radius:9px;
-    background:transparent;color:var(--ink);font-size:14px;font-weight:800;cursor:pointer;text-align:left;
-  }
-  .menu-cat:hover{background:var(--surface-2)}
-  .menu-cat .dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex-shrink:0}
-  .menu-cat .cnt{margin-left:auto;font-size:11px;font-weight:700;color:var(--muted);background:var(--surface-2);border-radius:999px;padding:2px 7px}
-  .menu-cat .chev{color:var(--muted);font-size:14px;font-weight:800}
-  .menu-back{
-    display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border:0;border-radius:9px;
-    background:transparent;color:var(--accent);font-size:13.5px;font-weight:800;cursor:pointer;text-align:left;
-  }
-  .menu-back:hover{background:var(--surface-2)}
-  .menu-panel{animation:panelIn .18s ease both}
-  @keyframes panelIn{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
-  .menu-item,.menu-cat,.menu-back{animation:menuRowIn .2s ease both}
-  @keyframes menuRowIn{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
-  @media(max-width:640px){
-    .count-badge{display:none}
-    .menu-btn{padding:0 11px}
-    .menu-panel{min-width:230px}
-  }
 
   .hero{margin:4px 0 18px}
   .hero h1{font-size:30px;line-height:1.05;font-weight:900;letter-spacing:-.02em;margin:0}
@@ -136,8 +87,11 @@
   body.compact .card{padding:12px 8px}
   body.compact .card-main{flex-direction:column;align-items:center;text-align:center;gap:8px}
   body.compact .card-info p,body.compact .card-info .tags,body.compact .card-foot{display:none}
+  body.compact .card-info .note{display:none}
   body.compact .card-info h2{font-size:13px}
   body.compact .icon{width:40px;height:40px}
+  body.compact .feature .icon{width:40px;height:40px}
+  body.compact .feature .icon svg{width:22px;height:22px}
 
   /* Search */
   .search-row{display:flex;gap:10px;margin:22px 0 14px}
@@ -171,6 +125,12 @@
   .chip.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
   .chip .n{font-size:11px;opacity:.75;background:rgba(127,127,127,.15);padding:2px 6px;border-radius:999px}
 
+  /* Zones */
+  .zone{margin-bottom:28px}
+  .zone-title{margin:0;font-size:19px;font-weight:900;letter-spacing:-.01em;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .zone-date{font-size:12.5px;font-weight:700;color:var(--muted)}
+  .zone-sub{margin:4px 0 14px;color:var(--muted);font-size:13px;line-height:1.5}
+
   /* Grid */
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   @media(max-width:940px){.grid{grid-template-columns:1fr 1fr}}
@@ -197,6 +157,25 @@
   }
   .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
   .tag{font-size:11px;font-weight:700;letter-spacing:.02em;padding:3px 7px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+
+  /* HILL 筆記 */
+  .note{margin:8px 0 0;font-size:12.5px;line-height:1.55;color:var(--muted)}
+  .note-label{display:inline-block;font-size:11px;font-weight:800;color:var(--accent);border:1px solid color-mix(in srgb, var(--accent) 45%, transparent);border-radius:999px;padding:1px 7px;margin-right:6px;vertical-align:1px}
+
+  /* 自製 / 外部標記、最新上線 */
+  .tag-own{background:var(--accent);color:var(--bg)}
+  .tag-ext{background:transparent;border:1px solid var(--line);color:var(--muted)}
+  .new-badge{font-size:11px;font-weight:800;color:#fff;background:#DC2626;border-radius:999px;padding:2px 8px;vertical-align:2px;white-space:nowrap}
+
+  /* 今日推薦大卡 */
+  .card.feature{padding:18px 20px}
+  .feature-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .feature-badge{font-size:11.5px;font-weight:800;letter-spacing:.04em;padding:4px 10px;border-radius:999px;background:var(--ink);color:var(--bg)}
+  .feature-badge.new{background:#DC2626;color:#fff}
+  .feature .icon{width:56px;height:56px;border-radius:14px}
+  .feature .icon svg{width:28px;height:28px}
+  .feature .icon img{width:36px;height:36px}
+  .feature .card-info h2{font-size:18px}
 
   .card-foot{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
@@ -238,7 +217,7 @@
     color:var(--muted);font-size:12.5px;line-height:1.6;
   }
   .foot-note kbd{font-family:inherit;background:var(--surface);border:1px solid var(--line);border-bottom-width:2px;padding:1px 6px;border-radius:5px;font-size:11px}
-  .foot-copy{text-align:center;font-size:12.5px;color:var(--muted);margin-top:10px}
+  .foot-copy{text-align:center;font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.7}
 
   .toast{
     position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(16px);
@@ -263,21 +242,11 @@
         <span>HILL'S LAUNCHPAD</span>
       </div>
     </div>
-    <div class="top-actions">
-      <div class="count-badge">共 <b id="totalCount">4</b> 個網站</div>
-      <div class="menu-wrap">
-        <button type="button" class="menu-btn" id="menuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="toolMenu">
-          工具選單
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
-        <div class="menu-panel" id="toolMenu" role="menu" hidden></div>
-      </div>
-    </div>
   </header>
 
   <section class="hero">
-    <h1>所有網站，<em>一頁搞定。</em></h1>
-    <p>你做過的工具與服務都收在這裡。搜尋、點一下就開，不用再翻聊天紀錄找網址。之後新增的功能網站也會直接加進這一頁。</p>
+    <h1>我做給自己用的工具，<em>順便給你用。</em></h1>
+    <p>沒有廣告、不用註冊、點了就用。這裡收的不是別人推薦的網站，是 HILL 自己做、自己每天在用的東西；外部好站另外放在下面，不混在一起。</p>
   </section>
 
   <div class="search-row">
@@ -297,7 +266,29 @@
   <nav class="filters" id="filters" aria-label="分類篩選"></nav>
 
   <main>
-    <div class="grid" id="grid"></div>
+    <section class="zone zone-feature" id="featureZone" aria-label="今日推薦">
+      <h2 class="zone-title"><span>今日推薦</span><span class="zone-date" id="featureDate"></span></h2>
+      <div id="featureCard"></div>
+    </section>
+
+    <section class="zone" id="zoneMade" aria-label="HILL 自製工具">
+      <h2 class="zone-title">HILL 自製工具</h2>
+      <p class="zone-sub">我自己做、自己每天在用的工具。</p>
+      <div class="grid" id="gridMade"></div>
+    </section>
+
+    <section class="zone" id="zoneToolbox" aria-label="網路工具箱">
+      <h2 class="zone-title">網路工具箱</h2>
+      <p class="zone-sub">匯率與 QR 在工具箱裡也有快速版，完整版在上面。</p>
+      <div class="grid" id="gridToolbox"></div>
+    </section>
+
+    <section class="zone" id="zoneExternal" aria-label="外部收藏">
+      <h2 class="zone-title">外部收藏</h2>
+      <p class="zone-sub">不是我做的，但我常用；點了會跳出站外。</p>
+      <div class="grid" id="gridExternal"></div>
+    </section>
+
     <div class="empty" id="emptyState">
       <strong>找不到符合的網站</strong>
       <p>換個關鍵字試試，或清除篩選看全部。</p>
@@ -306,130 +297,108 @@
   </main>
 
   <div class="foot-note">
-    <span>提示：按數字鍵 1–9 可直接開啟對應網站，按 <kbd>/</kbd> 快速搜尋，<kbd>Enter</kbd> 開啟第一個結果。</span>
+    <span id="keyHint"></span>
     <span id="resultHint"></span>
   </div>
-  <div class="foot-copy">© 2026 HILL 版權所有</div>
+  <div class="foot-copy">© 2026 HILL · 這裡的工具都是我自己做、自己在用的，有問題或想許願新工具，歡迎告訴我。買房試算與匯率僅供參考，不是財務建議；匯率請註明來源與更新日期。</div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite">已複製網址</div>
 
 <script>
   // === 網站清單：之後新增功能網站，只要在這裡加一筆就會自動出現在頁面上 ===
+  // zone: made（HILL 自製工具）/ toolbox（網路工具箱）/ external（外部收藏）
+  // scenario: eat 吃飯決定 / money 錢與買房 / focus 專注與工作 / urgent 臨時急用 / relax 影音放鬆
+  // newFrom/newUntil: 新工具上線 7 天內顯示「最新上線」，並搶佔當日的今日推薦
   var SITES = [
     {
       id: "short-url",
-      name: "短短 URL 短網址",
-      desc: "長網址一秒變短。把冗長連結縮成 dududu 短網址，可自訂代碼，分享更乾淨俐落。",
+      name: "短短 URL",
+      desc: "連結長到傳不出去？貼上，一秒變短。",
+      note: "自己傳連結時最常用。",
       url: "https://dududu.kdns.fr/",
-      favicon: "https://dududu.kdns.fr/favicon.ico",
       display: "dududu.kdns.fr",
-      category: "tool",
-      categoryLabel: "實用工具",
-      tags: ["短連結", "分享"],
+      zone: "made",
+      scenario: "focus",
+      tags: ["短網址"],
       color: "#0E7490",
       icon: "link"
     },
     {
-      id: "kvideo",
-      name: "KVideo 影音聚合",
-      desc: "影音聚合網站，隨開即看。追劇、看影片不用再到處找入口。",
-      url: "https://kvideo.dududu.kdns.fr/",
-      favicon: "https://kvideo.dududu.kdns.fr/icon.png",
-      display: "kvideo.dududu.kdns.fr",
-      category: "media",
-      categoryLabel: "影音娛樂",
-      tags: ["影片", "線上看"],
-      color: "#C2410C",
-      icon: "play"
-    },
-    {
-      id: "music",
-      name: "音樂播放器",
-      desc: "AlgerMusicPlayer 網頁版，搜歌、歌詞、播放一次到位，播不了時自動改走 YouTube 備用音源。",
-      url: "https://dududu.kdns.fr/music",
-      favicon: "https://dududu.kdns.fr/favicon.ico",
-      display: "dududu.kdns.fr/music",
-      category: "media",
-      categoryLabel: "影音娛樂",
-      tags: ["音樂", "播放器"],
-      color: "#15803D",
-      icon: "music"
-    },
-    {
       id: "blink-mail",
       name: "瞬郵 Blink Mail",
-      desc: "臨時電子信箱，註冊測試、收驗證信時用，不用暴露自己的真實信箱。",
+      desc: "註冊網站不想給真信箱？開一個臨時信箱，用完就丟。",
+      note: "即開即用，約 1 小時。",
       url: "https://blink-mail.kdns.fr/",
       favicon: "https://blink-mail.kdns.fr/favicon.svg",
       display: "blink-mail.kdns.fr",
-      category: "tool",
-      categoryLabel: "實用工具",
-      tags: ["臨時信箱", "驗證信"],
+      zone: "made",
+      scenario: "urgent",
+      tags: ["臨時信箱", "隱私"],
       color: "#B45309",
       icon: "mail"
     },
     {
       id: "pocket-list",
       name: "口袋名單",
-      desc: "收藏的愛店清單都在這裡：不知道吃什麼時先翻口袋名單，照著推薦去吃就對了。",
+      desc: "我真正會回訪的 6 間店，都收在這裡。",
+      note: "不是排行榜，是我的名單。",
       url: "/kou-dai-ming-dan/",
-      favicon: "/favicon.svg",
       display: "liuu.loc.cc/kou-dai-ming-dan",
-      category: "tool",
-      categoryLabel: "實用工具",
-      tags: ["美食", "愛店推薦"],
+      zone: "made",
+      scenario: "eat",
+      tags: ["美食", "我的收藏"],
       color: "#BE185D",
       icon: "utensils"
     },
     {
       id: "mai-fang",
       name: "台灣買房全貌試算",
-      desc: "一次算完買房交易稅費、寬限期前後月付跳幅、負擔能力與賣房的房地合一稅，附三種貸款情境並排比較。",
+      desc: "輸入房價，頭期款、貸款與每月要付多少，一次算清楚。",
+      note: "看房前先算，別被月付嚇到。",
       url: "/mai-fang-shi-suan/",
-      favicon: "/favicon.svg",
       display: "liuu.loc.cc/mai-fang-shi-suan",
-      category: "tool",
-      categoryLabel: "實用工具",
-      tags: ["買房", "試算"],
+      zone: "made",
+      scenario: "money",
+      tags: ["買房", "僅供參考"],
       color: "#1D4ED8",
       icon: "home"
     },
     {
       id: "qr-check",
-      name: "QR 碼連結檢查",
-      desc: "把有 QR 碼的照片丟進來，先解出它真正連到的網址與網域，再決定要不要開啟。照片只在你的裝置上解碼，不上傳。",
+      name: "QR 連結檢查",
+      desc: "掃 QR 前先看它連去哪，照片不上傳，確認安全再開。",
+      note: "路邊來路不明的 QR 先丟這裡。",
       url: "/qr-lian-jie-jian-cha/",
-      favicon: "/favicon.svg",
       display: "liuu.loc.cc/qr-lian-jie-jian-cha",
-      category: "tool",
-      categoryLabel: "實用工具",
-      tags: ["QR 碼", "安全檢查"],
+      zone: "made",
+      scenario: "urgent",
+      tags: ["安全", "照片不上傳"],
       color: "#7C3AED",
       icon: "qr"
     },
     {
       id: "what-to-eat",
       name: "今天吃什麼",
-      desc: "從口袋名單 6 間店隨機抽一間，解決不知道吃什麼，抽中顯示地址、評分與營業時間。",
+      desc: "選不出來就讓它抽：從口袋名單 6 間店隨機選一間。",
+      note: "跟口袋名單是同一批店。",
       url: "/jin-tian-chi-shen-me/",
-      favicon: "/favicon.svg",
       display: "liuu.loc.cc/jin-tian-chi-shen-me",
-      category: "tool",
-      categoryLabel: "實用工具",
-      tags: ["美食", "隨機挑"],
+      zone: "made",
+      scenario: "eat",
+      tags: ["隨機抽", "吃飯"],
       color: "#EA580C",
       icon: "dices"
     },
     {
       id: "pomodoro",
       name: "番茄鐘",
-      desc: "專注 25 分鐘、短休息 5 分鐘，4 輪後長休息 15 分鐘，時間到有提示音，時間可自訂。",
+      desc: "專心 25 分鐘、休息 5 分鐘，按下開始就不要滑手機。",
+      note: "做事拖延時，我都先開這個。",
       url: "/fan-qie-zhong/",
-      favicon: "/favicon.svg",
       display: "liuu.loc.cc/fan-qie-zhong",
-      category: "tool",
-      categoryLabel: "實用工具",
+      zone: "made",
+      scenario: "focus",
       tags: ["專注", "計時"],
       color: "#DC2626",
       icon: "timer"
@@ -437,54 +406,70 @@
     {
       id: "giveaway",
       name: "直播抽獎小幫手",
-      desc: "貼上參加者名單隨機抽獎，可一次抽 1、3 或 5 位，抽過的不會重複中獎。",
+      desc: "名單貼上就能抽，直播抽獎不用再手忙腳亂。",
+      note: "開播前先把名單準備好。",
       url: "/zhi-bo-chou-jiang-xiao-bang-shou/",
-      favicon: "/favicon.svg",
       display: "liuu.loc.cc/zhi-bo-chou-jiang-xiao-bang-shou",
-      category: "tool",
-      categoryLabel: "實用工具",
-      tags: ["抽獎", "直播"],
+      zone: "made",
+      scenario: "focus",
+      tags: ["直播", "抽獎"],
       color: "#CA8A04",
       icon: "gift"
     },
     {
       id: "currency",
       name: "匯率換算",
-      desc: "31 種貨幣即時換算，附 30 天走勢圖、目標匯率提醒、旅遊購物試算、換匯比一比與旅行分帳，開啟時自動抓最新匯率。",
+      desc: "出國或網購前先換算：美金、歐元、日圓對台幣多少。",
+      note: "卡片上註明資料日期。",
       url: "/hui-lu-huan-suan/",
-      favicon: "/favicon.svg",
       display: "liuu.loc.cc/hui-lu-huan-suan",
-      category: "tool",
-      categoryLabel: "實用工具",
-      tags: ["匯率", "換算"],
+      zone: "made",
+      scenario: "money",
+      tags: ["匯率", "僅供參考"],
       color: "#0F766E",
       icon: "coins"
     },
     {
-      id: "ximalaya",
-      name: "喜馬拉雅",
-      desc: "有聲書、播客、相聲與音樂，官方網頁版免安裝，瀏覽器打開就能聽。",
-      url: "https://www.ximalaya.com",
-      favicon: "https://www.ximalaya.com/favicon.ico",
-      display: "www.ximalaya.com",
-      category: "media",
-      categoryLabel: "影音娛樂",
-      tags: ["有聲書", "播客"],
-      color: "#E11D48",
-      icon: "music"
-    },
-    {
       id: "toolbox",
       name: "網路工具箱",
-      desc: "12 個免費實用工具一站搞定：匯率換算、IP 查詢、網速測試、DNS 查詢、QR 碼產生、強密碼、世界時鐘、天氣與各國資料生成器，免登入免安裝。",
+      desc: "12 個小工具一次到位：密碼產生、JSON、Base64、時間戳。",
+      note: "另一個網域 iuume.loc.cc，是故意的。",
       url: "http://iuume.loc.cc/",
-      favicon: "http://iuume.loc.cc/favicon.svg",
       display: "iuume.loc.cc",
-      category: "tool",
-      categoryLabel: "實用工具",
-      tags: ["工具箱", "免費工具"],
+      zone: "toolbox",
+      scenario: "urgent",
+      tags: ["工具箱", "12 個工具"],
       color: "#2563EB",
-      icon: "link"
+      icon: "wrench",
+      newFrom: "2026-11-19",
+      newUntil: "2026-11-26"
+    },
+    {
+      id: "kvideo",
+      name: "KVideo",
+      desc: "想看電影或劇，先在這裡一次搜齊。",
+      note: "外部聚合站，開啟較慢。",
+      url: "https://kvideo.dududu.kdns.fr/",
+      favicon: "https://kvideo.dududu.kdns.fr/icon.png",
+      display: "kvideo.dududu.kdns.fr",
+      zone: "external",
+      scenario: "relax",
+      tags: ["外部網站", "影音"],
+      color: "#C2410C",
+      icon: "play"
+    },
+    {
+      id: "music",
+      name: "音樂播放器",
+      desc: "工作時放點音樂：熱門歌單打開就能聽。",
+      note: "外部播放器，會跳轉開啟。",
+      url: "https://dududu.kdns.fr/music",
+      display: "dududu.kdns.fr/music",
+      zone: "external",
+      scenario: "relax",
+      tags: ["外部網站", "音樂"],
+      color: "#15803D",
+      icon: "music"
     }
   ];
 
@@ -499,15 +484,43 @@
     dices: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="12" height="12" x="2" y="10" rx="2"/><rect width="12" height="12" x="10" y="2" rx="2"/><path d="M7.5 15.5h.01"/><path d="M11 12.5h.01"/><path d="M15.5 6.5h.01"/><path d="M19 9.5h.01"/></svg>',
     timer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>',
     gift: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>',
-    coins: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>'
+    coins: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>',
+    wrench: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>'
   };
 
   var CATEGORIES = [
     { key: "all", label: "全部" },
-    { key: "tool", label: "實用工具" },
-    { key: "media", label: "影音娛樂" }
+    { key: "eat", label: "吃飯決定" },
+    { key: "money", label: "錢與買房" },
+    { key: "focus", label: "專注與工作" },
+    { key: "urgent", label: "臨時急用" },
+    { key: "relax", label: "影音放鬆" }
   ];
 
+  // 今日推薦輪播：週一 番茄鐘、週二 今天吃什麼、週三 買房試算、週四 QR 檢查、
+  // 週五 口袋名單、週六 音樂播放器、週日 KVideo；有新工具時當天直接換成新工具。
+  var FEATURE_SCHEDULE = { 1: "pomodoro", 2: "what-to-eat", 3: "mai-fang", 4: "qr-check", 5: "pocket-list", 6: "music", 0: "kvideo" };
+
+  function todayStart(){ var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function parseDay(str){ var p = str.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function isNew(s, today){ if (!s.newFrom || !s.newUntil) return false; return today >= parseDay(s.newFrom) && today <= parseDay(s.newUntil); }
+  function scenarioLabel(key){
+    var found = "";
+    CATEGORIES.forEach(function(c){ if (c.key === key) found = c.label; });
+    return found;
+  }
+  function pickFeature(){
+    var today = todayStart();
+    var fresh = SITES.filter(function(s){ return isNew(s, today); });
+    if (fresh.length) {
+      fresh.sort(function(a, b){ return parseDay(b.newFrom) - parseDay(a.newFrom); });
+      return { site: fresh[0], isNew: true };
+    }
+    var id = FEATURE_SCHEDULE[today.getDay()];
+    var site = null;
+    SITES.forEach(function(s){ if (s.id === id) site = s; });
+    return { site: site, isNew: false };
+  }
 
   var searchEngine = "site";
   function iconHtml(s){
@@ -524,15 +537,18 @@
     }
   }, true);
   var state = { q: "", cat: "all" };
-  var grid = document.getElementById("grid");
+  var gridMade = document.getElementById("gridMade");
+  var gridToolbox = document.getElementById("gridToolbox");
+  var gridExternal = document.getElementById("gridExternal");
+  var zoneMade = document.getElementById("zoneMade");
+  var zoneToolbox = document.getElementById("zoneToolbox");
+  var zoneExternal = document.getElementById("zoneExternal");
   var emptyState = document.getElementById("emptyState");
   var filtersEl = document.getElementById("filters");
   var searchInput = document.getElementById("searchInput");
   var resultHint = document.getElementById("resultHint");
   var toast = document.getElementById("toast");
   var toastTimer = null;
-
-  document.getElementById("totalCount").textContent = SITES.length;
 
   function showToast(msg){
     toast.textContent = msg;
@@ -555,10 +571,75 @@
     }
   }
 
+  function srcBadge(s){
+    if (s.zone === "made") return '<span class="tag tag-own">HILL 自製</span>';
+    if (s.zone === "toolbox") return '<span class="tag tag-own">HILL 整理</span>';
+    return '<span class="tag tag-ext">外部網站</span>';
+  }
+  function tagsHtml(s){
+    var html = srcBadge(s) + '<span class="tag">' + scenarioLabel(s.scenario) + "</span>";
+    s.tags.forEach(function(t){
+      if (t === "外部網站") return; // 標記已顯示，不重複
+      html += '<span class="tag">' + t + "</span>";
+    });
+    return html;
+  }
+  function noteHtml(s){
+    return '<div class="note"><span class="note-label">HILL 筆記</span>' + s.note + "</div>";
+  }
+  function copyBtnHtml(s){
+    return '<button type="button" class="btn-copy" aria-label="複製 ' + s.name + ' 網址"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>複製</button>';
+  }
+  function openBtnHtml(s){
+    return '<a class="btn-open" href="' + s.url + '" target="_blank" rel="noopener noreferrer">開啟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></a>';
+  }
+  function cardInner(s, num, opts){
+    var isNewNow = isNew(s, todayStart());
+    var newBadge = (isNewNow && !(opts && opts.feature)) ? ' <span class="new-badge">最新上線</span>' : "";
+    return '<div class="card-main">' +
+      '<div class="icon" aria-hidden="true">' + iconHtml(s) + "</div>" +
+      '<div class="card-info"><h2>' + num + ". " + s.name + newBadge + "</h2><p>" + s.desc + "</p>" + noteHtml(s) + '<div class="tags">' + tagsHtml(s) + "</div></div>" +
+    "</div>" +
+    '<div class="card-foot">' +
+      '<span class="domain" title="' + s.url + '">' + s.display + "</span>" +
+      '<div class="actions">' + copyBtnHtml(s) + openBtnHtml(s) + "</div>" +
+    "</div>";
+  }
+  function buildCard(s){
+    var num = SITES.indexOf(s) + 1;
+    var card = document.createElement("article");
+    card.className = "card";
+    card.style.setProperty("--c", s.color);
+    card.setAttribute("data-site", s.id);
+    card.innerHTML = cardInner(s, num, {});
+    card.querySelector(".btn-copy").addEventListener("click", function(){ copyUrl(s.url); });
+    return card;
+  }
+  function renderFeature(){
+    var pick = pickFeature();
+    var s = pick.site;
+    if (!s) return;
+    var num = SITES.indexOf(s) + 1;
+    var badges = '<span class="feature-badge">今日推薦</span>';
+    if (pick.isNew) badges += '<span class="feature-badge new">最新上線</span>';
+    var card = document.createElement("article");
+    card.className = "card feature";
+    card.style.setProperty("--c", s.color);
+    card.setAttribute("data-site", s.id);
+    card.innerHTML = '<div class="feature-badges">' + badges + "</div>" + cardInner(s, num, { feature: true });
+    card.querySelector(".btn-copy").addEventListener("click", function(){ copyUrl(s.url); });
+    var el = document.getElementById("featureCard");
+    el.innerHTML = "";
+    el.appendChild(card);
+    var d = new Date();
+    var week = ["日", "一", "二", "三", "四", "五", "六"][d.getDay()];
+    document.getElementById("featureDate").textContent = (d.getMonth() + 1) + "/" + d.getDate() + "（" + week + "）";
+  }
+
   function renderFilters(){
     filtersEl.innerHTML = "";
     CATEGORIES.forEach(function(c){
-      var n = c.key === "all" ? SITES.length : SITES.filter(function(s){ return s.category === c.key; }).length;
+      var n = c.key === "all" ? SITES.length : SITES.filter(function(s){ return s.scenario === c.key; }).length;
       var b = document.createElement("button");
       b.type = "button";
       b.className = "chip" + (state.cat === c.key ? " active" : "");
@@ -572,44 +653,27 @@
   function filtered(){
     var q = state.q.trim().toLowerCase();
     return SITES.filter(function(s){
-      if (state.cat !== "all" && s.category !== state.cat) return false;
+      if (state.cat !== "all" && s.scenario !== state.cat) return false;
       if (!q) return true;
-      var hay = (s.name + " " + s.desc + " " + s.display + " " + s.categoryLabel + " " + s.tags.join(" ")).toLowerCase();
+      var hay = (s.name + " " + s.desc + " " + s.note + " " + s.display + " " + scenarioLabel(s.scenario) + " " + s.tags.join(" ")).toLowerCase();
       return hay.indexOf(q) !== -1;
     });
+  }
+
+  function renderZone(grid, section, list, zone){
+    var items = list.filter(function(s){ return s.zone === zone; });
+    grid.innerHTML = "";
+    items.forEach(function(s){ grid.appendChild(buildCard(s)); });
+    section.style.display = items.length ? "" : "none";
   }
 
   function render(){
     renderFilters();
     var list = filtered();
-    grid.innerHTML = "";
-    list.forEach(function(s, idx){
-      var card = document.createElement("article");
-      card.className = "card";
-      card.style.setProperty("--c", s.color);
-
-      var tagsHtml = s.tags.map(function(t){ return '<span class="tag">' + t + "</span>"; }).join("");
-      tagsHtml = '<span class="tag">' + s.categoryLabel + "</span>" + tagsHtml;
-
-      card.innerHTML =
-        '<div class="card-main">' +
-          '<div class="icon" aria-hidden="true">' + iconHtml(s) + "</div>" +
-          '<div class="card-info"><h2>' + (idx + 1) + ". " + s.name + "</h2><p>" + s.desc + '</p><div class="tags">' + tagsHtml + "</div></div>" +
-        "</div>" +
-        '<div class="card-foot">' +
-          '<span class="domain" title="' + s.url + '">' + s.display + "</span>" +
-          '<div class="actions">' +
-            '<button type="button" class="btn-copy" aria-label="複製 ' + s.name + ' 網址"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>複製</button>' +
-            '<a class="btn-open" href="' + s.url + '" target="_blank" rel="noopener noreferrer">開啟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></a>' +
-          "</div>" +
-        "</div>";
-
-      card.querySelector(".btn-copy").addEventListener("click", function(){ copyUrl(s.url); });
-      grid.appendChild(card);
-    });
-
+    renderZone(gridMade, zoneMade, list, "made");
+    renderZone(gridToolbox, zoneToolbox, list, "toolbox");
+    renderZone(gridExternal, zoneExternal, list, "external");
     emptyState.classList.toggle("show", list.length === 0);
-    grid.style.display = list.length === 0 ? "none" : "";
     resultHint.textContent = list.length === SITES.length ? "" : ("目前顯示 " + list.length + " / " + SITES.length + " 個");
   }
 
@@ -646,89 +710,47 @@
     state.q = ""; state.cat = "all"; searchInput.value = ""; render(); searchInput.focus();
   });
 
+  // 數字鍵：1–9 按一下開 1–9 號；10 號以上連按兩下（先按 1 再按 0–2）。
+  // 單按一位數字後等 600ms 才開，讓第二位有時間進來；第二位不合法時開第一位那張。
+  var numBuf = "";
+  var numTimer = null;
+  function openByNumber(n){
+    var s = SITES[n - 1];
+    if (s) window.open(s.url, "_blank", "noopener");
+  }
+  function flushNumBuf(){
+    if (!numBuf) return;
+    var n = parseInt(numBuf, 10);
+    numBuf = "";
+    if (n >= 1 && n <= SITES.length) openByNumber(n);
+  }
   document.addEventListener("keydown", function(e){
     var tag = (document.activeElement && document.activeElement.tagName) || "";
     var typing = tag === "INPUT" || tag === "TEXTAREA";
     if (e.key === "/" && !typing) { e.preventDefault(); searchInput.focus(); return; }
-    if (!typing && ["1","2","3","4","5","6","7","8","9"].indexOf(e.key) !== -1) {
-      var i = parseInt(e.key, 10) - 1;
-      if (SITES[i]) window.open(SITES[i].url, "_blank", "noopener");
+    if (typing || !/^[0-9]$/.test(e.key)) return;
+    clearTimeout(numTimer);
+    if (numBuf === "") {
+      numBuf = e.key;
+      numTimer = setTimeout(flushNumBuf, 600);
+    } else {
+      var n = parseInt(numBuf + e.key, 10);
+      var first = parseInt(numBuf, 10);
+      numBuf = "";
+      if (n >= 1 && n <= SITES.length) { openByNumber(n); }
+      else if (first >= 1 && first <= SITES.length) { openByNumber(first); }
     }
   });
 
-  /* Tool dropdown menu: two levels — level 1 lists categories, level 2 lists that category's sites.
-     Desktop: hover opens the menu and hover switches levels (no click needed).
-     Touch: tap still works via the click handlers. */
-  var menuBtn = document.getElementById("menuBtn");
-  var toolMenu = document.getElementById("toolMenu");
-  var menuWrap = document.querySelector(".menu-wrap");
-  var menuLevel = "cats"; // "cats" or a category key
-  var openTimer = null;
-  var closeTimer = null;
-  // True once the mouse has actually moved after the last menu rebuild.
-  // Rebuilding swaps the rows under a stationary cursor, which can fire a
-  // stray mouseenter on the new row — ignore those so levels don't flicker.
-  var movedSinceBuild = false;
-  document.addEventListener("mousemove", function(){ movedSinceBuild = true; });
-
-  function menuItemEl(s, i){
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "menu-item";
-    b.setAttribute("role", "menuitem");
-    b.style.setProperty("--c", s.color);
-    b.style.animationDelay = ((i || 0) * 30) + "ms";
-    b.innerHTML = '<span class="dot"></span>' + s.name + '<span class="go">開啟 ↗</span>';
-    b.addEventListener("click", function(e){ e.stopPropagation(); closeMenu(); window.open(s.url, "_blank", "noopener"); });
-    return b;
+  function keyHintText(){
+    var n = SITES.length;
+    var t = "提示：按數字鍵 1–" + n + " 開啟對應網站";
+    if (n > 9) t += "（10 號以上連按兩下，例如先按 1 再按 0 是 10 號）";
+    return t + "，按 <kbd>/</kbd> 快速搜尋，<kbd>Enter</kbd> 開啟第一個結果。";
   }
+  document.getElementById("keyHint").innerHTML = keyHintText();
 
-  function buildMenu(){
-    toolMenu.innerHTML = "";
-    movedSinceBuild = false;
-    if (menuLevel === "cats") {
-      CATEGORIES.filter(function(c){ return c.key !== "all"; }).forEach(function(c, i){
-        var items = SITES.filter(function(s){ return s.category === c.key; });
-        if (!items.length) return;
-        var b = document.createElement("button");
-        b.type = "button";
-        b.className = "menu-cat";
-        b.setAttribute("role", "menuitem");
-        b.style.setProperty("--c", items[0].color);
-        b.style.animationDelay = (i * 30) + "ms";
-        b.innerHTML = '<span class="dot"></span>' + c.label + '<span class="cnt">' + items.length + ' 個</span><span class="chev">›</span>';
-        b.addEventListener("click", function(e){ e.stopPropagation(); menuLevel = c.key; buildMenu(); });
-        b.addEventListener("mouseenter", function(){ if (movedSinceBuild) { menuLevel = c.key; buildMenu(); } });
-        toolMenu.appendChild(b);
-      });
-    } else {
-      var cat = null;
-      CATEGORIES.forEach(function(c){ if (c.key === menuLevel) cat = c; });
-      var back = document.createElement("button");
-      back.type = "button";
-      back.className = "menu-back";
-      back.innerHTML = "‹ 全部類別";
-      back.addEventListener("click", function(e){ e.stopPropagation(); menuLevel = "cats"; buildMenu(); });
-      back.addEventListener("mouseenter", function(){ if (movedSinceBuild) { menuLevel = "cats"; buildMenu(); } });
-      toolMenu.appendChild(back);
-      var g = document.createElement("div");
-      g.className = "menu-group";
-      g.textContent = cat ? cat.label : "";
-      toolMenu.appendChild(g);
-      SITES.filter(function(s){ return s.category === menuLevel; }).forEach(function(s, i){
-        toolMenu.appendChild(menuItemEl(s, i));
-      });
-    }
-  }
-  function openMenu(){ clearTimeout(closeTimer); menuLevel = "cats"; buildMenu(); toolMenu.hidden = false; menuBtn.setAttribute("aria-expanded", "true"); }
-  function closeMenu(){ clearTimeout(openTimer); toolMenu.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); }
-  menuBtn.addEventListener("click", function(e){ e.stopPropagation(); if (toolMenu.hidden) { openMenu(); } else { closeMenu(); } });
-  // Hover: open shortly after the mouse rests on the button, close shortly after it leaves the whole menu area.
-  menuWrap.addEventListener("mouseenter", function(){ clearTimeout(closeTimer); openTimer = setTimeout(openMenu, 120); });
-  menuWrap.addEventListener("mouseleave", function(){ clearTimeout(openTimer); closeTimer = setTimeout(closeMenu, 180); });
-  document.addEventListener("click", function(e){ if (!toolMenu.hidden && e.target.isConnected && !toolMenu.contains(e.target)) closeMenu(); });
-  document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeMenu(); });
-
+  renderFeature();
   render();
 </script>
 </body>
