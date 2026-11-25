@@ -131,6 +131,8 @@
       .card[hidden] { display: none; }
       .photo { position: relative; aspect-ratio: 16 / 9.5; background: var(--surface-2); }
       .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .photo-empty { display: flex; align-items: center; justify-content: center; background: var(--accent-soft); }
+      .photo-empty .ph { font-size: 52px; font-weight: 900; color: var(--accent); font-family: "Noto Serif TC", serif; }
       .type-tag {
         position: absolute; left: 12px; top: 12px;
         background: rgba(12, 20, 16, .78); color: #fff;
@@ -200,10 +202,10 @@
       <header class="intro">
         <div>
           <h1>口袋名單</h1>
-          <p>想不到吃什麼的時候，先翻這裡。台中南屯兩間、東區的臭豆腐和素食小吃，加苗栗一間 1949 年開業的餛飩老店，還有想吃烤雞時的 21 風味館。</p>
+          <p>想不到吃什麼的時候，先翻這裡。目前共 24 間店，以台中為主：茶飲、義大利餐、餛飩老店、臭豆腐、烤雞、印度餐廳、鮮花咖啡、魚料理都有；部分新店家的地址與照片還在補。</p>
         </div>
-        <div class="count-badge" aria-label="目前共 6 間店">
-          <strong id="visibleCount">6</strong><span>/ 6 間店</span>
+        <div class="count-badge" aria-label="目前共 24 間店">
+          <strong id="visibleCount">24</strong><span>/ 24 間店</span>
         </div>
       </header>
 
@@ -224,6 +226,10 @@
           <button class="chip" type="button" data-filter="東區">台中東區</button>
           <button class="chip" type="button" data-filter="素食">素食</button>
           <button class="chip" type="button" data-filter="烤雞">烤雞</button>
+          <button class="chip" type="button" data-filter="印度餐廳">印度餐廳</button>
+          <button class="chip" type="button" data-filter="鮮花咖啡">鮮花咖啡</button>
+          <button class="chip" type="button" data-filter="魚料理">魚料理</button>
+          <button class="chip" type="button" data-filter="待補">資料待補</button>
         </div>
       </div>
 
@@ -457,6 +463,582 @@
                 在地圖開啟
               </a>
               <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=21PLUS%2021%E9%A2%A8%E5%91%B3%E9%A4%A8" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- tomotomo -->
+        <article class="card" data-name="tomotomo" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">T</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>tomotomo</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=tomotomo%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=tomotomo%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- 向晚一日 -->
+        <article class="card" data-name="向晚一日" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">向</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>向晚一日</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%90%91%E6%99%9A%E4%B8%80%E6%97%A5%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E5%90%91%E6%99%9A%E4%B8%80%E6%97%A5%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- aoza -->
+        <article class="card" data-name="aoza" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">A</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>aoza</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=aoza%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=aoza%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- 黑毛屋 -->
+        <article class="card" data-name="黑毛屋" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">黑</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>黑毛屋</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%BB%91%E6%AF%9B%E5%B1%8B%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E9%BB%91%E6%AF%9B%E5%B1%8B%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- 無理wuli -->
+        <article class="card" data-name="無理wuli" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">無</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>無理wuli</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=%E7%84%A1%E7%90%86wuli%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E7%84%A1%E7%90%86wuli%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- soyo -->
+        <article class="card" data-name="soyo" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">S</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>soyo</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=soyo%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=soyo%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- 崔基虎 -->
+        <article class="card" data-name="崔基虎" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">崔</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>崔基虎</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%B4%94%E5%9F%BA%E8%99%8E%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E5%B4%94%E5%9F%BA%E8%99%8E%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- ora -->
+        <article class="card" data-name="ora" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">O</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>ora</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=ora%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=ora%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- celaffee -->
+        <article class="card" data-name="celaffee" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">C</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>celaffee</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=celaffee%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=celaffee%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- 溫久熬 -->
+        <article class="card" data-name="溫久熬" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">溫</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>溫久熬</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%BA%AB%E4%B9%85%E7%86%AC%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E6%BA%AB%E4%B9%85%E7%86%AC%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- Smith&amp;Wollensky -->
+        <article class="card" data-name="smith&amp;wollensky" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">S</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>Smith&amp;Wollensky</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=Smith%26Wollensky%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Smith%26Wollensky%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- phase -->
+        <article class="card" data-name="phase" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">P</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>phase</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=phase%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=phase%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- nuka -->
+        <article class="card" data-name="nuka" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">N</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>nuka</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=nuka%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=nuka%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- Cuteness Overload 鮮花咖啡 -->
+        <article class="card" data-name="cuteness overload 鮮花咖啡" data-tags="台中 鮮花咖啡" data-type="鮮花咖啡">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">C</span>
+            <span class="type-tag">鮮花咖啡</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>Cuteness Overload 鮮花咖啡</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>鮮花咖啡，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=Cuteness%20Overload%20%E9%AE%AE%E8%8A%B1%E5%92%96%E5%95%A1%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Cuteness%20Overload%20%E9%AE%AE%E8%8A%B1%E5%92%96%E5%95%A1%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- 首稿 -->
+        <article class="card" data-name="首稿" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">首</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>首稿</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%A6%96%E7%A8%BF%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E9%A6%96%E7%A8%BF%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- 泰水華美 -->
+        <article class="card" data-name="泰水華美" data-tags="台中 待補" data-type="資料待補">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">泰</span>
+            <span class="type-tag">資料待補</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>泰水華美</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>資料待補，地址與電話還在補</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%B3%B0%E6%B0%B4%E8%8F%AF%E7%BE%8E%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E6%B3%B0%E6%B0%B4%E8%8F%AF%E7%BE%8E%20%E5%8F%B0%E4%B8%AD" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- 活力印度餐廳｜台中健行店 -->
+        <article class="card" data-name="活力印度餐廳｜台中健行店" data-tags="台中 印度餐廳 健行路" data-type="印度餐廳">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">活</span>
+            <span class="type-tag">印度餐廳</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>活力印度餐廳｜台中健行店</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中</span> · 健行路 1037 號 2 樓</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>印度餐廳，電話 04-2320-0599</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%B4%BB%E5%8A%9B%E5%8D%B0%E5%BA%A6%E9%A4%90%E5%BB%B3%20%E5%8F%B0%E4%B8%AD%E5%B8%82%E5%81%A5%E8%A1%8C%E8%B7%AF1037%E8%99%9F2%E6%A8%93" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E6%B4%BB%E5%8A%9B%E5%8D%B0%E5%BA%A6%E9%A4%90%E5%BB%B3%20%E5%8F%B0%E4%B8%AD%E5%B8%82%E5%81%A5%E8%A1%8C%E8%B7%AF1037%E8%99%9F2%E6%A8%93" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
+                導航
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- 權志 龍魚屋 -->
+        <article class="card" data-name="權志 龍魚屋" data-tags="台中 南屯 魚料理" data-type="魚料理">
+          <div class="photo photo-empty">
+            <span class="ph" aria-hidden="true">權</span>
+            <span class="type-tag">魚料理</span>
+          </div>
+          <div class="card-body">
+            <div class="name-row">
+              <h2>權志 龍魚屋</h2>
+            </div>
+            <div class="meta">
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span><span class="area">台中南屯</span> · 地址待補</span>
+              </div>
+              <div class="row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M5 11l1.2 9h11.6L19 11"/></svg>
+                <span>魚料理，龍膽石斑一魚四吃、煎餃</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%AC%8A%E5%BF%97%20%E9%BE%8D%E9%AD%9A%E5%B1%8B%20%E5%8F%B0%E4%B8%AD%E5%8D%97%E5%B1%AF" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                在地圖開啟
+              </a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E6%AC%8A%E5%BF%97%20%E9%BE%8D%E9%AD%9A%E5%B1%8B%20%E5%8F%B0%E4%B8%AD%E5%8D%97%E5%B1%AF" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H5a2 2 0 0 1-2-2v-3.5A2.5 2.5 0 0 1 5.5 12h5A2.5 2.5 0 0 0 13 9.5V7"/><path d="m15 3 6 6-6 6"/><path d="M21 9H9"/></svg>
                 導航
               </a>
