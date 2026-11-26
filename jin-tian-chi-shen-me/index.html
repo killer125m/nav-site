@@ -187,12 +187,12 @@
       </svg>
     </div>
     <h1>今天吃什麼</h1>
-    <p>想不到要吃什麼？從口袋名單 <b>24 間愛店</b>裡，交給運氣決定。</p>
+    <p>想不到要吃什麼？從口袋名單 <b><span class="js-total">24</span> 間愛店</b>裡，交給運氣決定。</p>
   </header>
 
   <section class="stage" aria-label="隨機抽店">
     <div class="stage-top">
-      <span><span class="dot" id="statusDot"></span><span id="statusText">口袋名單 · 共 24 間</span></span>
+      <span><span class="dot" id="statusDot"></span><span id="statusText">店家資料載入中…</span></span>
     </div>
 
     <div class="display">
@@ -202,7 +202,7 @@
     </div>
 
     <div class="stage-actions">
-      <button type="button" class="btn-draw" id="drawBtn">🎲 幫我決定吃什麼</button>
+      <button type="button" class="btn-draw" id="drawBtn" disabled>🎲 幫我決定吃什麼</button>
       <button type="button" class="btn-again" id="againBtn" hidden>不喜歡？再抽一次</button>
     </div>
   </section>
@@ -248,7 +248,7 @@
   </section>
 
   <section class="all" aria-label="全部店家">
-    <h3>口袋名單全部 24 間</h3>
+    <h3>口袋名單全部 <span class="js-total">24</span> 間</h3>
     <p class="all-sub">點任一間可以直接看它的資料，或按上面的按鈕隨機抽。</p>
     <div class="store-list" id="storeList"></div>
   </section>
@@ -257,257 +257,7 @@
 </div>
 
 <script>
-var STORES = [
-  {
-    name: "TEAMARS 茶馬司・繁星店",
-    area: "台中・南屯",
-    type: "茶飲・茶館",
-    address: "台中市南屯區龍富路四段 309 號 1F",
-    rating: 4.6,
-    hours: "營業時間請以店家公告為準",
-    extra: "口袋名單愛店",
-    note: "南屯的茶館愛店，適合想坐下來好好吃一餐、喝杯茶的時候。"
-  },
-  {
-    name: "The Cafe by 想 台中",
-    area: "台中・南屯七期",
-    type: "義大利餐廳",
-    address: "台中市南屯區惠中路二段 146 號",
-    rating: 4.1,
-    hours: "營業時間請以店家公告為準",
-    extra: "七期・義式料理",
-    note: "七期的義大利餐廳，想吃義大利麵、燉飯這類西式料理就選它。"
-  },
-  {
-    name: "江技舊記・苗栗店",
-    area: "苗栗・苗栗市",
-    type: "餛飩老店",
-    address: "苗栗市新苗街 88 號",
-    rating: 4.1,
-    hours: "10:00 – 20:00",
-    extra: "1949 年開業",
-    note: "1949 年開業的餛飩老店，在苗栗想吃古早味就是這一味。"
-  },
-  {
-    name: "臭霸王臭豆腐",
-    area: "台中・東區",
-    type: "臭豆腐・小吃",
-    address: "台中市東區旱溪西路一段 443 號",
-    rating: 3.8,
-    hours: "17:00 開始營業",
-    extra: "每日手工現作，售完為止",
-    note: "每日手工現作、賣完就沒了，想吃要趁早，晚餐時段剛剛好。"
-  },
-  {
-    name: "一品香春捲臭豆腐",
-    area: "台中・東區",
-    type: "素食餐廳・春捲臭豆腐",
-    address: "台中市東區精武東路 110 號",
-    rating: 4.4,
-    hours: "16:00 – 21:00",
-    extra: "週三、週日公休",
-    note: "素食也能吃得很滿足，春捲配臭豆腐是招牌組合。注意週三、週日休息。"
-  },
-  {
-    name: "21 風味館（21PLUS）",
-    area: "全台門市",
-    type: "烤雞・炸雞連鎖",
-    address: "全台 65 間門市（台中昌平、烏日高鐵等）",
-    rating: null,
-    hours: "依各門市公告為準",
-    extra: "招牌：21 種香料烤雞",
-    note: "想吃烤雞就它了，招牌 21 種香料烤雞，全台門市都找得到。"
-  },
-  {
-    name: "tomotomo",
-    area: "台中・西區",
-    type: "日式雪花冰",
-    address: "台中市西區向上路一段17巷1弄1號",
-    rating: null,
-    rateLabel: "Google 評分待補",
-    hours: "12:00–19:00（週三、四休）",
-    extra: "鍋燒麵",
-    note: "日式雪花冰、鍋燒麵。"
-  },
-  {
-    name: "向晚一日",
-    area: "台中・北區",
-    type: "早午餐・義式料理",
-    address: "台中市北區學士路236巷6號",
-    rating: 5.0,
-    hours: "10:00–19:00",
-    extra: "寵物友善",
-    note: "早午餐、義式料理，寵物友善。"
-  },
-  {
-    name: "aoza",
-    area: "台中・西區",
-    type: "早午餐・紙包料理",
-    address: "台中市西區中興街81號",
-    rating: 4.4,
-    hours: "09:00–17:00",
-    extra: "紙包料理",
-    note: "早午餐、紙包料理。"
-  },
-  {
-    name: "黑毛屋",
-    area: "台中・西屯",
-    type: "日式鍋物",
-    address: "台中市西屯區文心路二段207號2樓（市政店）",
-    rating: 4.5,
-    hours: "11:30–15:30、17:00–23:00",
-    extra: "另有新光三越店",
-    note: "日式鍋物；另有新光三越店（台灣大道三段301號9樓）。"
-  },
-  {
-    name: "無理wuli",
-    area: "台中・西區",
-    type: "韓式鍋物",
-    address: "台中市西區公正路156巷4號",
-    rating: 4.4,
-    hours: "11:30–15:30、17:00–21:00",
-    extra: "豆腐鍋",
-    note: "韓式鍋物、豆腐鍋。"
-  },
-  {
-    name: "soyo",
-    area: "台中・南屯",
-    type: "咖啡・手作甜點",
-    address: "台中市南屯區干城街202巷1弄16號",
-    rating: null,
-    rateLabel: "Google 評分待補",
-    hours: "11:00–18:00（週二、五休）",
-    extra: "黎明新村",
-    note: "黎明新村的咖啡、手作甜點。"
-  },
-  {
-    name: "崔基虎",
-    area: "台中・北屯",
-    type: "韓式料理",
-    address: "台中市北屯區昌平路二段31-34號",
-    rating: null,
-    rateLabel: "Google 評分待補",
-    hours: "週三–五 17:00–20:00、週六日 11:30–14:00、17:00–20:00（週一、二休）",
-    extra: "韓式料理",
-    note: "韓式料理。"
-  },
-  {
-    name: "ora",
-    area: "台中・北區",
-    type: "咖啡・酒吧",
-    address: "台中市北區博館一街3號",
-    rating: null,
-    rateLabel: "Google 評分待補",
-    hours: "咖啡 11:30–18:00、酒吧 18:00–02:00（週一休）",
-    extra: "白天咖啡、晚上酒吧",
-    note: "白天咖啡、晚上酒吧。"
-  },
-  {
-    name: "celaffee",
-    area: "台中・西區",
-    type: "咖啡・早午餐",
-    address: "台中市西區美村路一段270巷15號",
-    rating: 4.6,
-    hours: "10:00–21:00",
-    extra: "雲朵咖啡",
-    note: "咖啡、早午餐（雲朵咖啡）。"
-  },
-  {
-    name: "溫久熬",
-    area: "台中・中區",
-    type: "重慶麻辣老火鍋",
-    address: "台中市中區臺灣大道一段138號之1",
-    rating: 4.6,
-    hours: "17:30–01:30",
-    extra: "深夜火鍋",
-    note: "深夜重慶麻辣老火鍋。"
-  },
-  {
-    name: "Smith&Wollensky",
-    area: "台中・西屯",
-    type: "美式牛排",
-    address: "台中市西屯區朝富路213號34樓（CBD 時代廣場）",
-    rating: 4.4,
-    hours: "11:30–15:30、17:00–22:00",
-    extra: "乾式熟成",
-    note: "美式牛排、乾式熟成。"
-  },
-  {
-    name: "phase",
-    area: "台中・中區",
-    type: "精品咖啡",
-    address: "台中市中區中山路119號（本店）",
-    rating: 4.5,
-    hours: "11:00–20:00",
-    extra: "自家烘焙",
-    note: "精品咖啡、自家烘焙；另有水湳店與外帶店。"
-  },
-  {
-    name: "nuka",
-    area: "台中・西區",
-    type: "早午餐・義大利麵",
-    address: "台中市西區美村路一段378號",
-    rating: null,
-    rateLabel: "Google 評分待補",
-    hours: "09:00–17:00（週二休）",
-    extra: "麵包",
-    note: "早午餐、義大利麵、麵包。"
-  },
-  {
-    name: "Cuteness Overload 鮮花咖啡",
-    area: "台中・北區",
-    type: "韓系花藝咖啡廳",
-    address: "台中市北區大義街101號",
-    rating: null,
-    rateLabel: "Google 評分待補",
-    hours: "11:00–18:00",
-    extra: "小熊蛋糕",
-    note: "韓系花藝咖啡廳、小熊蛋糕。"
-  },
-  {
-    name: "首稿",
-    area: "台中・南區",
-    type: "咖啡館",
-    address: "台中市南區復興路一段416號",
-    rating: null,
-    rateLabel: "Google 評分待補",
-    hours: "12:00–20:00（週五、六至 01:00；週一休）",
-    extra: "咖啡館",
-    note: "咖啡館。"
-  },
-  {
-    name: "泰水華美",
-    area: "台中・西區",
-    type: "泰式小吃",
-    address: "台中市西區公正路261號",
-    rating: null,
-    rateLabel: "Google 評分待補",
-    hours: "11:30–21:00",
-    extra: "泰式小吃",
-    note: "泰式小吃。"
-  },
-  {
-    name: "活力印度餐廳｜台中健行店",
-    area: "台中・北區",
-    type: "印度餐廳",
-    address: "台中市健行路1037號2樓",
-    rating: null,
-    rateLabel: "Google 評分待補",
-    hours: "營業時間請以店家公告為準",
-    extra: "印度餐廳",
-    note: "印度餐廳。"
-  },
-  {
-    name: "權志 龍魚屋",
-    area: "台中・南屯",
-    type: "魚料理",
-    address: "台中市南屯區五權西路三段1巷59-1號",
-    rating: 4.9,
-    hours: "11:30–14:30、17:30–22:00（週二休）",
-    extra: "預約制",
-    note: "龍膽石斑一魚四吃、煎餃，預約制。"
-  }
-];
+var STORES = [];
 
 var rollingName = document.getElementById('rollingName');
 var rollingSub  = document.getElementById('rollingSub');
@@ -539,7 +289,7 @@ function showResult(store){
 
   var ratingEl = document.getElementById('rRating');
   if (store.rating == null){
-    ratingEl.textContent = '—（連鎖門市，各店評分不同）';
+    ratingEl.textContent = store.rateLabel ? '—（' + store.rateLabel + '）' : '—（尚無 Google 評分）';
   } else {
     ratingEl.innerHTML = '';
     var stars = document.createElement('span');
@@ -576,7 +326,7 @@ function spin(){
   drawBtn.textContent = '抽選中…';
   againBtn.hidden = true;
   statusDot.classList.add('pulse');
-  statusText.textContent = '正在從 24 間裡面挑一間…';
+  statusText.textContent = '正在從 ' + STORES.length + ' 間裡面挑一間…';
   displayHint.textContent = '會是哪一間呢…';
   rollingName.classList.remove('landed');
   rollingName.classList.add('spinning');
@@ -619,7 +369,7 @@ function land(idx){
   rollingSub.textContent = store.area + ' · ' + store.type;
   displayHint.textContent = '抽好了，今天就吃這間';
   statusDot.classList.remove('pulse');
-  statusText.textContent = '口袋名單 · 共 24 間';
+  statusText.textContent = '口袋名單 · 共 ' + STORES.length + ' 間';
   drawBtn.disabled = false;
   drawBtn.textContent = '🎲 再抽一次';
   againBtn.hidden = true;
@@ -631,42 +381,60 @@ function land(idx){
 drawBtn.addEventListener('click', spin);
 againBtn.addEventListener('click', spin);
 
-// Build the full store list
-var listEl = document.getElementById('storeList');
-STORES.forEach(function(store){
-  var btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'store';
+function buildList() {
+  var listEl = document.getElementById('storeList');
+  STORES.forEach(function(store){
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'store';
 
-  var name = document.createElement('p');
-  name.className = 's-name';
-  name.textContent = store.name;
+    var name = document.createElement('p');
+    name.className = 's-name';
+    name.textContent = store.name;
 
-  var meta = document.createElement('p');
-  meta.className = 's-meta';
-  var rateTxt = store.rateLabel || (store.rating == null ? '全台門市' : 'Google ' + store.rating.toFixed(1));
-  meta.textContent = store.area + ' · ' + store.type + ' · ';
-  var rate = document.createElement('span');
-  rate.className = 's-rate';
-  rate.textContent = rateTxt;
-  meta.appendChild(rate);
+    var meta = document.createElement('p');
+    meta.className = 's-meta';
+    var rateTxt = store.rateLabel || (store.rating == null ? 'Google 評分待補' : 'Google ' + store.rating.toFixed(1));
+    meta.textContent = store.area + ' · ' + store.type + ' · ';
+    var rate = document.createElement('span');
+    rate.className = 's-rate';
+    rate.textContent = rateTxt;
+    meta.appendChild(rate);
 
-  btn.appendChild(name);
-  btn.appendChild(meta);
-  btn.addEventListener('click', function(){
-    if (spinning) return;
-    lastIndex = STORES.indexOf(store);
-    rollingName.textContent = store.name;
-    rollingName.classList.remove('spinning');
-    rollingName.classList.add('landed');
-    rollingSub.textContent = store.area + ' · ' + store.type;
-    displayHint.textContent = '你選了這間';
-    drawBtn.textContent = '🎲 幫我決定吃什麼';
-    showResult(store);
-    resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    btn.appendChild(name);
+    btn.appendChild(meta);
+    btn.addEventListener('click', function(){
+      if (spinning) return;
+      lastIndex = STORES.indexOf(store);
+      rollingName.textContent = store.name;
+      rollingName.classList.remove('spinning');
+      rollingName.classList.add('landed');
+      rollingSub.textContent = store.area + ' · ' + store.type;
+      displayHint.textContent = '你選了這間';
+      drawBtn.textContent = '🎲 幫我決定吃什麼';
+      showResult(store);
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    listEl.appendChild(btn);
   });
-  listEl.appendChild(btn);
-});
+}
+
+drawBtn.disabled = true;
+statusText.textContent = '店家資料載入中…';
+fetch('../data/stores.json')
+  .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  .then(function (data) {
+    STORES = data.map(function (s) {
+      return { name: s.name, area: s.area, type: s.type, address: s.address, rating: s.rating, rateLabel: s.rateLabel, hours: s.hours, extra: s.extra, note: s.note };
+    });
+    buildList();
+    document.querySelectorAll('.js-total').forEach(function (n) { n.textContent = STORES.length; });
+    statusText.textContent = '口袋名單 · 共 ' + STORES.length + ' 間';
+    drawBtn.disabled = false;
+  })
+  .catch(function () {
+    statusText.textContent = '店家資料載入失敗，請重新整理頁面再試一次。';
+  });
 </script>
 </body>
 </html>
