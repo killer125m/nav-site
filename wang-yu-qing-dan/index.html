@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <title>我的網域</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f4f0;
+        --surface: #ffffff;
+        --surface-2: #eef0ea;
+        --ink: #17201c;
+        --ink-2: #3d4a44;
+        --muted: #6b7972;
+        --line: #dde1d8;
+        --accent: #0f6b4f;
+        --accent-ink: #ffffff;
+        --accent-soft: #e3efe9;
+        --amber: #b7791f;
+        --amber-bg: #fdf3e0;
+        --red: #b91c1c;
+        --red-bg: #fdecec;
+        --shadow: 0 1px 2px rgba(23,32,28,.06), 0 12px 32px -12px rgba(23,32,28,.18);
+        --radius: 18px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --bg: #101512;
+          --surface: #1a211d;
+          --surface-2: #232c27;
+          --ink: #edf2ee;
+          --ink-2: #c3cec7;
+          --muted: #93a399;
+          --line: #2e3a34;
+          --accent: #3ec98f;
+          --accent-ink: #0b1511;
+          --accent-soft: #1e332a;
+          --amber: #e8b34b;
+          --amber-bg: #332a17;
+          --red: #f87171;
+          --red-bg: #3a1d1d;
+          --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -12px rgba(0,0,0,.6);
+        }
+      }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Noto Sans TC", system-ui, -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.55;
+      }
+      a { color: inherit; }
+      .wrap { max-width: 1020px; margin: 0 auto; padding: 28px 20px 56px; }
+      @media (max-width: 560px) { .wrap { padding: 20px 16px 44px; } }
+
+      .intro { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; margin-bottom: 20px; }
+      .intro h1 {
+        font-family: "Noto Serif TC", serif;
+        font-size: clamp(30px, 5vw, 42px);
+        font-weight: 900;
+        line-height: 1.15;
+        margin: 0 0 6px;
+        letter-spacing: .01em;
+      }
+      .intro p { margin: 0; color: var(--muted); font-size: 15px; max-width: 46ch; }
+      .count-badge {
+        flex: none;
+        display: flex; align-items: baseline; gap: 6px;
+        background: var(--surface); border: 1px solid var(--line);
+        border-radius: 999px; padding: 8px 16px 9px;
+        box-shadow: var(--shadow);
+      }
+      .count-badge b { font-size: 22px; line-height: 1; }
+      .count-badge span { color: var(--muted); font-size: 13px; }
+
+      .alert {
+        background: var(--amber-bg);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        margin-bottom: 24px;
+        font-size: 15px;
+      }
+      .alert b { color: var(--amber); }
+
+      .group { margin-bottom: 28px; }
+      .group h2 {
+        font-size: 18px; font-weight: 900; margin: 0 0 4px;
+        display: flex; align-items: baseline; gap: 8px;
+      }
+      .group h2 span { color: var(--muted); font-size: 13px; font-weight: 500; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        box-shadow: var(--shadow);
+      }
+      .card h3 { margin: 0 0 10px; font-size: 19px; font-weight: 700; word-break: break-all; }
+      .card h3 a { text-decoration: none; }
+      .card h3 a:hover { text-decoration: underline; }
+      .rows { display: grid; gap: 6px; font-size: 14px; }
+      .row { display: flex; gap: 8px; }
+      .row .k { flex: none; width: 56px; color: var(--muted); }
+      .row .v { min-width: 0; }
+      .badge {
+        display: inline-block;
+        font-size: 12px; font-weight: 700;
+        border-radius: 999px; padding: 1px 9px;
+        background: var(--surface-2); color: var(--ink-2);
+      }
+      .badge.green { background: var(--accent-soft); color: var(--accent); }
+      .badge.amber { background: var(--amber-bg); color: var(--amber); }
+      .badge.red { background: var(--red-bg); color: var(--red); }
+      .note { margin-top: 10px; font-size: 13px; color: var(--muted); }
+      .foot { margin-top: 8px; font-size: 13px; color: var(--muted); }
+      .back { display: inline-block; margin-bottom: 18px; font-size: 14px; color: var(--muted); text-decoration: none; }
+      .back:hover { text-decoration: underline; }
+      .error { color: var(--red); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="back" href="/">← 回導航站</a>
+      <div class="intro">
+        <div>
+          <h1>我的網域</h1>
+          <p>忘記網域就來這裡查。到期日、用途一次看清楚。</p>
+        </div>
+        <div class="count-badge"><b id="total">–</b><span>個網域</span></div>
+      </div>
+      <div class="alert" id="alert" hidden></div>
+      <div id="groups"></div>
+      <p class="foot">iuududu.com 沒註冊成功，不在清單內。dudu.xwx.me 以前註冊過，已從專案移除。<br />新增網域時，改 data/domains.json 一處就好，這頁會自動更新。</p>
+    </div>
+    <script>
+      function daysUntil(dateStr) {
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var p = dateStr.split("-");
+        var d = new Date(+p[0], +p[1] - 1, +p[2]);
+        return Math.round((d - today) / 86400000);
+      }
+      function expiryBadge(d) {
+        if (d.expiry_note === "終身") return '<span class="badge green">終身</span>';
+        if (!d.expiry) return '<span class="badge">免費</span>';
+        var n = daysUntil(d.expiry);
+        var cls = n <= 30 ? "red" : (n <= 180 ? "amber" : "");
+        var label = n < 0 ? "已過期 " + Math.abs(n) + " 天" : n + " 天後到期";
+        return d.expiry + ' <span class="badge ' + cls + '">' + label + '</span>';
+      }
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+      fetch("../data/domains.json")
+        .then(function (r) { if (!r.ok) throw new Error("讀不到 domains.json"); return r.json(); })
+        .then(function (data) {
+          var list = data.domains || [];
+          document.getElementById("total").textContent = list.length;
+          var soon = list.filter(function (d) { return d.expiry && daysUntil(d.expiry) <= 180 && daysUntil(d.expiry) >= 0; });
+          var alert = document.getElementById("alert");
+          if (soon.length) {
+            alert.hidden = false;
+            alert.innerHTML = "⚠ <b>" + soon.length + " 個網域在半年內到期：</b>" +
+              soon.map(function (d) { return esc(d.name) + "（" + esc(d.expiry) + "）"; }).join("、") + "，記得提前續期。";
+          }
+          var order = ["loc.cc", "ipv64.net"];
+          var groups = {};
+          list.forEach(function (d) {
+            var key = order.indexOf(d.provider) >= 0 ? d.provider : "其他";
+            (groups[key] = groups[key] || []).push(d);
+          });
+          var keys = Object.keys(groups).sort(function (a, b) {
+            var ia = order.indexOf(a), ib = order.indexOf(b);
+            if (ia < 0) ia = 99; if (ib < 0) ib = 99;
+            return ia - ib;
+          });
+          var html = "";
+          keys.forEach(function (key) {
+            var items = groups[key];
+            html += '<section class="group"><h2>' + esc(key) + ' <span>' + items.length + ' 個</span></h2><div class="grid">';
+            items.forEach(function (d) {
+              var name = d.url ? '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">' + esc(d.name) + '</a>' : esc(d.name);
+              html += '<article class="card"><h3>' + name + '</h3><div class="rows">' +
+                '<div class="row"><span class="k">註冊商</span><span class="v">' + esc(d.provider) + '</span></div>' +
+                '<div class="row"><span class="k">到期日</span><span class="v">' + expiryBadge(d) +
+                (d.expiry_note && d.expiry_note !== "終身" ? '<br /><span style="color:var(--muted);font-size:12px">' + esc(d.expiry_note) + '</span>' : "") + '</span></div>' +
+                '<div class="row"><span class="k">用途</span><span class="v">' + esc(d.purpose) + '</span></div>' +
+                '</div>' +
+                (d.note ? '<p class="note">' + esc(d.note) + '</p>' : "") +
+                '</article>';
+            });
+            html += "</div></section>";
+          });
+          document.getElementById("groups").innerHTML = html;
+        })
+        .catch(function (e) {
+          document.getElementById("groups").innerHTML = '<p class="error">清單讀取失敗：' + esc(e.message) + '</p>';
+        });
+    </script>
+  </body>
+</html>
